@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Repository", "Chat.Rep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Model", "Chat.Model\Chat.Model.csproj", "{31E04505-D548-4D3D-BBB4-A4B90C01DB18}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Utility", "Chat.Utility\Chat.Utility.csproj", "{52003DEA-CED3-447A-B9E5-A647B6FED5F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Chat.Utility\Infrastructure.csproj", "{52003DEA-CED3-447A-B9E5-A647B6FED5F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Service", "Chat.Service\Chat.Service.csproj", "{FF0D559E-E17D-4AFD-BAF1-13FAA940EDCC}"
 EndProject
