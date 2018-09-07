@@ -2,19 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Text;
-using System.Xml;
 
-namespace Infrastructure.Log.Utility
+namespace Infrastructure.Mail
 {
     public static class ConfigManager
     {
         public static NameValueCollection AppSettings { get; set; }
-        private const string FILE_PATH = @"Configs\log.config";
+        private const string FILE_PATH = @"Configs\mail.config";
         static ConfigManager()
         {
-            AppSettings=new ConfigHelper().Config(FILE_PATH);
+            AppSettings = new ConfigHelper().Config(FILE_PATH);
         }
     }
 }
