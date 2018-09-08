@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Entity\Chat\" />
+    <Folder Include="Entity\Discovery\" />
+    <Folder Include="DTO\" />
+  </ItemGroup>
+
 </Project>

@@ -8,4 +8,8 @@
     <PackageReference Include="Dapper" Version="1.50.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chat.Utility\Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
