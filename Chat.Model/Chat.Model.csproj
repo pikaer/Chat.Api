@@ -5,9 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTO\Chat\" />
+    <Folder Include="DTO\Discovery\" />
+    <Folder Include="DTO\UserInfo\" />
     <Folder Include="Entity\Chat\" />
     <Folder Include="Entity\Discovery\" />
-    <Folder Include="DTO\" />
   </ItemGroup>
 
 </Project>
