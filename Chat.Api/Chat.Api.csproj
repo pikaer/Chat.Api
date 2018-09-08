@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Content Remove="wwwroot\Resource\iconfont\iconfont.min.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Resource\iconfont\iconfont.eot" />
+    <None Include="wwwroot\Resource\iconfont\iconfont.svg" />
+    <None Include="wwwroot\Resource\iconfont\iconfont.ttf" />
+    <None Include="wwwroot\Resource\iconfont\iconfont.woff" />
   </ItemGroup>
 
   <ItemGroup>

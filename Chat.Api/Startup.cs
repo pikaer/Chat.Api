@@ -42,6 +42,7 @@ namespace Chat.Api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseStaticFiles();
         }
     }
 }
