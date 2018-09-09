@@ -10,10 +10,13 @@ namespace Chat.Api.Controllers
 {
     public class BaseController : ControllerBase
     {
+        /// <summary>
+        /// 处理请求数据流
+        /// </summary>
+        /// <returns></returns>
         protected string GetInputString()
         {
             Stream req = Request.Body;
-            req.Seek(0, SeekOrigin.Begin);
             string json = new StreamReader(req).ReadToEnd();
 
             if (!string.IsNullOrEmpty(json))
@@ -23,7 +26,7 @@ namespace Chat.Api.Controllers
 
             return json;
         }
-        
+
         /// <summary>
         /// 获取错误的返回
         /// </summary>

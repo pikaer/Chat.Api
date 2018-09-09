@@ -13,7 +13,10 @@ using Newtonsoft.Json;
 
 namespace Chat.Api.Controllers
 {
-    [Route("api/UserInfo")]
+    /// <summary>
+    /// 用户信息
+    /// </summary>
+    [Route("api/[controller]/[action]")]
     public class UserInfoController : BaseController
     {
         private UserInfoService _userInfoService = new UserInfoService();
@@ -22,7 +25,6 @@ namespace Chat.Api.Controllers
         /// 存入用户信息
         /// </summary>
         [HttpPost]
-        [Route("SetUserInfo")]
         public JsonResult SetUserInfo()
         {
             string json = GetInputString();

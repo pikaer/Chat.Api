@@ -1,5 +1,5 @@
 ﻿using Chat.Model.Entity.UserInfo;
-using Dapper.Contrib.Extensions;
+using Dapper;
 using System;
 
 namespace Chat.Repository
@@ -8,7 +8,7 @@ namespace Chat.Repository
     {
         protected override DbEnum GetDbEnum()
         {
-            return DbEnum.MyChat;
+            return DbEnum.ChatConnect;
         }
 
         public bool SetUserInfo(UserInfo dto)
@@ -17,7 +17,33 @@ namespace Chat.Repository
             {
                 try
                 {
-                    return Db.Insert(dto) > 0;
+                    var sql = @"INSERT INTO dbo.user_UserInfo
+                                            (OpenId
+                                            ,NickName
+                                            ,Gender
+                                            ,City
+                                            ,Province
+                                            ,Country
+                                            ,Language
+                                            ,Mobile
+                                            ,HeadshotPath
+                                            ,Signature
+                                            ,CreateTime
+                                            ,UpdateTime)
+                                      VALUES
+                                            (@OpenId
+                                            ,@NickName
+                                            ,@Gender
+                                            ,@City
+                                            ,@Province
+                                            ,@Country
+                                            ,@Language
+                                            ,@Mobile
+                                            ,@HeadshotPath
+                                            ,@Signature
+                                            ,@CreateTime
+                                            ,@UpdateTime)";
+                    return Db.Execute(sql,dto) > 0;
                 }
                 catch (Exception ex)
                 {

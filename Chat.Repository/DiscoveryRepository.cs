@@ -4,7 +4,7 @@
     {
         protected override DbEnum GetDbEnum()
         {
-            return DbEnum.MyChat;
+            return DbEnum.ChatConnect;
         }
     }
 }

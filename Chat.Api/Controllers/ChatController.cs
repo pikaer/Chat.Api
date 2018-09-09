@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ChatController : ControllerBase
     {

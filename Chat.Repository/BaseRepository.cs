@@ -20,7 +20,7 @@ namespace Chat.Repository
         /// </summary>
         protected enum DbEnum
         {
-            MyChat,
+            ChatConnect,
         }
 
         /// <summary>
