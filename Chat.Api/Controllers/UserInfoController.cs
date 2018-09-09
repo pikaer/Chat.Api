@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Chat.Model.DTO.UserInfo;
+﻿using Chat.Model.DTO.UserInfo;
 using Chat.Model.Enum;
 using Chat.Model.Utils;
 using Chat.Service;
 using Infrastructure.Utility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Chat.Api.Controllers
 {
