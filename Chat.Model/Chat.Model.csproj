@@ -7,7 +7,6 @@
   <ItemGroup>
     <Folder Include="DTO\Chat\" />
     <Folder Include="DTO\Discovery\" />
-    <Folder Include="DTO\UserInfo\" />
     <Folder Include="Entity\Chat\" />
     <Folder Include="Entity\Discovery\" />
   </ItemGroup>

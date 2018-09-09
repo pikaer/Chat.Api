@@ -18,10 +18,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\Resource\headphoto\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chat.Model\Chat.Model.csproj" />
+    <ProjectReference Include="..\Chat.Service\Chat.Service.csproj" />
+    <ProjectReference Include="..\Chat.Utility\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

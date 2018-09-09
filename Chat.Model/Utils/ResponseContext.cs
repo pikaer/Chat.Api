@@ -1,4 +1,6 @@
-﻿namespace Chat.Model.Utils
+﻿using Chat.Model.Enum;
+
+namespace Chat.Model.Utils
 {
     public class ResponseContext<T>
     {
@@ -15,11 +17,12 @@
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ResponseContext()
+        public ResponseContext(T content)
         {
             Head = new ResponseHead();
-            Content = default(T);
+            Content = content;
         }
+        
     }
 
     public class ResponseHead
@@ -30,11 +33,11 @@
         public ResponseHead()
         {
             Ret = 0;
-            Code = 10000;
+            Code = ErrCodeEnum.Sucess;
             Msg = "调用接口成功";
         }
 
-        public ResponseHead(int ret, int code, string msg)
+        public ResponseHead(int ret, ErrCodeEnum code, string msg)
         {
             Ret = ret;
             Code = code;
@@ -53,7 +56,7 @@
         /// 错误码
         /// </summary>
 
-        public int Code { get; set; }
+        public ErrCodeEnum Code { get; set; }
         
         /// <summary>
         /// 错误信息

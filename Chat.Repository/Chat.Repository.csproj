@@ -6,9 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Dapper.Contrib" Version="1.50.5" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Chat.Model\Chat.Model.csproj" />
     <ProjectReference Include="..\Chat.Utility\Infrastructure.csproj" />
   </ItemGroup>
 
