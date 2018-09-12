@@ -32,25 +32,25 @@ namespace Chat.Model.Utils
         /// </summary>
         public ResponseHead()
         {
-            Ret = 0;
+            Success = false;
             Code = ErrCodeEnum.Sucess;
             Msg = "调用接口成功";
         }
 
-        public ResponseHead(int ret, ErrCodeEnum code, string msg)
+        public ResponseHead(bool success, ErrCodeEnum code, string msg)
         {
-            Ret = ret;
+            Success = success;
             Code = code;
             Msg = msg;
         }
 
         /// <summary>
         /// 返回值
-        ///  0:成功
-        /// -1:失败
+        /// true:成功
+        /// false:失败
         /// </summary>
 
-        public int Ret { get; set; }
+        public bool Success { get; set; }
 
         /// <summary>
         /// 错误码
