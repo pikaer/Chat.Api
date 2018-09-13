@@ -8,6 +8,9 @@ using Infrastructure.Utility;
 
 namespace Chat.Api.Controllers
 {
+    /// <summary>
+    /// 控制器基类
+    /// </summary>
     public class BaseController : ControllerBase
     {
         /// <summary>

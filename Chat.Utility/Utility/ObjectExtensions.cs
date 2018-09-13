@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Utility
 {
@@ -20,10 +18,9 @@ namespace Infrastructure.Utility
             {
                 rtn = JsonConvert.DeserializeObject<T>(value.ToString());
             }
-            catch (Exception ex)
+            catch
             {
                 string txt = ("Json值:" + value.ToString() + "转换失败");
-                //Log.Exception("ObjectExtensions", "JsonToObject", ex, txt);
             }
             return rtn;
         }
