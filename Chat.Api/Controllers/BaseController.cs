@@ -1,10 +1,9 @@
 ﻿using Chat.Model.Enum;
+using Chat.Model.Utils;
+using Infrastructure.Utility;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
-using Newtonsoft.Json;
-using Chat.Model.Utils;
-using Infrastructure.Utility;
 
 namespace Chat.Api.Controllers
 {

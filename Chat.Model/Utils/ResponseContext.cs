@@ -32,7 +32,7 @@ namespace Chat.Model.Utils
         /// </summary>
         public ResponseHead()
         {
-            Success = false;
+            Success = true;
             Code = ErrCodeEnum.Sucess;
             Msg = "调用接口成功";
         }

@@ -3,6 +3,7 @@ using Chat.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Utility;
+using System;
 
 namespace Chat.Service
 {
@@ -33,6 +34,7 @@ namespace Chat.Service
                     temp.RecentChatContent = unread == null ? "" : unread.RecentChatContent;
                     temp.UnreadCount = unread == null ? 0 : unread.UnreadCount;
                     temp.RecentChatTimeDesc ="";
+                    temp.RecentChatTime = new DateTime();
                     if (unread!=null)
                     {
                         temp.RecentChatTime = unread.RecentChatTime;
@@ -62,7 +64,7 @@ namespace Chat.Service
                     dto.RecentChatTimeDesc = dto.RecentChatTime.GetDateDesc();
                     dto.UnreadCount = _chatRepository.GetUnReadCount(userId,dto.UserId);
                 }
-                return list;
+                return list.OrderByDescending(a => a.RecentChatTime.Value).ToList();
             }
             catch
             {
