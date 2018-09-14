@@ -1,4 +1,5 @@
 ﻿using Chat.Model.DTO.Chat;
+using Chat.Model.Utils;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,28 @@ namespace Chat.Repository
                 catch
                 {
                     return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 清理未读提示
+        /// </summary>
+        public bool ClearUnRead(CommonRequest request)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"UPDATE dbo.friend_Friend
+                                   SET UpdateTime =@now
+                                      ,ReadTime =@now
+                                 WHERE UserId=@UserId AND PartnerId=@PartnerId";
+                    return Db.QueryFirstOrDefault<int>(sql, new { request.UserId, request.PartnerId, now =DateTime.Now})>0;
+                }
+                catch
+                {
+                    return false;
                 }
             }
         }

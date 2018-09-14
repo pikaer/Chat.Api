@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Utility;
 using System;
+using Chat.Model.Enum;
+using Chat.Model.Utils;
 
 namespace Chat.Service
 {
@@ -28,11 +30,11 @@ namespace Chat.Service
                     var unread = unreadList.FirstOrDefault(a => a.UserId == dto.UserId);
 
                     temp.Gender = dto.Gender;
-                    temp.NickName = dto.NickName;
+                    temp.NickName = dto.NickName.Trim();
                     temp.UserId = dto.UserId;
                     temp.HeadshotPathDesc = dto.HeadshotPath.ToPathDesc();
-                    temp.RecentChatContent = unread == null ? "" : unread.RecentChatContent;
-                    temp.UnreadCount = unread == null ? 0 : unread.UnreadCount;
+                    temp.RecentChatContent = unread == null ? "" : unread.RecentChatContent.Trim();
+                    temp.UnreadCount = unread == null ?"" : unread.UnreadCount;
                     temp.RecentChatTimeDesc ="";
                     temp.RecentChatTime = new DateTime();
                     if (unread!=null)
@@ -61,14 +63,31 @@ namespace Chat.Service
                 var list = _chatRepository.GetUnreadList(userId);
                 foreach (var dto in list)
                 {
+                    dto.RecentChatContent = dto.Type == ChatContentEnum.Text ? dto.RecentChatContent : dto.Type.ToDescription();
                     dto.RecentChatTimeDesc = dto.RecentChatTime.GetDateDesc();
-                    dto.UnreadCount = _chatRepository.GetUnReadCount(userId,dto.UserId);
+                    var count = _chatRepository.GetUnReadCount(userId, dto.UserId);
+                    dto.UnreadCount = count > 0? count.ToString():"";
                 }
                 return list.OrderByDescending(a => a.RecentChatTime.Value).ToList();
             }
             catch
             {
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// 清理未读提示
+        /// </summary>
+        public bool ClearUnRead(CommonRequest request)
+        {
+            try
+            {
+                return _chatRepository.ClearUnRead(request);
+            }
+            catch
+            {
+                return false;
             }
         }
     }

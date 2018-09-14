@@ -1,4 +1,5 @@
 ﻿using Chat.Model.DTO.UserInfo;
+using Chat.Model.Entity.UserInfo;
 using Chat.Model.Enum;
 using Chat.Model.Utils;
 using Chat.Service;
@@ -36,7 +37,7 @@ namespace Chat.Api.Controllers
                 return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
             }
             var res = _userInfoService.SetUserInfo(request.Content);
-            var response = new ResponseContext<bool>(res);
+            var response = new ResponseContext<UserInfo>(res);
             return new JsonResult(response);
         }
     }

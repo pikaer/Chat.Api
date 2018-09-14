@@ -23,7 +23,7 @@ namespace Chat.Model.DTO.Chat
         /// <summary>
         /// 未读消息条数
         /// </summary>
-        public int UnreadCount { get; set; }
+        public string UnreadCount { get; set; }
 
         /// <summary>
         /// 最近聊天时间

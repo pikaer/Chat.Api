@@ -66,5 +66,29 @@ namespace Chat.Api.Controllers
             var response = new ResponseContext<List<UnReadListDTO>>(res);
             return new JsonResult(response);
         }
+
+        /// <summary>
+        /// 清理未读提示
+        /// </summary>
+        public JsonResult ClearUnRead()
+        {
+            string json = GetInputString();
+            if (string.IsNullOrEmpty(json))
+            {
+                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+            }
+            var request = json.JsonToObject<RequestContext<CommonRequest>>();
+            if (request == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+            }
+            if (request.Content == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+            }
+            var res = _chatService.ClearUnRead(request.Content);
+            var response = new ResponseContext<bool>(res);
+            return new JsonResult(response);
+        }
     }
 }

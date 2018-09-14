@@ -49,7 +49,7 @@ namespace Chat.Repository
                                             ,@UpdateTime)";
                     return Db.Execute(sql,dto) > 0;
                 }
-                catch
+                catch(Exception ex)
                 {
                     return false;
                 }
@@ -83,6 +83,48 @@ namespace Chat.Repository
                                  ON users.UserId=friend.PartnerId 
                                  WHERE friend.UserId=@UserId";
                     return Db.Query<UserInfo>(sql, new { UserId = userId }).AsList();
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        public UserInfo GetUserInfoByOpenId(string openId="" , long userId=0)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"SELECT UserId
+                                      ,OpenId
+                                      ,NickName
+                                      ,Gender
+                                      ,City
+                                      ,Province
+                                      ,Country
+                                      ,Language
+                                      ,Mobile
+                                      ,HeadshotPath
+                                      ,Signature
+                                      ,CreateTime
+                                      ,UpdateTime
+                                  FROM dbo.user_UserInfo";
+                    if(userId>0)
+                    {
+                        sql += " WHERE UserId =" + userId;
+                    }
+                    else
+                    {
+                        sql += " WHERE OpenId =" + "'"+openId+"'";
+                    }
+                    return Db.QueryFirstOrDefault<UserInfo>(sql);
                 }
                 catch
                 {
