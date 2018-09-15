@@ -17,40 +17,32 @@ namespace Chat.Service
         /// <summary>
         /// 获取消息列表
         /// </summary>
-        public List<ChatListDTO> GetChatList(long userId)
+        public List<ChatListDTO> GetChatList(ChatListRequest request)
         {
-            try
+            var rtn = new List<ChatListDTO>();
+            var userList = _userInfoRepository.GetFriendListByUserId(request.UserId);
+            var unreadList = GetUnreadList(request.UserId);
+            foreach (var dto in userList)
             {
-                var rtn = new List<ChatListDTO>();
-                var userList = _userInfoRepository.GetFriendListByUserId(userId);
-                var unreadList = GetUnreadList(userId);
-                foreach(var dto in userList)
-                {
-                    var temp = new ChatListDTO();
-                    var unread = unreadList.FirstOrDefault(a => a.UserId == dto.UserId);
+                var temp = new ChatListDTO();
+                var unread = unreadList.FirstOrDefault(a => a.UserId == dto.UserId);
 
-                    temp.Gender = dto.Gender;
-                    temp.NickName = dto.NickName.Trim();
-                    temp.UserId = dto.UserId;
-                    temp.HeadshotPathDesc = dto.HeadshotPath.ToPathDesc();
-                    temp.RecentChatContent = unread == null ? "" : unread.RecentChatContent.Trim();
-                    temp.UnreadCount = unread == null ?"" : unread.UnreadCount;
-                    temp.RecentChatTimeDesc ="";
-                    temp.RecentChatTime = new DateTime();
-                    if (unread!=null)
-                    {
-                        temp.RecentChatTime = unread.RecentChatTime;
-                        temp.RecentChatTimeDesc = unread.RecentChatTime.GetDateDesc();
-                    }
-                    rtn.Add(temp);
+                temp.Gender = dto.Gender;
+                temp.NickName = dto.NickName.Trim();
+                temp.UserId = dto.UserId;
+                temp.HeadshotPathDesc = dto.HeadshotPath.ToPathDesc();
+                temp.RecentChatContent = unread == null ? "" : unread.RecentChatContent.Trim();
+                temp.UnreadCount = unread == null ? "" : unread.UnreadCount;
+                temp.RecentChatTimeDesc = "";
+                temp.RecentChatTime = new DateTime();
+                if (unread != null)
+                {
+                    temp.RecentChatTime = unread.RecentChatTime;
+                    temp.RecentChatTimeDesc = unread.RecentChatTime.GetDateDesc();
                 }
-                
-                return rtn.OrderByDescending(a=>a.RecentChatTime.Value).ToList();
+                rtn.Add(temp);
             }
-            catch
-            {
-                return null;
-            }
+            return rtn.OrderByDescending(a => a.RecentChatTime.Value).Skip(request.PageCount * (request.PageIndex - 1)).Take(request.PageCount).ToList();
         }
 
         /// <summary>
@@ -58,22 +50,15 @@ namespace Chat.Service
         /// </summary>
         public List<UnReadListDTO> GetUnreadList(long userId)
         {
-            try
+            var list = _chatRepository.GetUnreadList(userId);
+            foreach (var dto in list)
             {
-                var list = _chatRepository.GetUnreadList(userId);
-                foreach (var dto in list)
-                {
-                    dto.RecentChatContent = dto.Type == ChatContentEnum.Text ? dto.RecentChatContent : dto.Type.ToDescription();
-                    dto.RecentChatTimeDesc = dto.RecentChatTime.GetDateDesc();
-                    var count = _chatRepository.GetUnReadCount(userId, dto.UserId);
-                    dto.UnreadCount = count > 0? count.ToString():"";
-                }
-                return list.OrderByDescending(a => a.RecentChatTime.Value).ToList();
+                dto.RecentChatContent = dto.Type == ChatContentEnum.Text ? dto.RecentChatContent : dto.Type.ToDescription();
+                dto.RecentChatTimeDesc = dto.RecentChatTime.GetDateDesc();
+                var count = _chatRepository.GetUnReadCount(userId, dto.UserId);
+                dto.UnreadCount = count > 0 ? count.ToString() : "";
             }
-            catch
-            {
-                return null;
-            }
+            return list.OrderByDescending(a => a.RecentChatTime.Value).ToList();
         }
 
         /// <summary>
@@ -81,14 +66,7 @@ namespace Chat.Service
         /// </summary>
         public bool ClearUnRead(CommonRequest request)
         {
-            try
-            {
-                return _chatRepository.ClearUnRead(request);
-            }
-            catch
-            {
-                return false;
-            }
+            return _chatRepository.ClearUnRead(request);
         }
     }
 }

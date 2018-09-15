@@ -3,7 +3,7 @@
     public class CommonRequest
     {
         /// <summary>
-        /// 用户唯一标示，自增
+        /// 用户Id
         /// </summary>
         public long UserId { get; set; }
 

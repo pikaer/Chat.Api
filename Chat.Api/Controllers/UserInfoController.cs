@@ -22,23 +22,30 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult SetUserInfo()
         {
-            string json = GetInputString();
-            if (string.IsNullOrEmpty(json))
+            try
             {
-                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<WXUserInfoRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Content == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var res = _userInfoService.SetUserInfo(request.Content);
+                var response = new ResponseContext<UserInfo>(res);
+                return new JsonResult(response);
             }
-            var request = json.JsonToObject<RequestContext<WXUserInfoRequest>>();
-            if (request == null)
+            catch
             {
-                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                return ErrorJsonResult(ErrCodeEnum.InnerError);
             }
-            if (request.Content == null)
-            {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
-            }
-            var res = _userInfoService.SetUserInfo(request.Content);
-            var response = new ResponseContext<UserInfo>(res);
-            return new JsonResult(response);
         }
     }
 }
