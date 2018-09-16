@@ -132,5 +132,19 @@ namespace Chat.Repository
                 }
             }
         }
+
+        /// <summary>
+        /// 删除好友
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <param name="partnerId">好友Id</param>
+        public bool DeleteFriend(long userId, long partnerId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                var sql = @"DELETE FROM dbo.friend_Friend WHERE (UserId=@UserId and PartnerId=@PartnerId) or (UserId=@PartnerId and PartnerId=@UserId)";
+                return Db.Execute(sql, new { UserId = userId, PartnerId = partnerId }) > 0;
+            }
+        }
     }
 }

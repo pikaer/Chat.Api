@@ -91,5 +91,19 @@ namespace Chat.Repository
                 }
             }
         }
+
+        /// <summary>
+        /// 删除聊天记录
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <param name="partnerId">好友Id</param>
+        public bool DeleteChatHistory(long userId,long partnerId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                var sql = @"DELETE FROM dbo.chat_ChatHistory WHERE (UserId=@UserId and PartnerId=@PartnerId) or (UserId=@PartnerId and PartnerId=@UserId)";
+                return Db.Execute(sql, new {UserId= userId, PartnerId= partnerId }) > 0;
+            }
+        }
     }
 }

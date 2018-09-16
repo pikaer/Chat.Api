@@ -27,8 +27,8 @@ namespace Chat.Api
                 options.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "API",
-                    Description = "api文档",
+                    Title = "ChatApi",
+                    Description = "为小程序提供Api接口",
                     TermsOfService = "None"
                 });
                 var basePath = AppContext.BaseDirectory;

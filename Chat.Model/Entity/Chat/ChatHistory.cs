@@ -21,7 +21,7 @@ namespace Chat.Model.Entity.Chat
         /// 对方Id
         /// </summary>
         public long PartnerId { get; set; }
-
+        
         /// <summary>
         /// 本条聊天内容
         /// </summary>
