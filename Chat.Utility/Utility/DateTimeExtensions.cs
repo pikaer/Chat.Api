@@ -9,13 +9,9 @@ namespace Infrastructure.Utility
         /// </summary>
         /// <param name="datetime">时间：2018-9-4：6：30：30.000</param>
         /// <returns></returns>
-        public static string GetDateDesc(this DateTime? datetime)
+        public static string GetDateDesc(this DateTime datetime)
         {
             var rtn = "";
-            if (datetime==null)
-            {
-                return rtn;
-            }
             
             var now = DateTime.Now;
             var today = DateTime.Now.Date;  //2018-9-4 0:00:00 今天凌晨
@@ -134,7 +130,7 @@ namespace Infrastructure.Utility
             }
             else
             {
-                rtn = datetime.Value.ToShortDateString().ToString();
+                rtn = datetime.ToShortDateString().ToString();
             }
             return rtn;
         }

@@ -38,7 +38,7 @@ namespace Chat.Service
                 if (unread != null)
                 {
                     temp.RecentChatTime = unread.RecentChatTime;
-                    temp.RecentChatTimeDesc = unread.RecentChatTime.GetDateDesc();
+                    temp.RecentChatTimeDesc = unread.RecentChatTime.HasValue? unread.RecentChatTime.Value.GetDateDesc():"";
                 }
                 rtn.Add(temp);
             }
@@ -54,7 +54,7 @@ namespace Chat.Service
             foreach (var dto in list)
             {
                 dto.RecentChatContent = dto.Type == ChatContentEnum.Text ? dto.RecentChatContent : dto.Type.ToDescription();
-                dto.RecentChatTimeDesc = dto.RecentChatTime.GetDateDesc();
+                dto.RecentChatTimeDesc = dto.RecentChatTime.HasValue?dto.RecentChatTime.Value.GetDateDesc():"";
                 var count = _chatRepository.GetUnReadCount(userId, dto.UserId);
                 dto.UnreadCount = count > 0 ? count.ToString() : "";
             }
@@ -67,6 +67,31 @@ namespace Chat.Service
         public bool ClearUnRead(CommonRequest request)
         {
             return _chatRepository.ClearUnRead(request);
+        }
+
+        /// <summary>
+        /// 获取聊天列表
+        /// </summary>
+        public List<ChatContentListDTO> GetChatContentList(CommonRequest request)
+        {
+            var rtn = new List<ChatContentListDTO>();
+            var list = _chatRepository.GetChatHistories(request.UserId, request.PartnerId);
+            foreach (var dto in list)
+            {
+                var user = _userInfoRepository.GetUserInfoByOpenId("", dto.UserId);
+                var temp = new ChatContentListDTO()
+                {
+                    UserId = dto.UserId,
+                    ChatContent = dto.ChatContent,
+                    CreateTime = dto.CreateTime,
+                    CreateTimeDesc = dto.CreateTime.GetDateDesc(),
+                    Gender = user.Gender,
+                    NickName = user.NickName,
+                    HeadshotPathDesc = user.HeadshotPath.ToPathDesc()
+                };
+                rtn.Add(temp);
+            }
+            return rtn.OrderByDescending(a => a.CreateTime).ToList();
         }
     }
 }

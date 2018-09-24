@@ -81,5 +81,37 @@ namespace Chat.Api.Controllers
                 return ErrorJsonResult(ErrCodeEnum.InnerError);
             }
         }
+
+        /// <summary>
+        /// 获取聊天内容列表
+        /// </summary>
+        [HttpPost]
+        public JsonResult GetChatContentList()
+        {
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<CommonRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Content == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var res = _chatService.GetChatContentList(request.Content);
+                var response = new ResponseContext<List<ChatContentListDTO>>(res);
+                return new JsonResult(response);
+            }
+            catch
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError);
+            }
+        }
     }
 }

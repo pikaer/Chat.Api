@@ -1,4 +1,5 @@
 ﻿using Chat.Model.DTO.Chat;
+using Chat.Model.Entity.Chat;
 using Chat.Model.Utils;
 using Dapper;
 using System;
@@ -103,6 +104,22 @@ namespace Chat.Repository
             {
                 var sql = @"DELETE FROM dbo.chat_ChatHistory WHERE (UserId=@UserId and PartnerId=@PartnerId) or (UserId=@PartnerId and PartnerId=@UserId)";
                 return Db.Execute(sql, new {UserId= userId, PartnerId= partnerId }) > 0;
+            }
+        }
+
+        public List<ChatHistory> GetChatHistories(long userId, long partnerId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                var sql = @"SELECT Id
+                                  ,UserId
+                                  ,PartnerId
+                                  ,ChatContent
+                                  ,Type
+                                  ,CreateTime
+                              FROM dbo.chat_ChatHistory
+                              Where (UserId=@UserId and PartnerId=@PartnerId) or (UserId=@PartnerId and PartnerId=@UserId)";
+                return Db.Query<ChatHistory>(sql, new { UserId = userId, PartnerId = partnerId }).AsList();
             }
         }
     }
