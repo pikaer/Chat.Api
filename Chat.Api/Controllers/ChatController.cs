@@ -4,7 +4,6 @@ using Chat.Model.Utils;
 using Chat.Service;
 using Infrastructure.Utility;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 
 namespace Chat.Api.Controllers
