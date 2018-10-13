@@ -1,5 +1,6 @@
 ﻿using Chat.Model.DTO.Chat;
 using Chat.Model.Entity.Chat;
+using Chat.Model.Enum;
 using Chat.Model.Utils;
 using Dapper;
 using System;
@@ -120,6 +121,35 @@ namespace Chat.Repository
                               FROM dbo.chat_ChatHistory
                               Where (UserId=@UserId and PartnerId=@PartnerId) or (UserId=@PartnerId and PartnerId=@UserId)";
                 return Db.Query<ChatHistory>(sql, new { UserId = userId, PartnerId = partnerId }).AsList();
+            }
+        }
+
+        public bool InsertChatContent(ChatMessageDTO dto)
+        {
+            using (var Db = GetDbConnection())
+            {
+                var sql = @"INSERT INTO [dbo].[chat_ChatHistory]
+                                             ([Id]
+                                             ,[UserId]
+                                             ,[PartnerId]
+                                             ,[ChatContent]
+                                             ,[Type]
+                                             ,[CreateTime])
+                                       VALUES
+                                             (@Id
+                                             ,@UserId
+                                             ,@PartnerId
+                                             ,@ChatContent
+                                             ,@Type
+                                             ,@CreateTime";
+                return Db.Execute(sql, new {
+                    dto.UserId,
+                    dto.PartnerId,
+                    dto.ChatContent,
+                    Id = Guid.NewGuid(),
+                    Type = ChatContentEnum.Text,
+                    CreateTime=DateTime.Now
+                })>0;
             }
         }
     }

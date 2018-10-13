@@ -57,6 +57,10 @@ namespace Chat.Service
                 dto.RecentChatTimeDesc = dto.RecentChatTime.HasValue?dto.RecentChatTime.Value.GetDateDesc():"";
                 var count = _chatRepository.GetUnReadCount(userId, dto.UserId);
                 dto.UnreadCount = count > 0 ? count.ToString() : "";
+                if(count>99)
+                {
+                    dto.UnreadCount = "99+";
+                }
             }
             return list.OrderByDescending(a => a.RecentChatTime.Value).ToList();
         }
@@ -78,7 +82,7 @@ namespace Chat.Service
             var list = _chatRepository.GetChatHistories(request.UserId, request.PartnerId);
             foreach (var dto in list)
             {
-                var user = _userInfoRepository.GetUserInfoByOpenId("", dto.UserId);
+                var user = _userInfoRepository.GetUserInfoByOpenIdOrUserId("", dto.UserId);
                 var temp = new ChatContentListDTO()
                 {
                     UserId = dto.UserId,
@@ -92,6 +96,14 @@ namespace Chat.Service
                 rtn.Add(temp);
             }
             return rtn.OrderByDescending(a => a.CreateTime).ToList();
+        }
+
+        /// <summary>
+        /// 发布消息
+        /// </summary>
+        public bool PublishMessage(ChatMessageDTO request)
+        {
+            return _chatRepository.InsertChatContent(request);
         }
     }
 }

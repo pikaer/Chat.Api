@@ -16,7 +16,7 @@ namespace Chat.Service
         private UserInfoRepository _userInfoRepository = new UserInfoRepository();
         public UserInfo SetUserInfo(WXUserInfoRequest req)
         {
-            var userInfo = _userInfoRepository.GetUserInfoByOpenId(req.openId);
+            var userInfo = _userInfoRepository.GetUserInfoByOpenIdOrUserId(req.openId);
             if (userInfo == null)
             {
                 var dto = new UserInfo()
@@ -41,7 +41,7 @@ namespace Chat.Service
                 var ret = _userInfoRepository.SetUserInfo(dto);
                 if (ret)
                 {
-                    userInfo = _userInfoRepository.GetUserInfoByOpenId(req.openId);
+                    userInfo = _userInfoRepository.GetUserInfoByOpenIdOrUserId(req.openId);
                 }
             }
             return userInfo;

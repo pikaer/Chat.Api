@@ -3,6 +3,7 @@ using Chat.Repository;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Chat.Api.Hubs
@@ -31,7 +32,7 @@ namespace Chat.Api.Hubs
         public override async Task OnConnectedAsync()
         {
             long userId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UserId"]);
-            var user = _userInfoRepository.GetUserInfoByOpenId("", userId);
+            var user = _userInfoRepository.GetUserInfoByOpenIdOrUserId("", userId);
             if(user!=null)
             {
                 lock (SyncObj)
@@ -55,6 +56,30 @@ namespace Chat.Api.Hubs
             {
                 OnlineClients.TryRemove(Context.ConnectionId, out UserInfo user);
             }
+        }
+
+        /// <summary>
+        /// 订阅消息
+        /// </summary>
+        public async Task SubScribeMessage(long partnerId,string msg)
+        {
+            var userId = OnlineClients.Where(x => x.Key == Context.ConnectionId).FirstOrDefault().Value.UserId;
+            //var partnerId = Convert.ToInt64(msg);
+            if(partnerId>0)
+            {
+                var userInfo = OnlineClients.Where(x => x.Value.UserId == partnerId).FirstOrDefault().Value;
+                if(userInfo!=null&& userInfo.UserId>0)  //表示对方没有关闭对话窗口
+                {
+                    var connectId = OnlineClients.Where(a => a.Value.UserId == partnerId).FirstOrDefault().Key;
+                    await Clients.Client(connectId).SendAsync("receiveMessage", userId.ToString(), msg);
+                }
+                else //对方关闭了对话窗口
+                {
+
+                }
+            }
+            
+
         }
     }
 }

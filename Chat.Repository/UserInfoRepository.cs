@@ -96,7 +96,7 @@ namespace Chat.Repository
         /// </summary>
         /// <param name="openId"></param>
         /// <returns></returns>
-        public UserInfo GetUserInfoByOpenId(string openId="" , long userId=0)
+        public UserInfo GetUserInfoByOpenIdOrUserId(string openId="" , long userId=0)
         {
             using (var Db = GetDbConnection())
             {
