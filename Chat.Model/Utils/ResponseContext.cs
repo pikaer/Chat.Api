@@ -12,7 +12,7 @@ namespace Chat.Model.Utils
         /// <summary>
         /// 响应体
         /// </summary>
-        public T Content { get; set; }
+        public T Data { get; set; }
 
         /// <summary>
         /// 构造函数
@@ -20,7 +20,7 @@ namespace Chat.Model.Utils
         public ResponseContext(T content)
         {
             Head = new ResponseHead();
-            Content = content;
+            Data = content;
         }
         
     }
@@ -33,7 +33,7 @@ namespace Chat.Model.Utils
         public ResponseHead()
         {
             Success = true;
-            Code = ErrCodeEnum.Sucess;
+            Code = ErrCodeEnum.Success;
             Msg = "调用接口成功";
         }
 

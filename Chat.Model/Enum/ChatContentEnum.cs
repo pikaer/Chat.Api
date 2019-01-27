@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace Chat.Model.Enum
 {
@@ -20,7 +17,7 @@ namespace Chat.Model.Enum
         Expression = 1,
 
         /// <summary>
-        ///视频
+        ///图片
         /// </summary>
         [Description("图片")]
         Picture = 2

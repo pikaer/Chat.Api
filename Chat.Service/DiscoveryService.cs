@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Infrastructure.Utility;
 
 namespace Chat.Service
 {
     public class DiscoveryService
     {
+        public static DiscoveryService Instance = SingletonProvider<DiscoveryService>.Instance;
     }
 }

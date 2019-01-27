@@ -40,6 +40,18 @@ namespace Chat.Api.Controllers
             };
             return new JsonResult(errResponse);
         }
-        
+
+        /// <summary>
+        /// 获取成功的返回
+        /// </summary>
+        protected JsonResult SuccessJsonResult(object obj)
+        {
+            var response = new ResponseContext<object>(null)
+            {
+                Head = new ResponseHead(true, ErrCodeEnum.Success, ErrCodeEnum.Success.ToDescription()),
+                Content= obj
+            };
+            return new JsonResult(response);
+        }
     }
 }

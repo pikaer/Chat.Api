@@ -83,9 +83,9 @@ namespace Infrastructure.Utility
         /// <summary>
         /// 确定配置文件路径
         /// </summary>
-        private static void ConfigFinder(string Path)
+        private static void ConfigFinder(string path)
         {
-            _configPath = Path;
+            _configPath = path;
             JObject config_json = new JObject();
             while (config_json != null)
             {

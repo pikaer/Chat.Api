@@ -2,10 +2,13 @@
 
 namespace Chat.Model.Enum
 {
+    /// <summary>
+    /// 错误码
+    /// </summary>
     public enum ErrCodeEnum
     {
         [Description("接口调用成功")]
-        Sucess = 10000,
+        Success = 10000,
 
         [Description("接口调用失败")]
         Failure = 9000,

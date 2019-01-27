@@ -7,10 +7,10 @@ namespace Chat.Model.Enum
         [Description("未知")]
         Default = 0,
 
-        [Description("男")]
+        [Description("小哥哥")]
         Man = 1,
 
-        [Description("女")]
+        [Description("小姐姐")]
         Woman = 2
     }
 }

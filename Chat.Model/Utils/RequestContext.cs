@@ -32,7 +32,7 @@
         public string Token { get; set; }
 
         /// <summary>
-        /// App类型 默认为0: 微信小程序 1:Web端
+        /// App类型 默认为 0: 微信小程序 2:Android 3:IOS
         /// </summary>
         public int AppType { get; set; }
     }
