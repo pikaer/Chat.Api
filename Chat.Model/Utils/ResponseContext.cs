@@ -22,7 +22,12 @@ namespace Chat.Model.Utils
             Head = new ResponseHead();
             Data = content;
         }
-        
+
+        public ResponseContext()
+        {
+            Head = new ResponseHead();
+            Data = default(T);
+        }
     }
 
     public class ResponseHead

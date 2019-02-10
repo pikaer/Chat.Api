@@ -7,7 +7,7 @@ namespace Infrastructure.Utility
         /// <summary>
         /// 时间转义
         /// </summary>
-        /// <param name="datetime">时间：2018-9-4：6：30：30.000</param>
+        /// <param name="datetime">时间：2018-09-04 0630：30.000</param>
         /// <returns></returns>
         public static string GetDateDesc(this DateTime datetime)
         {

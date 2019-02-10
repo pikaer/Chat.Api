@@ -75,7 +75,7 @@ namespace Infrastructure.Redis
         /// <param name="dbNo">库号</param>
         /// <param name="pattern">模式。例："UserToken:*"</param>
         /// <returns></returns>
-        public static List<string> scanKeys(int dbNo, string pattern)
+        public static List<string> ScanKeys(int dbNo, string pattern)
         {
             var keys = new List<string>();
             foreach (var ep in _redis.GetEndPoints())
@@ -93,10 +93,10 @@ namespace Infrastructure.Redis
         /// <param name="dbNo">库号</param>
         /// <param name="pattern">模式。例："UserToken:*"</param>
         /// <returns></returns>
-        public static List<string> scanKeys(string pattern)
+        public static List<string> ScanKeys(string pattern)
         {
             var dbNo = _redis.GetDatabase().Database;
-            return scanKeys(dbNo, pattern);
+            return ScanKeys(dbNo, pattern);
         }
 
         #endregion

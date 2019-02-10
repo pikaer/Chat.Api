@@ -34,7 +34,7 @@ namespace Chat.Api.Controllers
         /// </summary>
         protected JsonResult ErrorJsonResult(ErrCodeEnum code)
         {
-            var errResponse = new ResponseContext<object>(null)
+            var errResponse = new ResponseContext<object>()
             {
                 Head = new ResponseHead(false, code, code.ToDescription())
             };
@@ -46,10 +46,10 @@ namespace Chat.Api.Controllers
         /// </summary>
         protected JsonResult SuccessJsonResult(object obj)
         {
-            var response = new ResponseContext<object>(null)
+            var response = new ResponseContext<object>()
             {
                 Head = new ResponseHead(true, ErrCodeEnum.Success, ErrCodeEnum.Success.ToDescription()),
-                Content= obj
+                Data = obj
             };
             return new JsonResult(response);
         }

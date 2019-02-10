@@ -19,6 +19,7 @@ namespace Infrastructure.Utility
             }
             return listitem;
         }
+
         /// <summary>
         /// 获取枚举描述值
         /// </summary>
