@@ -10,8 +10,6 @@ namespace Chat.Api.Controllers
     [ApiController]
     public class ChatController : BaseController
     {
-        private ChatService _chatService = new ChatService();
 
-        
     }
 }

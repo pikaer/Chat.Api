@@ -9,7 +9,6 @@ namespace Chat.Api.Controllers
     [Route("api/[controller]/[action]")]
     public class UserInfoController : BaseController
     {
-        private UserInfoService _userInfoService = new UserInfoService();
 
     }
 }
