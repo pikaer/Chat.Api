@@ -1,4 +1,6 @@
-﻿namespace Chat.Model.Utils
+﻿using System;
+
+namespace Chat.Model.Utils
 {
     public class RequestContext<T>
     {
@@ -32,9 +34,19 @@
         public string Token { get; set; }
 
         /// <summary>
-        /// App类型 默认为 0: 微信小程序 2:Android 3:IOS
+        /// 用户Id
         /// </summary>
-        public int AppType { get; set; }
+        public int UId { get; set; }
+
+        /// <summary>
+        /// 平台（小程序miniApp，android,ios,浏览器browser,h5)
+        /// </summary>
+        public string Platform { get; set; }
+
+        /// <summary>
+        /// 事务号
+        /// </summary>
+        public Guid TransactionID { get; set; }
     }
 
 }

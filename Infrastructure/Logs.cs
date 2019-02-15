@@ -6,10 +6,16 @@ using Dapper;
 
 namespace Infrastructure
 {
-    public static class Log
+    public static class Logs
     {
-        public static void WriteLog(LogLevelEnum logLevel, Guid tid, int uid,string platform,string title,string content,Dictionary<string,string> keyValuePairs)
+        public static void WriteLog(LogLevelEnum logLevel, Guid tid, int uid,string platform,string title,string content,Dictionary<string,string> keyValuePairs=null)
         {
+            //日志开关
+            if (!Convert.ToBoolean(ConfigHelper.AppSettings("LogIsOpen")))
+            {
+                return;
+            }
+            
             var logEntity = new LogEntity()
             {
                 LogId = Guid.NewGuid(),
@@ -18,7 +24,8 @@ namespace Infrastructure
                 UId = uid,
                 Platform = platform,
                 LogTitle = title,
-                LogContent = content
+                LogContent = content,
+                CreateTime = DateTime.Now
             };
             InsertLogs(logEntity);
 
@@ -31,15 +38,14 @@ namespace Infrastructure
                         TagId = Guid.NewGuid(),
                         LogId = logEntity.LogId,
                         Key = item.Key,
-                        Value = item.Value
+                        Value = item.Value,
+                        CreateTime=DateTime.Now
                     };
                     InsertTags(tagEntity);
                 }
             }
         }
-
-
-
+        
         private static void InsertLogs(LogEntity entity)
         {
             using (var Db = GetDbConnection())
@@ -53,7 +59,8 @@ namespace Infrastructure
                                                  ,UId
                                                  ,Platform
                                                  ,LogTitle
-                                                 ,LogContent)
+                                                 ,LogContent
+                                                 ,CreateTime)
                                            VALUES
                                                  (@LogId
                                                  ,@LogLevel
@@ -61,7 +68,8 @@ namespace Infrastructure
                                                  ,@UId
                                                  ,@Platform
                                                  ,@LogTitle
-                                                 ,@LogContent)";
+                                                 ,@LogContent
+                                                 ,@CreateTime)";
                     Db.Execute(sql, entity);
                 }
                 catch
@@ -81,12 +89,14 @@ namespace Infrastructure
                                                  (TagId
                                                  ,LogId
                                                  ,Key
-                                                 ,Value)
+                                                 ,Value
+                                                 ,CreateTime)
                                            VALUES
                                                  (@TagId
                                                  ,@LogId
                                                  ,@Key
-                                                 ,@Value)";
+                                                 ,@Value
+                                                 ,CreateTime)";
                     Db.Execute(sql);
                 }
                 catch
@@ -143,6 +153,11 @@ namespace Infrastructure
         /// 日志内容
         /// </summary>
         public string LogContent { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 
     /// <summary>
@@ -169,6 +184,11 @@ namespace Infrastructure
         /// 值
         /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 
     /// <summary>
