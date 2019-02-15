@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Utility
+﻿namespace Infrastructure
 {
     /// <summary>
     /// 单例模式

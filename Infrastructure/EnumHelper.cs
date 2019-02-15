@@ -1,25 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
-namespace Infrastructure.Utility
+namespace Infrastructure
 {
-    /// <summary>
-    ///     枚举扩展方法类
-    /// </summary>
-    public static class EnumExtensions
+    public static class EnumHelper
     {
-        public static Dictionary<int, string> ToDictionary(Type enumType)
-        {
-            Dictionary<int, string> listitem = new Dictionary<int, string>();
-            Array vals = Enum.GetValues(enumType);
-            foreach (Enum enu in vals)
-            {
-                listitem.Add(Convert.ToInt32(enu), enu.ToDescription());
-            }
-            return listitem;
-        }
-
         /// <summary>
         /// 获取枚举描述值
         /// </summary>

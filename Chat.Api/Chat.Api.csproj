@@ -34,7 +34,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Chat.Model\Chat.Model.csproj" />
     <ProjectReference Include="..\Chat.Service\Chat.Service.csproj" />
-    <ProjectReference Include="..\Chat.Utility\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

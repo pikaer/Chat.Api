@@ -1,5 +1,5 @@
 ﻿using Chat.Repository;
-using Infrastructure.Utility;
+using Infrastructure;
 
 namespace Chat.Service
 {

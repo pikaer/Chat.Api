@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Mail
+namespace Infrastructure
 {
-    public class Mail
+    public static class Mail
     {
-        private const string MOUDLE_NAME = "Infrastructure.Mail";
-        private static string From { get { return ConfigManager.AppSettings["From"]; } }
-        private static string DisplayName { get { return ConfigManager.AppSettings["DisplayName"]; } }
-        private static string Username { get { return ConfigManager.AppSettings["Username"]; } }
-        private static string Password { get { return ConfigManager.AppSettings["Password"]; } }
-        private static string Smtp { get { return ConfigManager.AppSettings["Smtp"]; } }
-        private static string Port { get { return ConfigManager.AppSettings["Port"]; } }
+        private static string From { get { return ConfigHelper.AppSettings("From"); } }
+        private static string DisplayName { get { return ConfigHelper.AppSettings("DisplayName"); } }
+        private static string Username { get { return ConfigHelper.AppSettings("Username"); } }
+        private static string Password { get { return ConfigHelper.AppSettings("Password"); } }
+        private static string Smtp { get { return ConfigHelper.AppSettings("Smtp"); } }
+        private static string Port { get { return ConfigHelper.AppSettings("Port"); } }
 
         //SmtpClient列表，按Smtp+Port存储单例
         private static ConcurrentDictionary<string, SmtpClient> _smtpClients = new ConcurrentDictionary<string, SmtpClient>();
@@ -99,4 +100,5 @@ namespace Infrastructure.Mail
             return smtpClient;
         }
     }
+    
 }

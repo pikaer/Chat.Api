@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Infrastructure.Utility
+namespace Infrastructure
 {
-    public static class ObjectExtensions
+    public static class ObjectHelper
     {
         /// <summary>
         /// 把对象类型转化为指定类型，转化失败时返回该类型默认值

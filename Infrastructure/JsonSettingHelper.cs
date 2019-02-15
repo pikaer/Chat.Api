@@ -5,12 +5,12 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Text;
 
-namespace Infrastructure.Utility
+namespace Infrastructure
 {
     /// <summary>
     /// 读取Json配置文件
     /// </summary>
-    public class ConfigurationHelper
+    public class JsonSettingHelper
     {
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Infrastructure.Utility
             set { c_defaultPath = value; }
         }
 
-        static ConfigurationHelper()
+        static JsonSettingHelper()
         {
             ConfigFinder(_defaultPath);
         }
@@ -192,7 +192,7 @@ namespace Infrastructure.Utility
             }
         }
 
-       
+
         public static NameValueCollection AppSettings { get; private set; } = new NameValueCollection();
 
         /// <summary>

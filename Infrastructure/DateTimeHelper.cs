@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Infrastructure.Utility
+namespace Infrastructure
 {
-    public static class DateTimeExtensions
+    public static class DateTimeHelper
     {
         /// <summary>
         /// 时间转义
@@ -12,7 +14,7 @@ namespace Infrastructure.Utility
         public static string GetDateDesc(this DateTime datetime)
         {
             var rtn = "";
-            
+
             var now = DateTime.Now;
             var today = DateTime.Now.Date;  //2018-9-4 0:00:00 今天凌晨
             var yestoday = DateTime.Now.AddDays(-1).Date;  //2018-9-3 0:00:00  昨天凌晨

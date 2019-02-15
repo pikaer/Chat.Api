@@ -1,4 +1,4 @@
-﻿using Infrastructure.Utility;
+﻿using Infrastructure;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,7 +11,7 @@ namespace Chat.Repository
         {
             var dbEnum = GetDbEnum();
             var dbName = Enum.GetName(dbEnum.GetType(), dbEnum);
-            var connString = ConfigurationHelper.AppSettings[dbName];
+            var connString = JsonSettingHelper.AppSettings[dbName];
             return new SqlConnection(connString);
         }
 

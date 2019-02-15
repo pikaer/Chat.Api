@@ -1,4 +1,4 @@
-﻿using Infrastructure.Utility;
+﻿using Infrastructure;
 
 namespace Chat.Repository
 {

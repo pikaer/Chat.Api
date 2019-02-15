@@ -4,15 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace Infrastructure.Utility
+namespace Infrastructure
 {
-    public class ConfigHelper
+    public static class ConfigHelper
     {
+        private readonly static string filePath = "Infrastructure.config";
 
         /// <summary>
         /// 加载配置
         /// </summary>
-        public NameValueCollection Config(string filePath)
+        public static string AppSettings(string key)
         {
             var rtn = new NameValueCollection();
             try
@@ -33,21 +34,21 @@ namespace Infrastructure.Utility
                 for (int i = 0; i < childNodes.Count; i++)
                 {
                     var node = childNodes[i];
-                    if(node.Name.Equals("appSettings"))
+                    if (node.Name.Equals("appSettings"))
                     {
                         var nodes = node.ChildNodes;
                         for (int j = 0; j < nodes.Count; j++)
                         {
                             var child = (XmlElement)nodes[j];
-                            var key = child.GetAttribute("key").ToString();
+                            var keys = child.GetAttribute("key").ToString();
                             var value = child.GetAttribute("value").ToString();
-                            if (rtn.AllKeys.Contains(key))
+                            if (rtn.AllKeys.Contains(keys))
                             {
-                                rtn[key] = value;
+                                rtn[keys] = value;
                             }
                             else
                             {
-                                rtn.Add(key, value);
+                                rtn.Add(keys, value);
                             }
                         }
                     }
@@ -58,16 +59,17 @@ namespace Infrastructure.Utility
             {
                 throw ex;
             }
-            return rtn;
+
+            return rtn[key];
         }
 
-       
+
         /// <summary>
         /// 从程序根目录复制
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        private void CopyConfigFile(string targetFile, string filePath)
+        private static void CopyConfigFile(string targetFile, string filePath)
         {
             var idx1 = targetFile.IndexOf(@"\bin\");
             if (idx1 <= 0) return;
