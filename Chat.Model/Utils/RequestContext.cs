@@ -28,6 +28,10 @@ namespace Chat.Model.Utils
 
     public class RequestHead
     {
+        public RequestHead()
+        {
+            TransactionId = Guid.NewGuid();
+        }
         /// <summary>
         /// Token信息
         /// </summary>
@@ -46,7 +50,7 @@ namespace Chat.Model.Utils
         /// <summary>
         /// 事务号
         /// </summary>
-        public Guid TransactionID { get; set; }
+        public Guid TransactionId { get; set; }
     }
 
 }

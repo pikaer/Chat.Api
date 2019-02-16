@@ -92,7 +92,7 @@ namespace Chat.Utility
                 }
                 if (head != null)
                 {
-                    tid = head.TransactionID;
+                    tid = head.TransactionId;
                     uid = head.UId;
                     platform = head.Platform;
                 }
