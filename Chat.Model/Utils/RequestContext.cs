@@ -40,7 +40,7 @@ namespace Chat.Model.Utils
         /// <summary>
         /// 用户Id
         /// </summary>
-        public int UId { get; set; }
+        public long UId { get; set; }
 
         /// <summary>
         /// 平台（小程序miniApp，android,ios,浏览器browser,h5)

@@ -7,7 +7,7 @@ namespace Chat.Model.Enum
     /// </summary>
     public enum LiveStateEnum
     {
-        [Description("未设置")]
+        [Description("未设置/默认/都可以")]
         Default = 0,
 
         [Description("学生党")]

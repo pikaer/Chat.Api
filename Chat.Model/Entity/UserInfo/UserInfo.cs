@@ -11,7 +11,7 @@ namespace Chat.Model.Entity.UserInfo
         /// <summary>
         /// 用户唯一标示，自增
         /// </summary>
-        public long UserId { get; set; }
+        public long UId { get; set; }
 
         /// <summary>
         /// 小程序端-用户唯一标示
@@ -29,39 +29,49 @@ namespace Chat.Model.Entity.UserInfo
         public string NickName { get; set; }
 
         /// <summary>
-        /// 生日
+        /// 生日（2018-08-20）
         /// </summary>
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
         /// <summary>
         /// 用户所在省份
         /// </summary>
-        public int? ProvinceId { get; set; }
+        public string Province { get; set; }
 
         /// <summary>
         /// 用户所在城市
         /// </summary>
-        public int? CityId { get; set; }
+        public string City { get; set; }
         
+        /// <summary>
+        /// 用户所在区
+        /// </summary>
+        public string Area { get; set; }
+
         /// <summary>
         /// 用户家乡所在省份
         /// </summary>
-        public int? HomeProvinceId { get; set; }
+        public string HomeProvince { get; set; }
 
         /// <summary>
         /// 用户家乡所在城市
         /// </summary>
-        public int? HomeCityId { get; set; }
-        
+        public string HomeCity { get; set; }
+
+        /// <summary>
+        /// 用户家乡所在区
+        /// </summary>
+        public string HomeArea { get; set; }
+
         /// <summary>
         /// 学校名称
         /// </summary>
         public string SchoolName { get; set; }
 
         /// <summary>
-        /// 入学日期
+        /// 入学日期（2017-09）
         /// </summary>
-        public DateTime EntranceDate { get; set; }
+        public string EntranceDate { get; set; }
 
         /// <summary>
         /// 学校类型

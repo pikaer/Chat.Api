@@ -4,7 +4,7 @@ namespace Chat.Model.Enum
 {
     public enum GenderEnum
     {
-        [Description("未知")]
+        [Description("未知/默认/都可以")]
         Default = 0,
 
         [Description("小哥哥")]

@@ -48,7 +48,7 @@ namespace Chat.Api.Controllers
            
             return new JsonResult(errResponse);
         }
-
+        
         /// <summary>
         /// 获取成功的返回
         /// </summary>

@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Model", "Chat.Model\Ch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Service", "Chat.Service\Chat.Service.csproj", "{FF0D559E-E17D-4AFD-BAF1-13FAA940EDCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{82F6EF34-3EF1-465D-AEB5-6265F2F303F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{82F6EF34-3EF1-465D-AEB5-6265F2F303F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Utility", "Chat.Utility\Chat.Utility.csproj", "{0B272C28-7478-417D-9CFF-A6B8E383927C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Utility", "Chat.Utility\Chat.Utility.csproj", "{0B272C28-7478-417D-9CFF-A6B8E383927C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Interface", "Chat.Interface\Chat.Interface.csproj", "{CCEDB307-FA2A-46B9-A785-6B5E4E18A378}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{0B272C28-7478-417D-9CFF-A6B8E383927C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B272C28-7478-417D-9CFF-A6B8E383927C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B272C28-7478-417D-9CFF-A6B8E383927C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCEDB307-FA2A-46B9-A785-6B5E4E18A378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCEDB307-FA2A-46B9-A785-6B5E4E18A378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCEDB307-FA2A-46B9-A785-6B5E4E18A378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCEDB307-FA2A-46B9-A785-6B5E4E18A378}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

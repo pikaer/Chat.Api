@@ -63,14 +63,14 @@ namespace Chat.Api.Hubs
         /// </summary>
         public async Task SubScribeMessage(long partnerId,string msg)
         {
-            var userId = OnlineClients.Where(x => x.Key == Context.ConnectionId).FirstOrDefault().Value.UserId;
+            var userId = OnlineClients.Where(x => x.Key == Context.ConnectionId).FirstOrDefault().Value.UId;
             //var partnerId = Convert.ToInt64(msg);
             if(partnerId>0)
             {
-                var userInfo = OnlineClients.Where(x => x.Value.UserId == partnerId).FirstOrDefault().Value;
-                if(userInfo!=null&& userInfo.UserId>0)  //表示对方没有关闭对话窗口
+                var userInfo = OnlineClients.Where(x => x.Value.UId == partnerId).FirstOrDefault().Value;
+                if(userInfo!=null&& userInfo.UId>0)  //表示对方没有关闭对话窗口
                 {
-                    var connectId = OnlineClients.Where(a => a.Value.UserId == partnerId).FirstOrDefault().Key;
+                    var connectId = OnlineClients.Where(a => a.Value.UId == partnerId).FirstOrDefault().Key;
                     await Clients.Client(connectId).SendAsync("receiveMessage", userId.ToString(), msg);
                 }
                 else //对方关闭了对话窗口
