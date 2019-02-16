@@ -54,5 +54,8 @@ namespace Chat.Model.Enum
 
         [Description("请求体不合法")]
         InvalidRequestBody = 10009,
+
+        [Description("请求头不合法")]
+        InvalidRequestHead = 10009,
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Chat.Model.Enum;
 using Chat.Model.Utils;
+using Chat.Utility;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -29,15 +30,22 @@ namespace Chat.Api.Controllers
             return json;
         }
 
+        
         /// <summary>
         /// 获取错误的返回
         /// </summary>
-        protected JsonResult ErrorJsonResult(ErrCodeEnum code)
+        protected JsonResult ErrorJsonResult(ErrCodeEnum code,string title=null,Exception ex=null)
         {
             var errResponse = new ResponseContext<object>()
             {
                 Head = new ResponseHead(false, code, code.ToDescription())
             };
+
+            if(string.IsNullOrEmpty(title)|| ex != null)
+            {
+                Log.Error(title, code.ToDescription(), ex);
+            }
+           
             return new JsonResult(errResponse);
         }
 
