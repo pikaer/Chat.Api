@@ -4,7 +4,7 @@ namespace Chat.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class DiscoveryController : ControllerBase
+    public class DiscoveryController : BaseController
     {
     }
 }

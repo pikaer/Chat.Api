@@ -69,6 +69,10 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
                 }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
                 if (request.Content == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
@@ -134,6 +138,10 @@ namespace Chat.Api.Controllers
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
                 }
                 if (request.Content == null)
                 {

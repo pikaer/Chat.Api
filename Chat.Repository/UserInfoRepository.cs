@@ -1,6 +1,8 @@
-﻿using Chat.Model.Utils;
+﻿using Chat.Model.Entity.UserInfo;
+using Chat.Model.Utils;
 using Chat.Utility;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using Infrastructure;
 using System;
 
@@ -8,8 +10,6 @@ namespace Chat.Repository
 {
     public class UserInfoRepository: BaseRepository
     {
-        public static UserInfoRepository Instance = SingletonProvider<UserInfoRepository>.Instance;
-
         protected override DbEnum GetDbEnum()
         {
             return DbEnum.ChatConnect;
@@ -19,14 +19,14 @@ namespace Chat.Repository
 
         private readonly string SELECT_USERPREFERENCE = "SELECT PreferId,UId ,PreferGender,PreferPlace,PreferHome,PreferAge,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime FROM dbo.user_UserPreference";
 
-        public GetUserInfoResponse GetUserInfo(long uid)
+        public UserInfo GetUserInfo(long uid)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
                     var sql = string.Format("{0} Where UId={1}", SELECT_USERINFO, uid);
-                    return Db.QueryFirst<GetUserInfoResponse>(sql);
+                    return Db.QueryFirst<UserInfo>(sql);
                 }
                 catch(Exception ex)
                 {
@@ -35,6 +35,36 @@ namespace Chat.Repository
                 }
             }
         }
+        public bool InsertUserInfo(UserInfo req)
+        {
+            using (var Db = GetDbConnection())
+            {
+                return Db.Insert(req) > 0;
+            }
+        }
+        public UserPreference GetUserPreference(long uid)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = string.Format("{0} Where UId={1}", SELECT_USERPREFERENCE, uid);
+                    return Db.QueryFirst<UserPreference>(sql);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetUserInfo", "获取用户偏好设置信息异常，Uid=" + uid, ex);
+                    return null;
+                }
+            }
+        }
 
+        public bool InsertUserPreference(UserPreference req)
+        {
+            using (var Db = GetDbConnection())
+            {
+                return Db.Insert(req) > 0;
+            }
+        }
     }
 }

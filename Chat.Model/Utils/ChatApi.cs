@@ -112,6 +112,11 @@
         public long UId { get; set; }
 
         /// <summary>
+        /// 小程序端-用户唯一标示
+        /// </summary>
+        public string OpenId { get; set; }
+
+        /// <summary>
         /// 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
         /// </summary>
         public int Gender { get; set; }
@@ -185,12 +190,7 @@
         /// 微信号
         /// </summary>
         public string WeChatNo { get; set; }
-
-        /// <summary>
-        /// 头像路径
-        /// </summary>
-        public string HeadPhotoPath { get; set; }
-
+        
         /// <summary>
         /// 个性签名
         /// </summary>
@@ -218,89 +218,34 @@
     public class GetUserPreferenceResponse
     {
         /// <summary>
-        /// 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+        /// 用户性别偏好
         /// </summary>
-        public int Gender { get; set; }
+        public int PreferGender { get; set; }
 
         /// <summary>
-        /// 用户昵称
+        /// 用户希望对方所在地偏好
         /// </summary>
-        public string NickName { get; set; }
+        public int PreferPlace { get; set; }
 
         /// <summary>
-        /// 生日（2018-08-20）
+        /// 用户希望对方家乡偏好
         /// </summary>
-        public string BirthDate { get; set; }
+        public int PreferHome { get; set; }
 
         /// <summary>
-        /// 用户所在省份
+        /// 用户希望对方年龄偏好
         /// </summary>
-        public string Province { get; set; }
+        public int PreferAge { get; set; }
 
         /// <summary>
-        /// 用户所在城市
+        /// 用户希望对方学校类型偏好
         /// </summary>
-        public string City { get; set; }
+        public int PreferSchoolType { get; set; }
 
         /// <summary>
-        /// 用户所在区
+        /// 用户希望对方状态偏好
         /// </summary>
-        public string Area { get; set; }
-
-        /// <summary>
-        /// 用户家乡所在省份
-        /// </summary>
-        public string HomeProvince { get; set; }
-
-        /// <summary>
-        /// 用户家乡所在城市
-        /// </summary>
-        public string HomeCity { get; set; }
-
-        /// <summary>
-        /// 用户家乡所在区
-        /// </summary>
-        public string HomeArea { get; set; }
-
-        /// <summary>
-        /// 学校名称
-        /// </summary>
-        public string SchoolName { get; set; }
-
-        /// <summary>
-        /// 入学日期（2017-09）
-        /// </summary>
-        public string EntranceDate { get; set; }
-
-        /// <summary>
-        /// 学校类型（详情见SchoolTypeEnum）
-        /// </summary>
-        public int SchoolType { get; set; }
-
-        /// <summary>
-        /// 状态(详情见LiveStateEnum）
-        /// </summary>
-        public int LiveState { get; set; }
-
-        /// <summary>
-        /// 手机号
-        /// </summary>
-        public string Mobile { get; set; }
-
-        /// <summary>
-        /// 微信号
-        /// </summary>
-        public string WeChatNo { get; set; }
-
-        /// <summary>
-        /// 头像路径
-        /// </summary>
-        public string HeadPhotoPath { get; set; }
-
-        /// <summary>
-        /// 个性签名
-        /// </summary>
-        public string Signature { get; set; }
+        public int PreferLiveState { get; set; }
     }
     #endregion
 
@@ -313,89 +258,34 @@
         public long UId { get; set; }
 
         /// <summary>
-        /// 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+        /// 用户性别偏好
         /// </summary>
-        public int Gender { get; set; }
+        public int PreferGender { get; set; }
 
         /// <summary>
-        /// 用户昵称
+        /// 用户希望对方所在地偏好
         /// </summary>
-        public string NickName { get; set; }
+        public int PreferPlace { get; set; }
 
         /// <summary>
-        /// 生日（2018-08-20）
+        /// 用户希望对方家乡偏好
         /// </summary>
-        public string BirthDate { get; set; }
+        public int PreferHome { get; set; }
 
         /// <summary>
-        /// 用户所在省份
+        /// 用户希望对方年龄偏好
         /// </summary>
-        public string Province { get; set; }
+        public int PreferAge { get; set; }
 
         /// <summary>
-        /// 用户所在城市
+        /// 用户希望对方学校类型偏好
         /// </summary>
-        public string City { get; set; }
+        public int PreferSchoolType { get; set; }
 
         /// <summary>
-        /// 用户所在区
+        /// 用户希望对方状态偏好
         /// </summary>
-        public string Area { get; set; }
-
-        /// <summary>
-        /// 用户家乡所在省份
-        /// </summary>
-        public string HomeProvince { get; set; }
-
-        /// <summary>
-        /// 用户家乡所在城市
-        /// </summary>
-        public string HomeCity { get; set; }
-
-        /// <summary>
-        /// 用户家乡所在区
-        /// </summary>
-        public string HomeArea { get; set; }
-
-        /// <summary>
-        /// 学校名称
-        /// </summary>
-        public string SchoolName { get; set; }
-
-        /// <summary>
-        /// 入学日期（2017-09）
-        /// </summary>
-        public string EntranceDate { get; set; }
-
-        /// <summary>
-        /// 学校类型（详情见SchoolTypeEnum）
-        /// </summary>
-        public int SchoolType { get; set; }
-
-        /// <summary>
-        /// 状态(详情见LiveStateEnum）
-        /// </summary>
-        public int LiveState { get; set; }
-
-        /// <summary>
-        /// 手机号
-        /// </summary>
-        public string Mobile { get; set; }
-
-        /// <summary>
-        /// 微信号
-        /// </summary>
-        public string WeChatNo { get; set; }
-
-        /// <summary>
-        /// 头像路径
-        /// </summary>
-        public string HeadPhotoPath { get; set; }
-
-        /// <summary>
-        /// 个性签名
-        /// </summary>
-        public string Signature { get; set; }
+        public int PreferLiveState { get; set; }
     }
 
     public class SetUserPreferenceResponse
