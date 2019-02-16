@@ -43,7 +43,7 @@ namespace Chat.Api.Controllers
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
                 var response = api.GetUserInfo(request);
-                return SuccessJsonResult(response);
+                return new JsonResult(response);
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace Chat.Api.Controllers
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
                 var response = api.SetUserInfo(request);
-                return SuccessJsonResult(response);
+                return new JsonResult(response);
             }
             catch(Exception ex)
             {
@@ -113,7 +113,7 @@ namespace Chat.Api.Controllers
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
                 var response = api.GetUserPreference(request);
-                return SuccessJsonResult(response);
+                return new JsonResult(response);
             }
             catch (Exception ex)
             {
@@ -148,7 +148,7 @@ namespace Chat.Api.Controllers
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
                 var response = api.SetUserPreference(request);
-                return SuccessJsonResult(response);
+                return new JsonResult(response);
             }
             catch (Exception ex)
             {

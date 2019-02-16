@@ -1,4 +1,5 @@
 ﻿using Chat.Model.Enum;
+using Infrastructure;
 
 namespace Chat.Model.Utils
 {
@@ -40,6 +41,13 @@ namespace Chat.Model.Utils
             Success = true;
             Code = ErrCodeEnum.Success;
             Msg = "调用接口成功";
+        }
+
+        public ResponseHead(bool success, ErrCodeEnum code)
+        {
+            Success = success;
+            Code = code;
+            Msg = code.ToDescription();
         }
 
         public ResponseHead(bool success, ErrCodeEnum code, string msg)
