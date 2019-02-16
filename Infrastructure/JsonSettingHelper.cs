@@ -48,6 +48,27 @@ namespace Infrastructure
         /// </summary>
         private static string _configUrlSection { get { return _configSection + "." + _configUrlPostfix; } }
 
+
+        public static NameValueCollection AppSettings { get; private set; } = new NameValueCollection();
+
+        /// <summary>
+        /// 手动刷新配置，修改配置后，请手动调用此方法，以便更新配置参数
+        /// </summary>
+        public static void RefreshConfiguration()
+        {
+            lock (FileListeners)
+            {
+                //修改配置
+                if (c_configSection != null) { _configSection = c_configSection; c_configSection = null; }
+                if (c_configUrlPostfix != null) { _configUrlPostfix = c_configUrlPostfix; c_configUrlPostfix = null; }
+                if (c_defaultPath != null) { _defaultPath = c_defaultPath; c_defaultPath = null; }
+                //释放掉全部监听响应链
+                while (FileListeners.Count > 0)
+                    FileListeners.Pop().Value.Dispose();
+                ConfigFinder(_defaultPath);
+            }
+        }
+
         private static long TimeStamp()
         {
             return (long)((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds * 100);
@@ -191,27 +212,6 @@ namespace Infrastructure
                 }
             }
         }
-
-
-        public static NameValueCollection AppSettings { get; private set; } = new NameValueCollection();
-
-        /// <summary>
-        /// 手动刷新配置，修改配置后，请手动调用此方法，以便更新配置参数
-        /// </summary>
-        public static void RefreshConfiguration()
-        {
-            lock (FileListeners)
-            {
-                //修改配置
-                if (c_configSection != null) { _configSection = c_configSection; c_configSection = null; }
-                if (c_configUrlPostfix != null) { _configUrlPostfix = c_configUrlPostfix; c_configUrlPostfix = null; }
-                if (c_defaultPath != null) { _defaultPath = c_defaultPath; c_defaultPath = null; }
-                //释放掉全部监听响应链
-                while (FileListeners.Count > 0)
-                    FileListeners.Pop().Value.Dispose();
-                ConfigFinder(_defaultPath);
-            }
-        }
-
+        
     }
 }

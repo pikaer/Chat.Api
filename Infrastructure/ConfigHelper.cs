@@ -59,11 +59,54 @@ namespace Infrastructure
             {
                 throw ex;
             }
-
+            
             return rtn[key];
         }
 
+        public static string GetString(string key, string defaultValue=null)
+        {
+            return AppSettings(key) ?? defaultValue;
+        }
 
+        public static int GetInt(string key, int defaultValue = 0)
+        {
+            int value = defaultValue;
+            if (int.TryParse(AppSettings(key), out value))
+            {
+                return value;
+            }
+            return defaultValue;
+        }
+
+        public static long GetLong(string key, long defaultValue = 0)
+        {
+            long value = defaultValue;
+            if (long.TryParse(AppSettings(key), out value))
+            {
+                return value;
+            }
+            return defaultValue;
+        }
+
+        public static bool GetBool(string key, bool defaultValue = false)
+        {
+            bool value = defaultValue;
+            if (bool.TryParse(AppSettings(key), out value))
+            {
+                return value;
+            }
+            return defaultValue;
+        }
+
+        public static float GetFloat(string key, float defaultValue = 0)
+        {
+            float value = defaultValue;
+            if (float.TryParse(AppSettings(key), out value))
+            {
+                return value;
+            }
+            return defaultValue;
+        }
         /// <summary>
         /// 从程序根目录复制
         /// </summary>

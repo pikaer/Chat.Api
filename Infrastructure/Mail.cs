@@ -29,7 +29,7 @@ namespace Infrastructure
         /// <param name="subject">邮件标题</param>
         /// <param name="body">邮件正文</param>
         /// <returns></returns>
-        public static bool Send(string receivers, string subject, string body)
+        public static bool Send(string subject, string body, string receivers=null)
         {
             try
             {
@@ -39,9 +39,17 @@ namespace Infrastructure
                     return false;
                 }
 
-                if (string.IsNullOrEmpty(receivers) || string.IsNullOrEmpty(subject) || string.IsNullOrEmpty(body))
+                if (string.IsNullOrEmpty(subject) || string.IsNullOrEmpty(body))
                 {
                     return false;
+                }
+                if (string.IsNullOrEmpty(receivers))
+                {
+                    receivers = ConfigHelper.AppSettings("DefaultEmailReceivers");
+                    if (string.IsNullOrEmpty(receivers))
+                    {
+                        return false;
+                    }
                 }
 
                 int mailPost = int.Parse(Port);
@@ -75,11 +83,11 @@ namespace Infrastructure
         /// <param name="receivers">接收人，如果多人用;分隔</param>
         /// <param name="subject">邮件标题</param>
         /// <param name="body">邮件正文</param>
-        public static void SendAsync(string receivers, string subject, string body)
+        public static void SendAsync(string subject, string body, string receivers=null)
         {
             Task.Factory.StartNew(() =>
             {
-                Send(receivers, subject, body);
+                Send(subject, body, receivers);
             });
         }
 

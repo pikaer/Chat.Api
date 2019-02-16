@@ -11,11 +11,18 @@ namespace Infrastructure
         public static void WriteLog(LogLevelEnum logLevel, Guid tid, int uid,string platform,string title,string content,Dictionary<string,string> keyValuePairs=null)
         {
             //日志开关
-            if (!Convert.ToBoolean(ConfigHelper.AppSettings("LogIsOpen")))
+            if (!ConfigHelper.GetBool("LogIsOpen"))
             {
                 return;
             }
-            
+
+            //日志级别开关
+            var level = ConfigHelper.GetInt("DefaultLogLevel", 0);
+            if ((int)logLevel< level)
+            {
+                return;
+            }
+
             var logEntity = new LogEntity()
             {
                 LogId = Guid.NewGuid(),
@@ -43,6 +50,16 @@ namespace Infrastructure
                     };
                     InsertTags(tagEntity);
                 }
+            }
+
+            //发送报警邮件
+            if(ConfigHelper.GetBool("ErrorLogSendEmail")&& 
+                (logLevel==LogLevelEnum.Error|| logLevel==LogLevelEnum.Fatal))
+            {
+                string body = string.Format("UId={0},TransactionID={1},Platform={2},LogId={3},Content={4}",
+                    uid.ToString(), tid.ToString(), platform, logEntity.LogId.ToString(), content);
+
+                Mail.Send(title, body);
             }
         }
         

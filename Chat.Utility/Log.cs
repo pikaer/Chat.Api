@@ -8,26 +8,63 @@ namespace Chat.Utility
 {
     public class Log
     {
+        /// <summary>
+        /// Debug日志
+        /// </summary>
+        /// <param name="title">日志标题</param>
+        /// <param name="content">日志内容</param>
+        /// <param name="head">公共请求头</param>
+        /// <param name="keyValuePairs">附件标签</param>
         public static void Debug(string title, string content, RequestHead head = null, Dictionary<string, string> keyValuePairs = null)
         {
             WriteLogAsync(LogLevelEnum.Debug, title, content,head, keyValuePairs);
         }
 
+        /// <summary>
+        /// Info日志
+        /// </summary>
+        /// <param name="title">日志标题</param>
+        /// <param name="content">日志内容</param>
+        /// <param name="head">公共请求头</param>
+        /// <param name="keyValuePairs">附件标签</param>
         public static void Info(string title, string content, RequestHead head = null, Dictionary<string, string> keyValuePairs = null)
         {
             WriteLogAsync(LogLevelEnum.Info, title, content,head, keyValuePairs);
         }
 
+        /// <summary>
+        /// Warn日志
+        /// </summary>
+        /// <param name="title">日志标题</param>
+        /// <param name="content">日志内容</param>
+        /// <param name="head">公共请求头</param>
+        /// <param name="keyValuePairs">附件标签</param>
         public static void Warn(string title, string content, RequestHead head = null, Dictionary<string, string> keyValuePairs = null)
         {
             WriteLogAsync(LogLevelEnum.Warn, title, content,head, keyValuePairs);
         }
 
+        /// <summary>
+        /// Error异常日志
+        /// </summary>
+        /// <param name="title">日志标题</param>
+        /// <param name="content">日志内容</param>
+        /// <param name="ex">Exception</param>
+        /// <param name="head">公共请求头</param>
+        /// <param name="keyValuePairs">附件标签</param>
         public static void Error(string title, string content, Exception ex = null, RequestHead head = null, Dictionary<string, string> keyValuePairs = null)
         {
             WriteLogAsync(LogLevelEnum.Error, title, content,head, keyValuePairs, ex);
         }
 
+        /// <summary>
+        /// Fatal致命错误日志
+        /// </summary>
+        /// <param name="title">日志标题</param>
+        /// <param name="content">日志内容</param>
+        /// <param name="ex">Exception</param>
+        /// <param name="head">公共请求头</param>
+        /// <param name="keyValuePairs">附件标签</param>
         public static void Fatal(string title, string content, Exception ex = null, RequestHead head = null, Dictionary<string, string> keyValuePairs = null)
         {
             WriteLogAsync(LogLevelEnum.Fatal, title, content, head, keyValuePairs, ex);
