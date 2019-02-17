@@ -339,4 +339,11 @@
         public bool ExcuteResult { get; set; }
     }
     #endregion
+
+    #region GetGoldCoinNumber
+
+    #endregion
+
+    #region UpdateGoldCoinNumber
+    #endregion
 }

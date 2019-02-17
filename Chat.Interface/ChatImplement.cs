@@ -7,7 +7,7 @@ namespace Chat.Interface
     /// <summary>
     /// 接口实现
     /// 目的：规范代码，让所有接口的实现一目了然
-    /// 强制要求：实例化都采用单利模式，不提倡单独实例化
+    /// 强制要求：实例化都采用单例模式，不提倡单独实例化
     /// </summary>
     public class ChatImplement : IChatInterface
     {
