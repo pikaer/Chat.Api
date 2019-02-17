@@ -39,7 +39,7 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = string.Format("{0} Where OpenId={1}", SELECT_USERINFO, openId);
+                    var sql = string.Format("{0} Where OpenId='{1}'", SELECT_USERINFO, openId);
                     return Db.QueryFirst<UserInfo>(sql);
                 }
                 catch (Exception ex)
@@ -57,11 +57,24 @@ namespace Chat.Repository
                 try
                 {
                     var sql = @"UPDATE dbo.user_UserInfo
-                                   SET Gender= @Gender
-                                      ,NickName = @NickName
-                                      ,UpdateTime = @UpdateTime
+                                   SET Gender = @Gender
+                                      ,NickName =@NickName
+                                      ,BirthDate = @BirthDate
+                                      ,Province =@Province
+                                      ,City = @City
+                                      ,Area = @Area
+                                      ,HomeProvince =@HomeProvince
+                                      ,HomeCity = @HomeCity
+                                      ,HomeArea =@HomeArea
+                                      ,SchoolName = @SchoolName
+                                      ,EntranceDate =@EntranceDate
+                                      ,SchoolType = @SchoolType
+                                      ,LiveState = @LiveState
+                                      ,Mobile = @Mobile
+                                      ,WeChatNo = @WeChatNo
+                                      ,UpdateTime= @UpdateTime
                                  WHERE UId=@UId";
-                    return Db.Execute(sql)>0;
+                    return Db.Execute(sql, req) >0;
                 }
                 catch (Exception ex)
                 {

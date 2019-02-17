@@ -44,8 +44,8 @@ namespace Infrastructure
                     {
                         TagId = Guid.NewGuid(),
                         LogId = logEntity.LogId,
-                        Key = item.Key,
-                        Value = item.Value,
+                        LogKey = item.Key,
+                        LogValue = item.Value,
                         CreateTime=DateTime.Now
                     };
                     InsertTags(tagEntity);
@@ -195,12 +195,12 @@ namespace Infrastructure
         /// <summary>
         /// 键
         /// </summary>
-        public string Key { get; set; }
+        public string LogKey { get; set; }
 
         /// <summary>
         /// 值
         /// </summary>
-        public string Value { get; set; }
+        public string LogValue { get; set; }
 
         /// <summary>
         /// 创建时间
