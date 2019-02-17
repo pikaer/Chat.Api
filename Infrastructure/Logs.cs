@@ -8,7 +8,7 @@ namespace Infrastructure
 {
     public static class Logs
     {
-        public static void WriteLog(LogLevelEnum logLevel, Guid tid, int uid,string platform,string title,string content,Dictionary<string,string> keyValuePairs=null)
+        public static void WriteLog(LogLevelEnum logLevel, Guid tid, long uid,string platform,string title,string content,Dictionary<string,string> keyValuePairs=null)
         {
             //日志开关
             if (!ConfigHelper.GetBool("LogIsOpen"))
@@ -154,7 +154,7 @@ namespace Infrastructure
         /// <summary>
         /// 用户Id
         /// </summary>
-        public int? UId { get; set; }
+        public long UId { get; set; }
 
         /// <summary>
         /// 平台（小程序miniApp，android,ios,浏览器browser,h5)
