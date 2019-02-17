@@ -4,6 +4,10 @@ using Infrastructure;
 
 namespace Chat.Interface
 {
+    /// <summary>
+    /// 接口实现
+    /// 目的：规范代码，让所有接口的实现一目了然
+    /// </summary>
     public class ChatImplement : IChatInterface
     {
         private UserInfoService userInfoService = SingletonProvider<UserInfoService>.Instance;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace Infrastructure
@@ -13,9 +14,9 @@ namespace Infrastructure
         {
             string str = enumValue.ToString();
             FieldInfo field = enumValue.GetType().GetField(str);
-            object[] objs = field.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false);
+            object[] objs = field.GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (objs == null || objs.Length == 0) return str;
-            System.ComponentModel.DescriptionAttribute da = (System.ComponentModel.DescriptionAttribute)objs[0];
+            DescriptionAttribute da = (DescriptionAttribute)objs[0];
             return da.Description;
         }
     }
