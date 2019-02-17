@@ -127,6 +127,54 @@
         public string NickName { get; set; }
 
         /// <summary>
+        /// 用户所在国家
+        /// </summary>
+        public string Country { get; set; }
+
+        /// <summary>
+        /// 用户所在省份
+        /// </summary>
+        public string Province { get; set; }
+
+        /// <summary>
+        /// 用户所在城市
+        /// </summary>
+        public string City { get; set; }
+    }
+
+    public class SetUserInfoResponse
+    {
+        /// <summary>
+        /// 处理结果
+        /// </summary>
+        public bool ExcuteResult { get; set; }
+
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+    }
+    #endregion
+
+    #region UpdateUserInfo
+    public class UpdateUserInfoRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+        /// </summary>
+        public int Gender { get; set; }
+
+        /// <summary>
+        /// 用户昵称
+        /// </summary>
+        public string NickName { get; set; }
+
+        /// <summary>
         /// 生日（2018-08-20）
         /// </summary>
         public string BirthDate { get; set; }
@@ -172,12 +220,12 @@
         public string EntranceDate { get; set; }
 
         /// <summary>
-        /// 学校类型（详情见SchoolTypeEnum）
+        /// 学校类型
         /// </summary>
         public int SchoolType { get; set; }
 
         /// <summary>
-        /// 状态(详情见LiveStateEnum）
+        /// 状态
         /// </summary>
         public int LiveState { get; set; }
 
@@ -190,14 +238,9 @@
         /// 微信号
         /// </summary>
         public string WeChatNo { get; set; }
-        
-        /// <summary>
-        /// 个性签名
-        /// </summary>
-        public string Signature { get; set; }
     }
 
-    public class SetUserInfoResponse
+    public class UpdateUserInfoResponse
     {
         /// <summary>
         /// 处理结果
@@ -249,8 +292,8 @@
     }
     #endregion
 
-    #region SetUserPreference
-    public class SetUserPreferenceRequest
+    #region UpdateUserPreference
+    public class UpdateUserPreferenceRequest
     {
         /// <summary>
         /// 用户Id
@@ -288,7 +331,7 @@
         public int PreferLiveState { get; set; }
     }
 
-    public class SetUserPreferenceResponse
+    public class UpdateUserPreferenceResponse
     {
         /// <summary>
         /// 处理结果

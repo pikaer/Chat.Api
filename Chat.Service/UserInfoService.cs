@@ -17,12 +17,12 @@ namespace Chat.Service
             var response = new ResponseContext<GetUserInfoResponse>();
             try
             {
-                var entity = userInfoDal.GetUserInfo(request.Content.UId);
+                var entity = userInfoDal.GetUserInfoByUId(request.Content.UId);
                 if (entity == null)
                 {
                     return response;
                 }
-                response.Data = new GetUserInfoResponse
+                response.Content = new GetUserInfoResponse
                 {
                     Gender = (int)entity.Gender,
                     NickName = entity.NickName,
@@ -51,9 +51,43 @@ namespace Chat.Service
             return response;
         }
 
+        public ResponseContext<UpdateUserInfoResponse> UpdateUserInfo(RequestContext<UpdateUserInfoRequest> request)
+        {
+            var response = new ResponseContext<UpdateUserInfoResponse>()
+            {
+                Content = new UpdateUserInfoResponse()
+            };
+            var data = request.Content;
+            var userInfo = new UserInfo()
+            {
+                UId = data.UId,
+                Gender = (GenderEnum)data.Gender,
+                NickName = data.NickName,
+                BirthDate = data.BirthDate,
+                Province = data.Province,
+                City = data.City,
+                Area = data.Area,
+                HomeProvince = data.HomeProvince,
+                HomeCity = data.HomeCity,
+                HomeArea = data.HomeArea,
+                SchoolName = data.SchoolName,
+                EntranceDate = data.EntranceDate,
+                SchoolType = (SchoolTypeEnum)data.SchoolType,
+                LiveState = (LiveStateEnum)data.LiveState,
+                Mobile = data.Mobile,
+                WeChatNo = data.WeChatNo,
+                UpdateTime = DateTime.Now
+            };
+            response.Content.ExcuteResult = userInfoDal.UpdateUserInfo(userInfo);
+            return response;
+        }
+
         public ResponseContext<SetUserInfoResponse> SetUserInfo(RequestContext<SetUserInfoRequest> request)
         {
-            var response = new ResponseContext<SetUserInfoResponse>();
+            var response = new ResponseContext<SetUserInfoResponse>()
+            {
+                Content=new SetUserInfoResponse()
+            };
             try
             {
                 var data = request.Content;
@@ -62,23 +96,25 @@ namespace Chat.Service
                     OpenId = data.OpenId,
                     Gender = (GenderEnum)data.Gender,
                     NickName = data.NickName,
-                    BirthDate = data.BirthDate,
-                    Province = data.Province,
-                    City = data.City,
-                    Area = data.Area,
-                    HomeProvince = data.HomeProvince,
-                    HomeCity = data.HomeCity,
-                    HomeArea = data.HomeArea,
-                    SchoolName = data.SchoolName,
-                    EntranceDate = data.EntranceDate,
-                    SchoolType = (SchoolTypeEnum)data.SchoolType,
-                    LiveState = (LiveStateEnum)data.LiveState,
-                    Mobile = data.Mobile,
-                    WeChatNo = data.WeChatNo,
-                    Signature = data.Signature,
                     CreateTime = DateTime.Now
                 };
-                response.Data.ExcuteResult = userInfoDal.InsertUserInfo(entity);
+
+                var userInfoEntity = userInfoDal.GetUserInfoByOpenId(request.Content.OpenId);
+                if (userInfoEntity == null)
+                {
+                    bool success=userInfoDal.InsertUserInfo(entity);
+                    if (success)
+                    {
+                        response.Content.UId = userInfoDal.GetUserInfoByOpenId(request.Content.OpenId).UId;
+                    }
+                    response.Content.ExcuteResult = success;
+                }
+                else
+                {
+                    entity.UId = userInfoEntity.UId;
+                    response.Content.UId = userInfoEntity.UId;
+                    response.Content.ExcuteResult =true;
+                }
             }
             catch (Exception ex)
             {
@@ -99,7 +135,7 @@ namespace Chat.Service
                     return response;
                 }
 
-                response.Data = new GetUserPreferenceResponse
+                response.Content = new GetUserPreferenceResponse
                 {
                     PreferGender = (int)entity.PreferGender,
                     PreferPlace = (int)entity.PreferPlace,
@@ -117,9 +153,12 @@ namespace Chat.Service
             return response;
         }
 
-        public ResponseContext<SetUserPreferenceResponse> SetUserPreference(RequestContext<SetUserPreferenceRequest> request)
+        public ResponseContext<UpdateUserPreferenceResponse> UpdateUserPreference(RequestContext<UpdateUserPreferenceRequest> request)
         {
-            var response = new ResponseContext<SetUserPreferenceResponse>();
+            var response = new ResponseContext<UpdateUserPreferenceResponse>()
+            {
+                Content=new UpdateUserPreferenceResponse()
+            };
             try
             {
                 var data = request.Content;
@@ -134,7 +173,17 @@ namespace Chat.Service
                     PreferLiveState = (LiveStateEnum)data.PreferLiveState,
                     CreateTime = DateTime.Now
                 };
-                response.Data.ExcuteResult = userInfoDal.InsertUserPreference(entity);
+
+                var userPreference = userInfoDal.GetUserPreference(request.Content.UId);
+                if(userPreference == null)
+                {
+                    response.Content.ExcuteResult = userInfoDal.InsertUserPreference(entity);
+                }
+                else
+                {
+                    entity.PreferId = userPreference.PreferId;
+                    response.Content.ExcuteResult = userInfoDal.UpdateUserPreference(entity);
+                }
             }
             catch (Exception ex)
             {

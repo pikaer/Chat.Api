@@ -19,7 +19,7 @@ namespace Infrastructure
             try
             {
                 var baseDirectory = Directory.GetCurrentDirectory();
-                var file = baseDirectory + filePath;
+                var file = baseDirectory+"\\" + filePath;
                 if (!File.Exists(file)) CopyConfigFile(file, filePath); //如果文件不存在，从程序根目录复制
                 var xmlDoc = new XmlDocument();
                 var settings = new XmlReaderSettings

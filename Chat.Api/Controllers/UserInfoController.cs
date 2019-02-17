@@ -87,6 +87,41 @@ namespace Chat.Api.Controllers
         }
 
         /// <summary>
+        /// 存入用户信息
+        /// </summary>
+        [HttpPost]
+        public JsonResult UpdateUserInfo()
+        {
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<UpdateUserInfoRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var response = api.UpdateUserInfo(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "SetUserInfo", ex);
+            }
+        }
+
+        /// <summary>
         /// 获取用户偏好设置
         /// </summary>
         [HttpPost]
@@ -125,7 +160,7 @@ namespace Chat.Api.Controllers
         /// 存入用户偏好设置
         /// </summary>
         [HttpPost]
-        public JsonResult SetUserPreference()
+        public JsonResult UpdateUserPreference()
         {
             try
             {
@@ -134,7 +169,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<SetUserPreferenceRequest>>();
+                var request = json.JsonToObject<RequestContext<UpdateUserPreferenceRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -147,7 +182,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.SetUserPreference(request);
+                var response = api.UpdateUserPreference(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)

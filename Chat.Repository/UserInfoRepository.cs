@@ -1,9 +1,6 @@
 ﻿using Chat.Model.Entity.UserInfo;
-using Chat.Model.Utils;
 using Chat.Utility;
 using Dapper;
-using Dapper.Contrib.Extensions;
-using Infrastructure;
 using System;
 
 namespace Chat.Repository
@@ -19,7 +16,7 @@ namespace Chat.Repository
 
         private readonly string SELECT_USERPREFERENCE = "SELECT PreferId,UId ,PreferGender,PreferPlace,PreferHome,PreferAge,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime FROM dbo.user_UserPreference";
 
-        public UserInfo GetUserInfo(long uid)
+        public UserInfo GetUserInfoByUId(long uid)
         {
             using (var Db = GetDbConnection())
             {
@@ -30,18 +27,59 @@ namespace Chat.Repository
                 }
                 catch(Exception ex)
                 {
-                    Log.Error("GetUserInfo", "获取用户信息异常，Uid=" + uid, ex);
+                    Log.Error("GetUserInfoByUId", "通过UId获取用户信息异常，Uid=" + uid, ex);
                     return null;
                 }
             }
         }
+
+        public UserInfo GetUserInfoByOpenId(string openId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = string.Format("{0} Where OpenId={1}", SELECT_USERINFO, openId);
+                    return Db.QueryFirst<UserInfo>(sql);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetUserInfoByOpenId", "获取用户信息异常，OpenId=" + openId, ex);
+                    return null;
+                }
+            }
+        }
+
+        public bool UpdateUserInfo(UserInfo req)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"UPDATE dbo.user_UserInfo
+                                   SET Gender= @Gender
+                                      ,NickName = @NickName
+                                      ,UpdateTime = @UpdateTime
+                                 WHERE UId=@UId";
+                    return Db.Execute(sql)>0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("UpdateUserInfo", "更新用户信息异常，UId=" + req.UId, ex);
+                    return false;
+                }
+            }
+        }
+
         public bool InsertUserInfo(UserInfo req)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
-                    return Db.Insert(req) > 0;
+                    var sql = @"INSERT INTO dbo.user_UserInfo (OpenId,Gender,NickName,CreateTime,UpdateTime)
+                                        VALUES(@OpenId,@Gender,@NickName,@CreateTime,@UpdateTime)";
+                    return Db.Execute(sql, req) > 0;
                 }
                 catch (Exception ex)
                 {
@@ -73,11 +111,39 @@ namespace Chat.Repository
             {
                 try
                 {
-                    return Db.Insert(req) > 0;
+                    var sql = @"INSERT INTO dbo.user_UserPreference (UId,PreferGender,PreferPlace,PreferHome,PreferAge ,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime)
+                                  VALUES (@UId,@PreferGender,@PreferPlace,@PreferHome,@PreferAge,@PreferSchoolType,@PreferLiveState,@CreateTime,@UpdateTime)";
+                    return Db.Execute(sql,req) > 0;
                 }
                 catch (Exception ex)
                 {
                     Log.Error("InsertUserPreference", "存入用户偏好设置异常，UId=" + req.UId, ex);
+                    return false;
+                }
+            }
+        }
+
+        public bool UpdateUserPreference(UserPreference req)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"UPDATE dbo.user_UserPreference
+                                   SET PreferGender = @PreferGender
+                                      ,PreferPlace = @PreferPlace
+                                      ,PreferHome = @PreferHome
+                                      ,PreferAge = @PreferAge
+                                      ,PreferSchoolType = @PreferSchoolType
+                                      ,PreferLiveState = @PreferLiveState
+                                      ,CreateTime = @CreateTime
+                                      ,UpdateTime = @UpdateTime
+                                 WHERE PreferId=@PreferId";
+                    return Db.Execute(sql, req) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("UpdateUserPreference", "更新用户偏好设置异常，UId=" + req.UId, ex);
                     return false;
                 }
             }

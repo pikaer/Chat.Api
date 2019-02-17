@@ -13,7 +13,7 @@ namespace Chat.Model.Utils
         /// <summary>
         /// 响应体
         /// </summary>
-        public T Data { get; set; }
+        public T Content { get; set; }
 
         /// <summary>
         /// 构造函数
@@ -21,13 +21,13 @@ namespace Chat.Model.Utils
         public ResponseContext(T content)
         {
             Head = new ResponseHead();
-            Data = content;
+            Content = content;
         }
 
         public ResponseContext()
         {
             Head = new ResponseHead();
-            Data = default(T);
+            Content = default(T);
         }
     }
 

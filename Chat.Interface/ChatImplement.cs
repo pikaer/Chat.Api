@@ -23,14 +23,19 @@ namespace Chat.Interface
             return userInfoService.GetUserPreference(request);
         }
 
+        public ResponseContext<UpdateUserInfoResponse> UpdateUserInfo(RequestContext<UpdateUserInfoRequest> request)
+        {
+            return userInfoService.UpdateUserInfo(request);
+        }
+
         public ResponseContext<SetUserInfoResponse> SetUserInfo(RequestContext<SetUserInfoRequest> request)
         {
             return userInfoService.SetUserInfo(request);
         }
-
-        public ResponseContext<SetUserPreferenceResponse> SetUserPreference(RequestContext<SetUserPreferenceRequest> request)
+       
+        public ResponseContext<UpdateUserPreferenceResponse> UpdateUserPreference(RequestContext<UpdateUserPreferenceRequest> request)
         {
-            return userInfoService.SetUserPreference(request);
+            return userInfoService.UpdateUserPreference(request);
         }
     }
 }
