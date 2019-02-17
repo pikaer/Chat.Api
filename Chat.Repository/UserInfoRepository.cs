@@ -39,7 +39,15 @@ namespace Chat.Repository
         {
             using (var Db = GetDbConnection())
             {
-                return Db.Insert(req) > 0;
+                try
+                {
+                    return Db.Insert(req) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("InsertUserInfo", "存入用户信息异常，OpenId=" + req.OpenId, ex);
+                    return false;
+                }
             }
         }
         public UserPreference GetUserPreference(long uid)
@@ -63,7 +71,15 @@ namespace Chat.Repository
         {
             using (var Db = GetDbConnection())
             {
-                return Db.Insert(req) > 0;
+                try
+                {
+                    return Db.Insert(req) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("InsertUserPreference", "存入用户偏好设置异常，UId=" + req.UId, ex);
+                    return false;
+                }
             }
         }
     }
