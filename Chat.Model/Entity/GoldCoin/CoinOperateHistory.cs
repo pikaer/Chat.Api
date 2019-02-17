@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Chat.Model.Entity.GoldCoin
 {
-    class CoinOperateHistory
+    public class CoinOperateHistory
     {
     }
 }
