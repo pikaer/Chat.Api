@@ -8,7 +8,18 @@ namespace Infrastructure
 {
     public static class Logs
     {
-        public static void WriteLog(LogLevelEnum logLevel, Guid tid, long uid,string platform,string title,string content,Dictionary<string,string> keyValuePairs=null)
+        /// <summary>
+        /// 将日志写入数据库
+        /// </summary>
+        /// <param name="logLevel">日志级别</param>
+        /// <param name="tid">事物号</param>
+        /// <param name="uid">用户Id</param>
+        /// <param name="platform">平台</param>
+        /// <param name="title">日志标题</param>
+        /// <param name="content">日志内容</param>
+        /// <param name="serverName">服务标示（服务名称）</param>
+        /// <param name="keyValuePairs">附加信息</param>
+        public static void WriteLog(LogLevelEnum logLevel, Guid tid, long uid,string platform,string title,string content,string serverName,Dictionary<string,string> keyValuePairs=null)
         {
             //日志开关
             if (!ConfigHelper.GetBool("LogIsOpen"))
@@ -32,6 +43,7 @@ namespace Infrastructure
                 Platform = platform,
                 LogTitle = title,
                 LogContent = content,
+                ServiceName=serverName,
                 CreateTime = DateTime.Now
             };
             InsertLogs(logEntity);
@@ -53,8 +65,7 @@ namespace Infrastructure
             }
 
             //发送报警邮件
-            if(ConfigHelper.GetBool("ErrorLogSendEmail")&& 
-                (logLevel==LogLevelEnum.Error|| logLevel==LogLevelEnum.Fatal))
+            if(ConfigHelper.GetBool("ErrorLogSendEmail")&&(logLevel==LogLevelEnum.Error|| logLevel==LogLevelEnum.Fatal))
             {
                 string body = string.Format("UId={0},TransactionID={1},Platform={2},LogId={3},Content={4}",
                     uid.ToString(), tid.ToString(), platform, logEntity.LogId.ToString(), content);
@@ -69,7 +80,7 @@ namespace Infrastructure
             {
                 try
                 {
-                    var sql = @"INSERT INTO dbo.sys_LogEntity
+                    var sql = @"INSERT INTO dbo.sys_Log
                                                  (LogId
                                                  ,LogLevel
                                                  ,TransactionID
@@ -77,6 +88,7 @@ namespace Infrastructure
                                                  ,Platform
                                                  ,LogTitle
                                                  ,LogContent
+                                                 ,ServiceName
                                                  ,CreateTime)
                                            VALUES
                                                  (@LogId
@@ -86,6 +98,7 @@ namespace Infrastructure
                                                  ,@Platform
                                                  ,@LogTitle
                                                  ,@LogContent
+                                                 ,@ServiceName
                                                  ,@CreateTime)";
                     Db.Execute(sql, entity);
                 }
@@ -105,14 +118,14 @@ namespace Infrastructure
                     var sql = @"INSERT INTO dbo.sys_LogTag
                                                  (TagId
                                                  ,LogId
-                                                 ,Key
-                                                 ,Value
+                                                 ,LogKey
+                                                 ,LogValue
                                                  ,CreateTime)
                                            VALUES
                                                  (@TagId
                                                  ,@LogId
-                                                 ,@Key
-                                                 ,@Value
+                                                 ,@LogKey
+                                                 ,@LogValue
                                                  ,CreateTime)";
                     Db.Execute(sql);
                 }
@@ -170,6 +183,11 @@ namespace Infrastructure
         /// 日志内容
         /// </summary>
         public string LogContent { get; set; }
+
+        /// <summary>
+        /// 服务名称（标示）
+        /// </summary>
+        public string ServiceName { get; set; }
 
         /// <summary>
         /// 创建时间

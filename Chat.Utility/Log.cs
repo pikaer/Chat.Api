@@ -98,7 +98,7 @@ namespace Chat.Utility
                 }
                 Task.Factory.StartNew(() =>
                 {
-                    Logs.WriteLog(level, tid, uid, platform, title, desc, keyValuePairs);
+                    Logs.WriteLog(level, tid, uid, platform, title, desc, "Chat.Api", keyValuePairs);
                 });
             }
             catch
