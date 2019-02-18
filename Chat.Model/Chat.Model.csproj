@@ -5,9 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Chat\" />
-    <Folder Include="DTO\Discovery\" />
-    <Folder Include="Entity\Discovery\" />
+    <Compile Remove="DTO\Chat\**" />
+    <Compile Remove="DTO\Discovery\**" />
+    <Compile Remove="Entity\Discovery\**" />
+    <EmbeddedResource Remove="DTO\Chat\**" />
+    <EmbeddedResource Remove="DTO\Discovery\**" />
+    <EmbeddedResource Remove="Entity\Discovery\**" />
+    <None Remove="DTO\Chat\**" />
+    <None Remove="DTO\Discovery\**" />
+    <None Remove="Entity\Discovery\**" />
   </ItemGroup>
 
   <ItemGroup>
