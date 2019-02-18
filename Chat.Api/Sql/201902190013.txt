@@ -1,0 +1,140 @@
+USE [Chat]
+GO
+/****** Object:  Table [dbo].[sys_Log]    Script Date: 2019/2/19 0:12:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[sys_Log](
+	[LogId] [uniqueidentifier] NULL,
+	[LogLevel] [tinyint] NULL,
+	[TransactionID] [uniqueidentifier] NULL,
+	[UId] [bigint] NULL,
+	[Platform] [nchar](20) NULL,
+	[LogTitle] [nchar](20) NULL,
+	[LogContent] [nvarchar](max) NULL,
+	[ServiceName] [nchar](20) NULL,
+	[CreateTime] [datetime] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[sys_LogTag]    Script Date: 2019/2/19 0:12:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[sys_LogTag](
+	[TagId] [uniqueidentifier] NULL,
+	[LogId] [uniqueidentifier] NULL,
+	[LogKey] [nchar](50) NULL,
+	[LogValue] [nvarchar](max) NULL,
+	[CreateTime] [datetime] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[user_UserInfo]    Script Date: 2019/2/19 0:12:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[user_UserInfo](
+	[UId] [bigint] IDENTITY(1,1) NOT NULL,
+	[OpenId] [varchar](30) NULL,
+	[Gender] [tinyint] NULL,
+	[NickName] [nvarchar](50) NULL,
+	[BirthDate] [varchar](14) NULL,
+	[Province] [nvarchar](50) NULL,
+	[City] [nvarchar](50) NULL,
+	[Area] [nvarchar](50) NULL,
+	[HomeProvince] [nvarchar](50) NULL,
+	[HomeCity] [nvarchar](50) NULL,
+	[HomeArea] [nvarchar](50) NULL,
+	[SchoolName] [nvarchar](50) NULL,
+	[EntranceDate] [varchar](14) NULL,
+	[SchoolType] [tinyint] NOT NULL CONSTRAINT [DF_user_UserInfo_SchoolType]  DEFAULT ((0)),
+	[LiveState] [tinyint] NOT NULL CONSTRAINT [DF_user_UserInfo_LiveState]  DEFAULT ((0)),
+	[Mobile] [varchar](30) NULL,
+	[WeChatNo] [varchar](50) NULL,
+	[HeadPhotoPath] [nvarchar](100) NULL,
+	[Signature] [nvarchar](100) NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL,
+ CONSTRAINT [PK_user_UserInfo] PRIMARY KEY CLUSTERED 
+(
+	[UId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[user_UserPreference]    Script Date: 2019/2/19 0:12:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[user_UserPreference](
+	[PreferId] [bigint] IDENTITY(1,1) NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[PreferGender] [tinyint] NOT NULL,
+	[PreferPlace] [tinyint] NOT NULL,
+	[PreferHome] [tinyint] NOT NULL,
+	[PreferAge] [tinyint] NOT NULL,
+	[PreferSchoolType] [tinyint] NOT NULL,
+	[PreferLiveState] [tinyint] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL,
+ CONSTRAINT [PK_user_UserPreference] PRIMARY KEY CLUSTERED 
+(
+	[PreferId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET IDENTITY_INSERT [dbo].[user_UserInfo] ON 
+
+GO
+INSERT [dbo].[user_UserInfo] ([UId], [OpenId], [Gender], [NickName], [BirthDate], [Province], [City], [Area], [HomeProvince], [HomeCity], [HomeArea], [SchoolName], [EntranceDate], [SchoolType], [LiveState], [Mobile], [WeChatNo], [HeadPhotoPath], [Signature], [CreateTime], [UpdateTime]) VALUES (1, N'oVBsh0XgX6q9hFUdFj8nQ1XUPlNs', 1, N'Hello', N'2014-11-09', N'广东省', N'深圳市', N'福田区', N'广东省', N'韶关市', N'全部', N'上海大学123', N'2017-09', 1, 2, N'18721019895ew', N'xiamu13122028ew', NULL, NULL, CAST(N'2019-02-17 15:01:42.487' AS DateTime), CAST(N'2019-02-18 01:32:28.470' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[user_UserInfo] OFF
+GO
+ALTER TABLE [dbo].[user_UserPreference] ADD  CONSTRAINT [DF_user_UserPreference_UId]  DEFAULT ((0)) FOR [UId]
+GO
+ALTER TABLE [dbo].[user_UserPreference] ADD  CONSTRAINT [DF_user_UserPreference_PreferGender]  DEFAULT ((0)) FOR [PreferGender]
+GO
+ALTER TABLE [dbo].[user_UserPreference] ADD  CONSTRAINT [DF_user_UserPreference_PreferPlace]  DEFAULT ((0)) FOR [PreferPlace]
+GO
+ALTER TABLE [dbo].[user_UserPreference] ADD  CONSTRAINT [DF_user_UserPreference_PreferHome]  DEFAULT ((0)) FOR [PreferHome]
+GO
+ALTER TABLE [dbo].[user_UserPreference] ADD  CONSTRAINT [DF_user_UserPreference_PreferAge]  DEFAULT ((0)) FOR [PreferAge]
+GO
+ALTER TABLE [dbo].[user_UserPreference] ADD  CONSTRAINT [DF_user_UserPreference_PreferSchoolType]  DEFAULT ((0)) FOR [PreferSchoolType]
+GO
+ALTER TABLE [dbo].[user_UserPreference] ADD  CONSTRAINT [DF_user_UserPreference_PreferLiveState]  DEFAULT ((0)) FOR [PreferLiveState]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户唯一标示，自增' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'UId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'小程序端-用户唯一标示' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'OpenId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户的性别，值为1时是男性，值为2时是女性，值为0时是未知' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Gender'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户昵称' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'NickName'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户所在省份' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Province'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户所在城市' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'City'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户的语言，简体中文为zh_CN' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'HomeCity'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'手机号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Mobile'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'头像路径' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'HeadPhotoPath'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'个性签名' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Signature'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'CreateTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'UpdateTime'
+GO
