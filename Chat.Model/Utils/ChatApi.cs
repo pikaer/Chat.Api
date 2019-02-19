@@ -340,10 +340,15 @@
     }
     #endregion
 
-    #region GetGoldCoinNumber
-
-    #endregion
-
     #region UpdateGoldCoinNumber
+    public class GoldCoinRequest
+    {
+
+    }
+
+    public class GoldCoinHistoryRequest
+    {
+
+    }
     #endregion
 }
