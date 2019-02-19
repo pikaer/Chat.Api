@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Chat.Interface;
 using Chat.Model.Enum;
 using Chat.Model.Utils;
-using Chat.Service;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Chat.Api.Controllers
 {
@@ -16,24 +13,39 @@ namespace Chat.Api.Controllers
     [Route("api/[controller]/[action]")]
     public class GoldCoinController : BaseController
     {
-        GoldCoinService goldCoinService = SingletonProvider<GoldCoinService>.Instance;
+        private readonly IChatInterface api = SingletonProvider<ChatImplement>.Instance;
 
         /// <summary>
         /// 根据用户Id获取金币
         /// </summary>
         [HttpPost]
-        public JsonResult GetGoldCoinNumberByUid(RequestContext<long> request)
+        public JsonResult GetGoldCoinNumberByUid(RequestContext<GetGoldCoinNumberRequest> request)
         {
-            if(request == null)
+            try
             {
-                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                if (request.Content.UId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var response = api.GetGoldCoinNumber(request);
+                return new JsonResult(response);
             }
-            if (request.Head == null)
+            catch (Exception ex)
             {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetGoldCoinNumberByUid", ex);
             }
-            var response = goldCoinService.GetGoldCoinNumberByUid(request);
-            return new JsonResult(response);
 
         }
 

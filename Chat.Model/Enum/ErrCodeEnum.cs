@@ -57,5 +57,8 @@ namespace Chat.Model.Enum
 
         [Description("请求头不合法")]
         InvalidRequestHead = 10009,
+
+        [Description("该用户不存在")]
+        UserNoExist = 80001,
     }
 }

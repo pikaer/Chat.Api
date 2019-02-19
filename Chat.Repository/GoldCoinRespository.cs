@@ -1,8 +1,6 @@
 ﻿using Chat.Utility;
 using Dapper;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chat.Repository
 {
@@ -13,19 +11,19 @@ namespace Chat.Repository
             return DbEnum.ChatConnect;
         }
 
-        public long? GetGoldCoinNumberByUid(long uid)
+        public int GetGoldCoinNumberByUid(long uid)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
                     var sql = $"select CoinTotal from coin_GoldCoin where UId = {uid}";
-                    return Db.QueryFirst<long>(sql);
+                    return Db.QueryFirst<int>(sql);
                 }
                 catch(Exception ex)
                 {
                     Log.Error("GetGoldCoinNumberByUid", "获取用户金币数异常，UId=" + uid, ex);
-                    return null;
+                    return 0;
                 }
             }
         }

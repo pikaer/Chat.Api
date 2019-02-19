@@ -161,22 +161,6 @@ namespace Chat.Repository
                 }
             }
         }
-
-        public bool CheckUserExist(long uid)
-        {
-            using (var Db = GetDbConnection())
-            {
-                try
-                {
-                    var sql = $"SELECT COUNT(1) FROM user_UserInfo WHERE UId = {uid}";
-                    return Db.Execute(sql) > 0;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("UpdateUserPreference", "更新用户偏好设置异常，UId=" + uid, ex);
-                    return false;
-                }
-            }
-        }
+        
     }
 }

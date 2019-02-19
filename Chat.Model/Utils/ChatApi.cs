@@ -351,4 +351,24 @@
 
     }
     #endregion
+
+    #region GetGoldCoinNumber
+    public class GetGoldCoinNumberRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+    }
+
+    public class GetGoldCoinNumberResponse
+    {
+        /// <summary>
+        /// 金币总数
+        /// </summary>
+        public int TotalCoin { get; set; }
+    }
+    #endregion
+
+    
 }

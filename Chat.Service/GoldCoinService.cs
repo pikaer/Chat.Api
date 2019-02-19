@@ -4,8 +4,6 @@ using Chat.Repository;
 using Chat.Utility;
 using Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chat.Service
 {
@@ -19,23 +17,29 @@ namespace Chat.Service
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public ResponseContext<long?> GetGoldCoinNumberByUid(RequestContext<long> request)
+        public ResponseContext<GetGoldCoinNumberResponse> GetGoldCoinNumberByUid(RequestContext<GetGoldCoinNumberRequest> request)
         {
-            var response = new ResponseContext<long?>() {Content = null};
+            var response = new ResponseContext<GetGoldCoinNumberResponse>()
+            {
+                Content = new GetGoldCoinNumberResponse()
+            };
 
             try
             {
-                var userIsExist = userInfoDal.CheckUserExist(request.Content);
-                if(!userIsExist)
+                var userInfo = userInfoDal.GetUserInfoByUId(request.Content.UId);
+                if(userInfo==null)
                 {
+                    response.Head = new ResponseHead(true, ErrCodeEnum.Success,"该用户不存在");
+                    response.Content.TotalCoin = 0;
                     return response;
                 }
-                response.Content = goldCoinDal.GetGoldCoinNumberByUid(request.Content);
+
+                response.Content.TotalCoin = goldCoinDal.GetGoldCoinNumberByUid(request.Content.UId);
             }
             catch (Exception ex)
             {
                 response.Head = new ResponseHead(false, ErrCodeEnum.QueryError);
-                Log.Error("GetGoldCoinNumberByUid", "获取用户信息异常", ex, request.Head);
+                Log.Error("GetGoldCoinNumberByUid", "根据用户Id获取金币数异常", ex, request.Head);
             }
             return response;
         }

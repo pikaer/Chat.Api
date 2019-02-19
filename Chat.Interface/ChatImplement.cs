@@ -12,7 +12,7 @@ namespace Chat.Interface
     public class ChatImplement : IChatInterface
     {
         private UserInfoService userInfoService = SingletonProvider<UserInfoService>.Instance;
-
+        private GoldCoinService goldCoinService = SingletonProvider<GoldCoinService>.Instance;
         public ResponseContext<GetUserInfoResponse> GetUserInfo(RequestContext<GetUserInfoRequest> request)
         {
             return userInfoService.GetUserInfo(request);
@@ -36,6 +36,11 @@ namespace Chat.Interface
         public ResponseContext<UpdateUserPreferenceResponse> UpdateUserPreference(RequestContext<UpdateUserPreferenceRequest> request)
         {
             return userInfoService.UpdateUserPreference(request);
+        }
+
+        public ResponseContext<GetGoldCoinNumberResponse> GetGoldCoinNumber(RequestContext<GetGoldCoinNumberRequest> request)
+        {
+            return goldCoinService.GetGoldCoinNumberByUid(request);
         }
     }
 }
