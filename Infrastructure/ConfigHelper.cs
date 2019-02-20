@@ -106,6 +106,7 @@ namespace Infrastructure
             }
             return defaultValue;
         }
+
         /// <summary>
         /// 从程序根目录复制
         /// </summary>

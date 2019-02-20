@@ -1,7 +1,5 @@
 ﻿using Chat.Model.Enum;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chat.Model.Entity.GoldCoin
 {

@@ -127,7 +127,7 @@ namespace Infrastructure
                                                  ,@LogKey
                                                  ,@LogValue
                                                  ,CreateTime)";
-                    Db.Execute(sql);
+                    Db.Execute(sql, logTag);
                 }
                 catch
                 {
