@@ -343,14 +343,54 @@ namespace Chat.Model.Utils
     }
     #endregion
 
-    #region UpdateGoldCoinNumber
-    public class GoldCoinRequest
+    #region UpdateGoldCoin
+    public class UpdateGoldCoinRequest
     {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
 
+        /// <summary>
+        /// 金币变化量
+        /// </summary>
+        public int AlertCoinNum { get; set; }
     }
 
-    public class GoldCoinHistoryRequest
+    public class UpdateGoldCoinResponse
     {
+        /// <summary>
+        /// 处理结果
+        /// </summary>
+        public bool ExcuteResult { get; set; }
+    }
+    #endregion
+
+    #region GoldCoinHistory
+    public class GetGoldCoinHistoryRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+    }
+
+    public class GetGoldCoinHistoryResponse
+    {
+        /// <summary>
+        /// 金币变动描述
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// 金币变化量
+        /// </summary>
+        public int AlertCoinNum { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public string CreateTime { get; set; }
 
     }
     #endregion

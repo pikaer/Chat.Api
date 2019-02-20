@@ -13,11 +13,11 @@ namespace Chat.Service
         private UserInfoRepository userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
 
         /// <summary>
-        /// 根据用户Id获取金币数[用户不存在时返回金币数为-1]
+        /// 根据用户Id获取金币数
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public ResponseContext<GetGoldCoinNumberResponse> GetGoldCoinNumberByUid(RequestContext<GetGoldCoinNumberRequest> request)
+        public ResponseContext<GetGoldCoinNumberResponse> GetGoldCoinNumber(RequestContext<GetGoldCoinNumberRequest> request)
         {
             var response = new ResponseContext<GetGoldCoinNumberResponse>()
             {
@@ -34,12 +34,36 @@ namespace Chat.Service
                     return response;
                 }
 
-                response.Content.TotalCoin = goldCoinDal.GetGoldCoinNumberByUid(request.Content.UId);
+                response.Content.TotalCoin = goldCoinDal.GetGoldCoinNumber(request.Content.UId);
             }
             catch (Exception ex)
             {
                 response.Head = new ResponseHead(false, ErrCodeEnum.QueryError);
-                Log.Error("GetGoldCoinNumberByUid", "根据用户Id获取金币数异常", ex, request.Head);
+                Log.Error("GetGoldCoinNumber", "根据用户Id获取金币数异常", ex, request.Head);
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// 更新用户金币
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ResponseContext<UpdateGoldCoinResponse> UpdateGoldCoin(RequestContext<UpdateGoldCoinRequest> request)
+        {
+            var response = new ResponseContext<UpdateGoldCoinResponse>()
+            {
+                Content = new UpdateGoldCoinResponse()
+            };
+
+            try
+            {
+                response.Content.ExcuteResult = goldCoinDal.UpdateGoldCoin(request.Content.UId,request.Content.AlertCoinNum);
+            }
+            catch(Exception ex)
+            {
+                response.Head = new ResponseHead(false, ErrCodeEnum.QueryError);
+                Log.Error("UpdateGoldCoin", "更新用户金币异常", ex, request.Head);
             }
             return response;
         }

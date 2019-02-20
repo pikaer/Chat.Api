@@ -11,7 +11,12 @@ namespace Chat.Repository
             return DbEnum.ChatConnect;
         }
 
-        public int GetGoldCoinNumberByUid(long uid)
+        /// <summary>
+        /// 获取用户金币数
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        public int GetGoldCoinNumber(long uid)
         {
             using (var Db = GetDbConnection())
             {
@@ -28,11 +33,17 @@ namespace Chat.Repository
             }
         }
 
-        public bool UpdateGoldCoinNumber(long uid,long coinNum)
+        /// <summary>
+        /// 更新金币表
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="coinNum"></param>
+        /// <returns></returns>
+        public bool UpdateGoldCoin(long uid,int coinNum)
         {
             using (var Db = GetDbConnection())
             {
-                var coinTotal = GetGoldCoinNumberByUid(uid) + coinNum;
+                var coinTotal = GetGoldCoinNumber(uid) + coinNum;
                 try
                 {
                     var sql = $"update coin_GoldCoin set CoinTotal = {coinTotal} where UId = 1";
