@@ -23,7 +23,7 @@ namespace Chat.Interface
 
         ResponseContext<GetChatListResponse> GetChatList(RequestContext<GetChatListRequest> request);
 
-        ResponseContext<UpdateGoldCoinResponse> UpdateGoldCoin(ResponseContext<UpdateGoldCoinRequest> request);
+        ResponseContext<UpdateGoldCoinResponse> UpdateGoldCoin(RequestContext<UpdateGoldCoinRequest> request);
     }
     
 }

@@ -54,5 +54,6 @@ namespace Chat.Interface
         {
             return chatService.GetChatList(request);
         }
+        
     }
 }
