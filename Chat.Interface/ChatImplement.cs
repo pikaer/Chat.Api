@@ -40,7 +40,12 @@ namespace Chat.Interface
 
         public ResponseContext<GetGoldCoinNumberResponse> GetGoldCoinNumber(RequestContext<GetGoldCoinNumberRequest> request)
         {
-            return goldCoinService.GetGoldCoinNumberByUid(request);
+            return goldCoinService.GetGoldCoinNumber(request);
+        }
+
+        public ResponseContext<UpdateGoldCoinResponse> UpdateGoldCoin(RequestContext<UpdateGoldCoinRequest> request)
+        {
+            return goldCoinService.UpdateGoldCoin(request);
         }
     }
 }

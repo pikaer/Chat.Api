@@ -19,10 +19,17 @@ namespace Chat.Api.Controllers
         /// 根据用户Id获取金币
         /// </summary>
         [HttpPost]
-        public JsonResult GetGoldCoinNumberByUid(RequestContext<GetGoldCoinNumberRequest> request)
+        public JsonResult GetGoldCoinNumberByUid()
         {
             try
             {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<GetGoldCoinNumberRequest>>();
+
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -52,10 +59,9 @@ namespace Chat.Api.Controllers
         /// <summary>
         /// 更新金币信息
         /// </summary>
-        /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult UpdateGoldCoinNumber(RequestContext<GoldCoinRequest> request)
+        public JsonResult UpdateGoldCoinNumber()
         {
             return new JsonResult(null);
         }
@@ -63,10 +69,9 @@ namespace Chat.Api.Controllers
         /// <summary>
         /// 获取金币信息历史记录
         /// </summary>
-        /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetGoldCoinHistory(RequestContext<GoldCoinHistoryRequest> request)
+        public JsonResult GetGoldCoinHistory()
         {
             return new JsonResult(null);
         }
