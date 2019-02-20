@@ -20,6 +20,8 @@ namespace Chat.Interface
         ResponseContext<UpdateUserPreferenceResponse> UpdateUserPreference(RequestContext<UpdateUserPreferenceRequest> request);
 
         ResponseContext<GetGoldCoinNumberResponse> GetGoldCoinNumber(RequestContext<GetGoldCoinNumberRequest> request);
+
+        ResponseContext<GetChatListResponse> GetChatList(RequestContext<GetChatListRequest> request);
     }
     
 }

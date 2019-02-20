@@ -1,4 +1,7 @@
-﻿namespace Chat.Model.Utils
+﻿using Chat.Model.Enum;
+using System.Collections.Generic;
+
+namespace Chat.Model.Utils
 {
     /**
     * 以下类都是和前端交互的实体，后面的只要是接口直接返回的类
@@ -370,5 +373,64 @@
     }
     #endregion
 
-    
+    #region GetChatList
+    public class GetChatListRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+    }
+
+    public class GetChatListResponse
+    {
+        /// <summary>
+        /// 未读消息总数量（>99条时展示99+）
+        /// </summary>
+        public string TotalUnReadCount { get; set; }
+
+        /// <summary>
+        /// 聊天列表集合
+        /// </summary>
+        public List<ChatListType> ChatList { get; set; }
+    }
+
+    public class ChatListType
+    {
+        /// <summary>
+        /// 好友UId
+        /// </summary>
+        public long PartnerUId { get; set; }
+
+        /// <summary>
+        /// 头像路径
+        /// </summary>
+        public string HeadImgPath { get; set; }
+
+        /// <summary>
+        /// 用户展示名称（当备注为空时，为用户昵称，否则是备注）
+        /// </summary>
+        public string DispalyName { get; set; }
+
+        /// <summary>
+        /// 最后对话内容
+        /// </summary>
+        public string LatestChatContent { get; set; }
+
+        /// <summary>
+        /// 聊天内容类别
+        /// </summary>
+        public ChatContentTypeEnum ChatContentType { get; set; }
+
+        /// <summary>
+        /// 最后对话时间
+        /// </summary>
+        public string LatestChatTime { get; set; }
+
+        /// <summary>
+        /// 未读消息数量（>99条时展示99+）
+        /// </summary>
+        public string UnReadCount { get; set; }
+    }
+    #endregion
 }
