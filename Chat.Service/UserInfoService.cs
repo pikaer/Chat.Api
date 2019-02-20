@@ -102,6 +102,14 @@ namespace Chat.Service
                 var userInfoEntity = userInfoDal.GetUserInfoByOpenId(request.Content.OpenId);
                 if (userInfoEntity == null)
                 {
+                    //初始编号
+                    long tempUNo = 12345678;
+                    var maxUNo = userInfoDal.GetMaxUNo();
+                    if (maxUNo > 0)
+                    {
+                        tempUNo= maxUNo+1;
+                    }
+                    entity.UNo = tempUNo;
                     bool success=userInfoDal.InsertUserInfo(entity);
                     if (success)
                     {
@@ -192,5 +200,6 @@ namespace Chat.Service
             }
             return response;
         }
+        
     }
 }

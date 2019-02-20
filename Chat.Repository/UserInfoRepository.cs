@@ -12,7 +12,7 @@ namespace Chat.Repository
             return DbEnum.ChatConnect;
         }
 
-        private readonly string SELECT_USERINFO = "SELECT UId,OpenId,Gender,NickName,BirthDate,Province,City,Area,HomeProvince,HomeCity,HomeArea,SchoolName,EntranceDate,SchoolType,LiveState ,Mobile,WeChatNo,HeadPhotoPath,Signature,CreateTime,UpdateTime FROM dbo.user_UserInfo ";
+        private readonly string SELECT_USERINFO = "SELECT UId,UNo,OpenId,Gender,NickName,BirthDate,Province,City,Area,HomeProvince,HomeCity,HomeArea,SchoolName,EntranceDate,SchoolType,LiveState ,Mobile,WeChatNo,HeadPhotoPath,Signature,CreateTime,UpdateTime FROM dbo.user_UserInfo ";
 
         private readonly string SELECT_USERPREFERENCE = "SELECT PreferId,UId ,PreferGender,PreferPlace,PreferHome,PreferAge,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime FROM dbo.user_UserPreference";
 
@@ -90,8 +90,8 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = @"INSERT INTO dbo.user_UserInfo (OpenId,Gender,NickName,CreateTime,UpdateTime)
-                                        VALUES(@OpenId,@Gender,@NickName,@CreateTime,@UpdateTime)";
+                    var sql = @"INSERT INTO dbo.user_UserInfo (OpenId,Gender,UNo,NickName,CreateTime,UpdateTime)
+                                        VALUES(@OpenId,@Gender,@UNo,@NickName,@CreateTime,@UpdateTime)";
                     return Db.Execute(sql, req) > 0;
                 }
                 catch (Exception ex)
@@ -161,6 +161,27 @@ namespace Chat.Repository
                 }
             }
         }
-        
+
+        /// <summary>
+        /// 获取当前最大用户编号
+        /// </summary>
+        /// <returns></returns>
+        public long GetMaxUNo()
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = "Select Max(UNo) from user_UserInfo";
+                    return Db.QueryFirst<long>(sql);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetMaxUNo", "获取当前最大用户编号异常", ex);
+                    return 0;
+                }
+            }
+        }
+
     }
 }

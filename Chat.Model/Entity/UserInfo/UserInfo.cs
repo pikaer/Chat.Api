@@ -14,6 +14,11 @@ namespace Chat.Model.Entity.UserInfo
         public long UId { get; set; }
 
         /// <summary>
+        /// 用户账号，外露给前端
+        /// </summary>
+        public long UNo { get; set; }
+
+        /// <summary>
         /// 小程序端-用户唯一标示
         /// </summary>
         public string OpenId { get; set; }
