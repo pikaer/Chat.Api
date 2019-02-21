@@ -54,6 +54,10 @@ namespace Chat.Interface
         {
             return chatService.GetChatList(request);
         }
-        
+
+        public ResponseContext<GetGoldCoinDetailsResponse> GetGoldCoinDetails(RequestContext<GetGoldCoinDetailsRequest> request)
+        {
+            return goldCoinService.GetGoldCoinDetails(request);
+        }
     }
 }

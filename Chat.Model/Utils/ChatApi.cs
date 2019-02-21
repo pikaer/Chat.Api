@@ -367,7 +367,7 @@ namespace Chat.Model.Utils
     #endregion
 
     #region GoldCoinHistory
-    public class GetGoldCoinHistoryRequest
+    public class GetGoldCoinDetailsRequest
     {
         /// <summary>
         /// 用户Id
@@ -375,7 +375,7 @@ namespace Chat.Model.Utils
         public long UId { get; set; }
     }
 
-    public class GetGoldCoinHistoryResponse
+    public class GetGoldCoinDetailsResponse
     {
         /// <summary>
         /// 金币变动描述

@@ -30,6 +30,7 @@ namespace Chat.Api.Controllers
                 }
                 var request = json.JsonToObject<RequestContext<GetGoldCoinNumberRequest>>();
 
+                //ToDo => 优化
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -42,6 +43,8 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
+                //
+
                 if (request.Content.UId <= 0)
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
@@ -63,7 +66,33 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult UpdateGoldCoinNumber()
         {
-            return new JsonResult(null);
+            string json = GetInputString();
+            if (string.IsNullOrEmpty(json))
+            {
+                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+            }
+            var request = json.JsonToObject<RequestContext<UpdateGoldCoinRequest>>();
+
+            if (request == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+            }
+            if (request.Head == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+            }
+            if (request.Content == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+            }
+
+            if (request.Content.UId <= 0)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+            }
+
+            var response = api.UpdateGoldCoin(request);
+            return new JsonResult(response);
         }
 
         /// <summary>
@@ -73,7 +102,34 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetGoldCoinHistory()
         {
-            return new JsonResult(null);
+            string json = GetInputString();
+
+            if (string.IsNullOrEmpty(json))
+            {
+                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+            }
+            var request = json.JsonToObject<RequestContext<GetGoldCoinDetailsRequest>>();
+
+            if (request == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+            }
+            if (request.Head == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+            }
+            if (request.Content == null)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+            }
+
+            if (request.Content.UId <= 0)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+            }
+
+            var response = api.GetGoldCoinDetails(request);
+            return new JsonResult(response);
         }
     }
 }

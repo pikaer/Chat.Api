@@ -67,5 +67,39 @@ namespace Chat.Service
             }
             return response;
         }
+
+        /// <summary>
+        /// 获取金币变化明细
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ResponseContext<GetGoldCoinDetailsResponse> GetGoldCoinDetails(RequestContext<GetGoldCoinDetailsRequest> request)
+        {
+            var response = new ResponseContext<GetGoldCoinDetailsResponse>()
+            {
+                Content = new GetGoldCoinDetailsResponse()
+            };
+
+            try
+            {
+                var entity = goldCoinDal.GetGoldCoinDetails(request.Content.UId);
+                if (entity == null)
+                {
+                    return response;
+                }
+                response.Content = new GetGoldCoinDetailsResponse
+                {
+                    Description = entity.Description,
+                    AlertCoinNum = entity.AlertCoinNum,
+                    CreateTime = entity.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+            }
+            catch(Exception ex)
+            {
+                response.Head = new ResponseHead(false, ErrCodeEnum.QueryError);
+                Log.Error("GetGoldCoinDetails", "获取金币详情异常", ex, request.Head);
+            }
+            return response;
+        }
     }
 }
