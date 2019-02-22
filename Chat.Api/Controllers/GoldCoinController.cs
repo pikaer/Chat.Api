@@ -19,7 +19,7 @@ namespace Chat.Api.Controllers
         /// 根据用户Id获取金币
         /// </summary>
         [HttpPost]
-        public JsonResult GetGoldCoinNumberByUid()
+        public JsonResult GetGoldCoinNumber()
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Chat.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetGoldCoinHistory()
+        public JsonResult GetGoldCoinDetails()
         {
             string json = GetInputString();
 

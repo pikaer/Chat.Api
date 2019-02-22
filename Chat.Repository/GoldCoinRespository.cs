@@ -2,6 +2,7 @@
 using Chat.Utility;
 using Dapper;
 using System;
+using System.Collections.Generic;
 
 namespace Chat.Repository
 {
@@ -64,14 +65,14 @@ namespace Chat.Repository
         /// </summary>
         /// <param name="uid"></param>
         /// <returns></returns>
-        public CoinOperateHistory GetGoldCoinDetails(long uid)
+        public List<CoinOperateHistory> GetGoldCoinDetails(long uid)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
                     var sql = $"{SELECT_CoinOperateDetails} Where UId = {uid}";
-                    return Db.QueryFirst<CoinOperateHistory>(sql);
+                    return Db.Query<CoinOperateHistory>(sql).AsList();
                 }
                 catch(Exception ex)
                 {

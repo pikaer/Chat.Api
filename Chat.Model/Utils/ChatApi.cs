@@ -378,6 +378,19 @@ namespace Chat.Model.Utils
     public class GetGoldCoinDetailsResponse
     {
         /// <summary>
+        /// 金币详情条数
+        /// </summary>
+        public int TotalCount { get; set; }
+
+        /// <summary>
+        /// 金币详情列表
+        /// </summary>
+        public List<GoldCoinDetailsType> GoldCoinDetaislList { get; set; }
+    }
+
+    public class GoldCoinDetailsType
+    {
+        /// <summary>
         /// 金币变动描述
         /// </summary>
         public string Description { get; set; }
@@ -385,13 +398,12 @@ namespace Chat.Model.Utils
         /// <summary>
         /// 金币变化量
         /// </summary>
-        public int AlertCoinNum { get; set; }
+        public string AlertCoinNum { get; set; }
 
         /// <summary>
         /// 创建时间
         /// </summary>
         public string CreateTime { get; set; }
-
     }
     #endregion
 
