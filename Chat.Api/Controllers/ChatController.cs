@@ -85,5 +85,110 @@ namespace Chat.Api.Controllers
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "GetChatContentList", ex);
             }
         }
+
+        /// <summary>
+        /// 删除会话
+        /// </summary>
+        [HttpPost]
+        public JsonResult DeleteChat()
+        {
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<DeleteChatRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.UId <= 0 || request.Content.PartnerUId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var response = api.DeleteChat(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "DeleteChat", ex);
+            }
+        }
+
+        /// <summary>
+        /// 清除未读消息
+        /// </summary>
+        [HttpPost]
+        public JsonResult ClearUnReadCount()
+        {
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<ClearUnReadCountRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.UId <= 0 || request.Content.PartnerUId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var response = api.ClearUnReadCount(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "ClearUnReadCount", ex);
+            }
+        }
+
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        [HttpPost]
+        public JsonResult SendMessage()
+        {
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<SendMessageRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.UId <= 0 || request.Content.PartnerUId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var response = api.SendMessage(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "SendMessage", ex);
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace Chat.Api
                 options.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "ChatApi",
+                    Title = "Chat.Api",
                     Description = "为小程序提供Api接口",
                     TermsOfService = "None"
                 });

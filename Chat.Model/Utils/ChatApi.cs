@@ -547,4 +547,108 @@ namespace Chat.Model.Utils
         public bool IsDisplayChatTime { get; set; }
     }
     #endregion
+
+    #region DeleteChat
+    /// <summary>
+    /// 删除会话
+    /// </summary>
+    public class DeleteChatRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 好友UId
+        /// </summary>
+        public long PartnerUId { get; set; }
+    }
+
+    public class DeleteChatResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+
+        /// <summary>
+        /// 目前剩余未读条数
+        /// </summary>
+        public string CurrentTotalUnReadCount { get; set; }
+    }
+    #endregion
+    
+
+    #region ClearUnReadCount
+    /// <summary>
+    /// 清除未读条数
+    /// </summary>
+    public class ClearUnReadCountRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 好友UId
+        /// </summary>
+        public long PartnerUId { get; set; }
+    }
+
+    public class ClearUnReadCountResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+
+        /// <summary>
+        /// 目前剩余未读条数
+        /// </summary>
+        public string CurrentTotalUnReadCount { get; set; }
+    }
+    #endregion
+
+    #region SendMessage
+    /// <summary>
+    /// 发送消息
+    /// </summary>
+    public class SendMessageRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 好友UId
+        /// </summary>
+        public long PartnerUId { get; set; }
+
+        /// <summary>
+        /// 聊天内容
+        /// </summary>
+        public string ChatContent { get; set; }
+
+        /// <summary>
+        /// 聊天内容类别
+        /// </summary>
+        public ChatContentTypeEnum ChatContentType { get; set; }
+
+        /// <summary>
+        /// 扩展信息
+        /// </summary>
+        public string ExtensionInfo { get; set; }
+    }
+
+    public class SendMessageResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
 }

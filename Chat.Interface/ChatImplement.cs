@@ -64,5 +64,20 @@ namespace Chat.Interface
         {
             return chatService.GetChatContentList(request);
         }
+
+        public ResponseContext<DeleteChatResponse> DeleteChat(RequestContext<DeleteChatRequest> request)
+        {
+            return chatService.DeleteChat(request);
+        }
+
+        public ResponseContext<ClearUnReadCountResponse> ClearUnReadCount(RequestContext<ClearUnReadCountRequest> request)
+        {
+            return chatService.ClearUnReadCount(request);
+        }
+
+        public ResponseContext<SendMessageResponse> SendMessage(RequestContext<SendMessageRequest> request)
+        {
+            return chatService.SendMessage(request);
+        }
     }
 }

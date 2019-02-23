@@ -32,6 +32,38 @@ namespace Chat.Service
             return response;
         }
 
+        /// <summary>
+        /// 删除会话
+        /// </summary>
+        public ResponseContext<DeleteChatResponse> DeleteChat(RequestContext<DeleteChatRequest> request)
+        {
+            var response = new ResponseContext<DeleteChatResponse>()
+            {
+                Content = new DeleteChatResponse()
+                {
+                    IsExecuteSuccess = true,
+                    CurrentTotalUnReadCount = "50"
+        }
+            };
+            return response;
+        }
+
+        /// <summary>
+        /// 清除未读条数
+        /// </summary>
+        public ResponseContext<ClearUnReadCountResponse> ClearUnReadCount(RequestContext<ClearUnReadCountRequest> request)
+        {
+            var response = new ResponseContext<ClearUnReadCountResponse>()
+            {
+                Content = new ClearUnReadCountResponse()
+                {
+                    IsExecuteSuccess = true,
+                    CurrentTotalUnReadCount="67"
+                }
+            };
+            return response;
+        }
+
 
         public GetChatContentListReponse ChatContentListTestData()
         {
@@ -55,6 +87,7 @@ namespace Chat.Service
             rtn.ChatContentList = item;
             return rtn;
         }
+
         /// <summary>
         /// 用户列表模拟数据
         /// </summary>
@@ -77,6 +110,11 @@ namespace Chat.Service
                 chatList.Add(dto);
             }
             return chatList;
+        }
+
+        public ResponseContext<SendMessageResponse> SendMessage(RequestContext<SendMessageRequest> request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

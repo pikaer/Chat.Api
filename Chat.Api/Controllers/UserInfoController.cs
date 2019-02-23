@@ -87,7 +87,7 @@ namespace Chat.Api.Controllers
         }
 
         /// <summary>
-        /// 存入用户信息
+        /// 更新用户信息
         /// </summary>
         [HttpPost]
         public JsonResult UpdateUserInfo()
@@ -157,7 +157,7 @@ namespace Chat.Api.Controllers
         }
 
         /// <summary>
-        /// 存入用户偏好设置
+        /// 修改用户偏好设置
         /// </summary>
         [HttpPost]
         public JsonResult UpdateUserPreference()
