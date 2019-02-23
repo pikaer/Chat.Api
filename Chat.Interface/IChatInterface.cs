@@ -26,6 +26,7 @@ namespace Chat.Interface
         ResponseContext<UpdateGoldCoinResponse> UpdateGoldCoin(RequestContext<UpdateGoldCoinRequest> request);
 
         ResponseContext<GetGoldCoinDetailsResponse> GetGoldCoinDetails(RequestContext<GetGoldCoinDetailsRequest> request);
+
+        ResponseContext<GetChatContentListReponse> GetChatContentList(RequestContext<GetChatContentListRequest> request);
     }
-    
 }

@@ -485,4 +485,70 @@ namespace Chat.Model.Utils
         public string UnReadCount { get; set; }
     }
     #endregion
+
+    #region GetChatContentList
+    public class GetChatContentListRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 好友UId
+        /// </summary>
+        public long PartnerUId { get; set; }
+    }
+
+    public class GetChatContentListReponse
+    {
+        /// <summary>
+        /// 好友头像地址
+        /// </summary>
+        public string PartnerHeadImgPath { get; set; }
+
+        /// <summary>
+        /// 用户本人头像地址
+        /// </summary>
+        public string OwnerHeadImgPath { get; set; }
+
+        /// <summary>
+        /// 聊天详细内容
+        /// </summary>
+        public List<ChatContentDetail> ChatContentList { get; set; }
+    }
+
+    public class ChatContentDetail
+    {
+        /// <summary>
+        /// 是否用户本人发出的消息
+        /// </summary>
+        public bool IsOwner { get; set; }
+
+        /// <summary>
+        /// 聊天内容
+        /// </summary>
+        public string ChatContent { get; set; }
+
+        /// <summary>
+        /// 聊天内容类别
+        /// </summary>
+        public ChatContentTypeEnum ChatContentType { get; set; }
+
+        /// <summary>
+        /// 扩展信息
+        /// </summary>
+        public string ExtensionInfo { get; set; }
+
+        /// <summary>
+        /// 聊天时间
+        /// </summary>
+        public string ChatTime { get; set; }
+
+        /// <summary>
+        /// 是否展示聊天时间(一般每隔10分钟会展示一次时间）
+        /// </summary>
+        public bool IsDisplayChatTime { get; set; }
+    }
+    #endregion
 }

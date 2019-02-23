@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Chat.Model.Enum;
+﻿using Chat.Model.Enum;
 using Chat.Model.Utils;
 using Chat.Repository;
 using Infrastructure;
+using System;
+using System.Collections.Generic;
 
 namespace Chat.Service
 {
@@ -37,6 +37,11 @@ namespace Chat.Service
             response.Content.ChatList = chatList;
             response.Content.TotalUnReadCount = "50";
             return response;
+        }
+
+        public ResponseContext<GetChatContentListReponse> GetChatContentList(RequestContext<GetChatContentListRequest> request)
+        {
+            throw new NotImplementedException();
         }
     }
 }
