@@ -502,16 +502,7 @@ namespace Chat.Model.Utils
 
     public class GetChatContentListReponse
     {
-        /// <summary>
-        /// 好友头像地址
-        /// </summary>
-        public string PartnerHeadImgPath { get; set; }
-
-        /// <summary>
-        /// 用户本人头像地址
-        /// </summary>
-        public string OwnerHeadImgPath { get; set; }
-
+        
         /// <summary>
         /// 聊天详细内容
         /// </summary>
@@ -524,6 +515,11 @@ namespace Chat.Model.Utils
         /// 是否用户本人发出的消息
         /// </summary>
         public bool IsOwner { get; set; }
+
+        /// <summary>
+        /// 头像路径
+        /// </summary>
+        public string HeadImgPath { get; set; }
 
         /// <summary>
         /// 聊天内容

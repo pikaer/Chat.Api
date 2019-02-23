@@ -1,7 +1,6 @@
 ﻿using Chat.Interface;
 using Chat.Model.Enum;
 using Chat.Model.Utils;
-using Chat.Service;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System;

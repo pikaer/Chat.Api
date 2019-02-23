@@ -17,10 +17,52 @@ namespace Chat.Service
             {
                 Content = new GetChatListResponse()
             };
+            
+            response.Content.ChatList = ChatListTestData();
+            response.Content.TotalUnReadCount = "50";
+            return response;
+        }
 
+        public ResponseContext<GetChatContentListReponse> GetChatContentList(RequestContext<GetChatContentListRequest> request)
+        {
+            var response = new ResponseContext<GetChatContentListReponse>()
+            {
+                Content = ChatContentListTestData()
+            };
+            return response;
+        }
+
+
+        public GetChatContentListReponse ChatContentListTestData()
+        {
+            var rtn = new GetChatContentListReponse();
+            var item = new List<ChatContentDetail>();
+            var today = DateTime.Now;
+            for(int i = 1; i <= 40; i++)
+            {
+                var dto = new ChatContentDetail()
+                {
+                    IsOwner = i % 3 == 0, //取余数
+                    HeadImgPath= i % 3==0? "../../content/images/pikaer.jpg" : "../../content/images/partner.jpg",
+                    ChatContent = string.Format("我给你发送了第{0}条消息对话", i),
+                    ChatContentType = ChatContentTypeEnum.Text,
+                    ChatTime = today.AddDays(i).GetDateDesc(),
+                    IsDisplayChatTime = i % 5 == 0
+                };
+                item.Add(dto);
+            }
+
+            rtn.ChatContentList = item;
+            return rtn;
+        }
+        /// <summary>
+        /// 用户列表模拟数据
+        /// </summary>
+        private List<ChatListType> ChatListTestData()
+        {
             //暂时返回模拟数据
             var chatList = new List<ChatListType>();
-            for(int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 var dto = new ChatListType()
                 {
@@ -34,14 +76,7 @@ namespace Chat.Service
                 };
                 chatList.Add(dto);
             }
-            response.Content.ChatList = chatList;
-            response.Content.TotalUnReadCount = "50";
-            return response;
-        }
-
-        public ResponseContext<GetChatContentListReponse> GetChatContentList(RequestContext<GetChatContentListRequest> request)
-        {
-            throw new NotImplementedException();
+            return chatList;
         }
     }
 }
