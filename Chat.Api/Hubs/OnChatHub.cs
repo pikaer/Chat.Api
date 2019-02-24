@@ -32,13 +32,15 @@ namespace Chat.Api.Hubs
             var partner = _userInfoDal.GetUserInfoByUId(partnerUId);
             if (user != null&&partner!=null)
             {
-                lock (SyncObj)
+                //lock (SyncObj)
+                //{
+
+                //}
+
+                var onChat = hubService.OnChatConnected(uId, partnerUId, Context.ConnectionId);
+                if (onChat != null)
                 {
-                    var onChat=hubService.OnChatConnected(uId, partnerUId,Context.ConnectionId);
-                    if (onChat != null)
-                    {
-                        OnlineChats[Context.ConnectionId] = onChat;
-                    }
+                    OnlineChats[Context.ConnectionId] = onChat;
                 }
             }
             await base.OnConnectedAsync();
@@ -49,14 +51,17 @@ namespace Chat.Api.Hubs
         /// </summary>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception exception=null)
         {
             await base.OnDisconnectedAsync(exception);
-            lock (SyncObj)
-            {
-                OnlineChats.TryRemove(Context.ConnectionId, out OnChat onChat);
-                hubService.OnChatDisconnected(onChat.UId);
-            }
+
+            OnlineChats.TryRemove(Context.ConnectionId, out OnChat onChat);
+            hubService.OnChatDisconnected(onChat.UId);
+            //lock (SyncObj)
+            //{
+
+            //}
         }
+        
     }
 }

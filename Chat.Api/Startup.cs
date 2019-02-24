@@ -71,6 +71,8 @@ namespace Chat.Api
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chat");
+                routes.MapHub<OnChatHub>("/onChat");
+                routes.MapHub<OnlineHub>("/online");
             });
         }
     }

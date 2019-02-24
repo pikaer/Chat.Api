@@ -10,7 +10,7 @@ namespace Chat.Api.Hubs
     /// <summary>
     /// 在线用户
     /// </summary>
-    public class OnlineUserHub: Hub
+    public class OnlineHub: Hub
     {
         private UserInfoRepository _userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
         private HubService hubService = SingletonProvider<HubService>.Instance;
@@ -20,6 +20,11 @@ namespace Chat.Api.Hubs
         ///  在线用户连接Id =>UId 映射
         /// </summary>
         public static ConcurrentDictionary<string, long> OnlineUsers { get; set; }
+
+        static OnlineHub()
+        {
+            OnlineUsers = new ConcurrentDictionary<string, long>();
+        }
 
         /// <summary>
         /// 成功连接
