@@ -1,15 +1,19 @@
-﻿using Chat.Model.Enum;
+﻿using Chat.Model.Entity.Chat;
+using Chat.Model.Enum;
 using Chat.Model.Utils;
 using Chat.Repository;
+using Chat.Utility;
 using Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Chat.Service
 {
     public class ChatService
     {
         private readonly ChatRepository chatDal = SingletonProvider<ChatRepository>.Instance;
+        private readonly UserInfoRepository userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
 
         public ResponseContext<GetChatListResponse> GetChatList(RequestContext<GetChatListRequest> request)
         {
@@ -29,9 +33,18 @@ namespace Chat.Service
             {
                 Content = ChatContentListTestData()
             };
+
+            var rtn = new List<ChatContentDetail>();
+
+            //我发给对方消息
+            rtn.AddRange(GetChatContentList(request.Content.UId, request.Content.PartnerUId,true));
+            //对方发给我的消息
+            rtn.AddRange(GetChatContentList(request.Content.PartnerUId, request.Content.UId,false));
+
+            response.Content.ChatContentList = rtn.OrderBy(a => a.CreateTime).ToList();
             return response;
         }
-
+        
         /// <summary>
         /// 删除会话
         /// </summary>
@@ -64,6 +77,32 @@ namespace Chat.Service
             return response;
         }
 
+        /// <summary>
+        /// 发送聊天内容
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ResponseContext<SendMessageResponse> SendMessage(RequestContext<SendMessageRequest> request)
+        {
+            var response = new ResponseContext<SendMessageResponse>()
+            {
+                Content = new SendMessageResponse()
+            };
+
+            var message = new ChatContent()
+            {
+                ChatId = Guid.NewGuid(),
+                UId = request.Content.UId,
+                PartnerUId = request.Content.PartnerUId,
+                ContentDetail = request.Content.ChatContent,
+                Type = request.Content.ChatContentType,
+                CreateTime = DateTime.Now,
+                HasRead = false
+            };
+
+            response.Content.IsExecuteSuccess= chatDal.InsertChatContent(message);
+            return response;
+        }
 
         public GetChatContentListReponse ChatContentListTestData()
         {
@@ -112,9 +151,30 @@ namespace Chat.Service
             return chatList;
         }
 
-        public ResponseContext<SendMessageResponse> SendMessage(RequestContext<SendMessageRequest> request)
+        private List<ChatContentDetail> GetChatContentList(long uId, long partnerUId,bool isOwner)
         {
-            throw new NotImplementedException();
+            var rtn = new List<ChatContentDetail>();
+            var message = chatDal.GetChatContent(uId, partnerUId);
+            var userInfo = userInfoDal.GetUserInfoByUId(uId);
+            if (userInfo == null|| message.IsNullOrEmpty())
+            {
+                return null;
+            }
+            foreach (var item in message)
+            {
+                var dto = new ChatContentDetail()
+                {
+                    IsOwner = isOwner,
+                    HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                    ChatContent = item.ContentDetail,
+                    ChatContentType = item.Type,
+                    ChatTime = item.CreateTime.GetDateDesc(),
+                    CreateTime= item.CreateTime,
+                    IsDisplayChatTime = true
+                };
+                rtn.Add(dto);
+            }
+            return rtn;
         }
     }
 }

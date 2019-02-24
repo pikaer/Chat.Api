@@ -1,40 +1,49 @@
 ﻿using Chat.Model.Enum;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chat.Model.Entity.Chat
 {
-    public class ChatHistory
+    public class ChatContent
     {
         ///<summary>
-        /// 唯一标识符
+        /// 会话Id,唯一标识符
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid ChatId { get; set; }
 
         /// <summary>
         /// 用户Id
         /// </summary>
-        public long UserId { get; set; }
+        public long UId { get; set; }
 
         /// <summary>
         /// 对方Id
         /// </summary>
-        public long PartnerId { get; set; }
+        public long PartnerUId { get; set; }
         
         /// <summary>
         /// 本条聊天内容
         /// </summary>
-        public string ChatContent { get; set; }
+        public string ContentDetail { get; set; }
 
         /// <summary>
         /// 聊天内容类别
         /// </summary>
-        public ChatContentEnum Type { get; set; }
+        public ChatContentTypeEnum Type { get; set; }
+
+        /// <summary>
+        /// 是否已读
+        /// </summary>
+        public bool HasRead { get; set; }
 
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime? UpdateTime { get; set; }
+       
     }
 }

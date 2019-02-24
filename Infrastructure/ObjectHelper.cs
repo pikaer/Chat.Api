@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Infrastructure
 {
@@ -22,6 +24,33 @@ namespace Infrastructure
                 string txt = ("Json值:" + value.ToString() + "转换失败");
             }
             return rtn;
+        }
+
+        /// <summary>
+        /// 判断集合是否为空
+        /// </summary>
+        public static bool IsNullOrEmpty<T>(this List<T> list)
+        {
+            if(list==null|| list.Count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 判断集合是否为空
+        /// </summary>
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> list)
+        {
+            if (list == null)
+            {
+                return true;
+            }
+            return !list.Any();
         }
     }
 }

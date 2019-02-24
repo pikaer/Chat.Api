@@ -1,4 +1,5 @@
 ﻿using Chat.Model.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace Chat.Model.Utils
@@ -540,6 +541,11 @@ namespace Chat.Model.Utils
         /// 聊天时间
         /// </summary>
         public string ChatTime { get; set; }
+
+        /// <summary>
+        /// 创建时间(主要用于排序）
+        /// </summary>
+        public DateTime CreateTime { get; set; }
 
         /// <summary>
         /// 是否展示聊天时间(一般每隔10分钟会展示一次时间）

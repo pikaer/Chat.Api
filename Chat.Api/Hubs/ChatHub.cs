@@ -31,15 +31,15 @@ namespace Chat.Api.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-            long userId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UserId"]);
-            //var user = _userInfoRepository.GetUserInfoByOpenIdOrUserId("", userId);
-            //if(user!=null)
-            //{
-            //    lock (SyncObj)
-            //    {
-            //        OnlineClients[Context.ConnectionId] = user;
-            //    }
-            //}
+            long uId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UId"]);
+            var user = _userInfoRepository.GetUserInfoByUId(uId);
+            if (user != null)
+            {
+                lock (SyncObj)
+                {
+                    OnlineClients[Context.ConnectionId] = user;
+                }
+            }
             await base.OnConnectedAsync();
         }
 
