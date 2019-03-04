@@ -25,10 +25,7 @@ namespace Infrastructure
             }
             return rtn;
         }
-
-        /// <summary>
-        /// 判断集合是否为空
-        /// </summary>
+        
         public static bool IsNullOrEmpty<T>(this List<T> list)
         {
             if(list==null|| list.Count == 0)
@@ -41,9 +38,18 @@ namespace Infrastructure
             }
         }
 
-        /// <summary>
-        /// 判断集合是否为空
-        /// </summary>
+        public static bool NotEmpty<T>(this List<T> list)
+        {
+            if (list != null && list.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> list)
         {
             if (list == null)
@@ -51,6 +57,18 @@ namespace Infrastructure
                 return true;
             }
             return !list.Any();
+        }
+
+        public static bool NotEmpty<T>(this IEnumerable<T> list)
+        {
+            if (list != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
