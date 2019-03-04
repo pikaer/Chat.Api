@@ -17,7 +17,7 @@ namespace Chat.Repository
 
         private readonly string SELECT_Online = "SELECT Id ,ConnectionId,UId,IsOnline,FirstConnectTime,LastConnectTime FROM dbo.hub_Online ";
 
-        private readonly string SELECT_OnChat = "SELECT Id ,ConnectionId,UId,IsOnline,FirstConnectTime,LastConnectTime FROM dbo.hub_Online ";
+        private readonly string SELECT_OnChat = "SELECT Id ,UId,PartnerUId  ,ConnectionId ,IsOnline,FirstConnectTime,LastConnectTime FROM dbo.hub_OnChat ";
 
         public Online GetOnlineUserByUId(long uid)
         {

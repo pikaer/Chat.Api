@@ -1,10 +1,12 @@
 ﻿using Chat.Model.Entity.Hubs;
 using Chat.Repository;
 using Chat.Service;
+using Chat.Utility;
 using Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Chat.Api.Hubs
@@ -21,29 +23,47 @@ namespace Chat.Api.Hubs
         public static ConcurrentDictionary<string, OnChat> OnlineChats { get; set; }
 
         /// <summary>
+        /// 初始化
+        /// </summary>
+        static OnChatHub()
+        {
+            OnlineChats = new ConcurrentDictionary<string, OnChat>();
+        }
+
+        /// <summary>
         /// 成功连接
         /// </summary>
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-            long uId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UId"]);
-            long partnerUId = Convert.ToInt64(Context.GetHttpContext().Request.Query["PartnerUId"]);
-            var user = _userInfoDal.GetUserInfoByUId(uId);
-            var partner = _userInfoDal.GetUserInfoByUId(partnerUId);
-            if (user != null&&partner!=null)
+            try
             {
-                //lock (SyncObj)
-                //{
-
-                //}
-
-                var onChat = hubService.OnChatConnected(uId, partnerUId, Context.ConnectionId);
-                if (onChat != null)
+                long uId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UId"]);
+                long partnerUId = Convert.ToInt64(Context.GetHttpContext().Request.Query["PartnerUId"]);
+                var user = _userInfoDal.GetUserInfoByUId(uId);
+                var partner = _userInfoDal.GetUserInfoByUId(partnerUId);
+                if (user != null && partner != null)
                 {
-                    OnlineChats[Context.ConnectionId] = onChat;
+                    lock (SyncObj)
+                    {
+                        var onChat = hubService.OnChatConnected(uId, partnerUId, Context.ConnectionId);
+                        if (onChat != null)
+                        {
+                            OnlineChats[Context.ConnectionId] = onChat;
+                        }
+                    }
                 }
+                await base.OnConnectedAsync();
             }
-            await base.OnConnectedAsync();
+            catch (Exception ex)
+            {
+                Log.Error("OnChatHub-OnConnectedAsync", "用户连接异常", ex,null,
+                    new Dictionary<string, string>()
+                    {
+                        { "UId",Context.GetHttpContext().Request.Query["UId"] },
+                        { "PartnerUId",Context.GetHttpContext().Request.Query["PartnerUId"] }
+                    });
+            }
         }
 
         /// <summary>
@@ -53,14 +73,24 @@ namespace Chat.Api.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception exception=null)
         {
-            await base.OnDisconnectedAsync(exception);
+            try
+            {
+                await base.OnDisconnectedAsync(exception);
 
-            OnlineChats.TryRemove(Context.ConnectionId, out OnChat onChat);
-            hubService.OnChatDisconnected(onChat.UId);
-            //lock (SyncObj)
-            //{
-
-            //}
+                lock (SyncObj)
+                {
+                    OnlineChats.TryRemove(Context.ConnectionId, out OnChat onChat);
+                    hubService.OnChatDisconnected(onChat.UId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("OnChatHub-OnDisconnectedAsync", "用户断开连接异常", ex, null,
+                    new Dictionary<string, string>()
+                    {
+                        { "ConnectionId",Context.GetHttpContext().Request.Query["ConnectionId"] }
+                    });
+            }
         }
         
     }

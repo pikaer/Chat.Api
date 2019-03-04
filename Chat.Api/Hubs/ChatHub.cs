@@ -50,7 +50,6 @@ namespace Chat.Api.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-
             await base.OnDisconnectedAsync(exception);
             lock (SyncObj)
             {
