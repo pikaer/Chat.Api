@@ -17,12 +17,17 @@ namespace Chat.Service
             return hubDal.GetOnlineUserByUId(uId);
         }
 
+        public OnChat GetOnChatByUId(long uId)
+        {
+            return hubDal.GetOnChatByUId(uId);
+        }
+
         /// <summary>
         /// 登录在线
         /// </summary>
         public bool OnlineConnected(long uId,string connectionId)
         {
-            var onlineUser= hubDal.GetOnlineUserByUId(uId);
+            var onlineUser= GetOnlineUserByUId(uId);
             if (onlineUser == null)
             {
                 var entity = new Online()
@@ -50,7 +55,7 @@ namespace Chat.Service
         /// <returns></returns>
         public OnChat OnChatConnected(long uId, long partnerUId, string connectionId)
         {
-            var onChat= hubDal.GetOnChatByUId(uId);
+            var onChat= GetOnChatByUId(uId);
             if (onChat == null)
             {
                 var entity = new OnChat()

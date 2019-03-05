@@ -15,6 +15,8 @@ namespace Chat.Api.Hubs
     {
         private UserInfoRepository _userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
         private HubService hubService = SingletonProvider<HubService>.Instance;
+
+        //操作OnlineChats的时候，要加锁
         private static readonly object SyncObj = new object();
 
         /// <summary>
@@ -79,6 +81,7 @@ namespace Chat.Api.Hubs
 
                 lock (SyncObj)
                 {
+                    long uId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UId"]);
                     OnlineChats.TryRemove(Context.ConnectionId, out OnChat onChat);
                     hubService.OnChatDisconnected(onChat.UId);
                 }
@@ -92,6 +95,32 @@ namespace Chat.Api.Hubs
                     });
             }
         }
-        
+
+        /// <summary>
+        /// 订阅消息
+        /// </summary>
+        public async Task SubScribeMessage(long uId, long partnerUId)
+        {
+            try
+            {
+                var onChat = hubService.GetOnChatByUId(partnerUId);
+
+                //当对方正在和自己聊天,通知对方刷新页面
+                if (onChat!=null&&onChat.IsOnline&& onChat.PartnerUId== uId)
+                {
+                    await Clients.Client(onChat.ConnectionId).SendAsync("receive", new { partnerUId= uId });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error("OnChatHub-SubScribeMessage", "用户订阅消息异常", ex, null,
+                    new Dictionary<string, string>()
+                    {
+                        { "UId",Context.GetHttpContext().Request.Query["UId"] },
+                        { "PartnerUId",Context.GetHttpContext().Request.Query["PartnerUId"] }
+                    });
+            }
+        }
     }
 }

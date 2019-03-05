@@ -78,7 +78,7 @@ namespace Chat.Repository
                 try
                 {
                     var sql = @"UPDATE dbo.hub_Online
-                                   SET IsOnline =false
+                                   SET IsOnline =0
                                       ,LastConnectTime= @LastConnectTime
                                  WHERE UId=@UId";
                     return Db.Execute(sql, new { UId= uId, LastConnectTime =DateTime.Now}) > 0;
@@ -98,7 +98,7 @@ namespace Chat.Repository
                 try
                 {
                     var sql = @"UPDATE dbo.hub_OnChat
-                                   SET IsOnline =false
+                                   SET IsOnline = 0
                                       ,LastConnectTime= @LastConnectTime
                                  WHERE UId=@UId";
                     return Db.Execute(sql, new { UId = uId, LastConnectTime = DateTime.Now }) > 0;

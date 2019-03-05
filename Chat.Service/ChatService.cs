@@ -21,7 +21,7 @@ namespace Chat.Service
             {
                 Content = new GetChatListResponse()
             };
-            
+
             response.Content.ChatList = ChatListTestData();
             response.Content.TotalUnReadCount = "50";
             return response;
@@ -37,14 +37,24 @@ namespace Chat.Service
             var rtn = new List<ChatContentDetail>();
 
             //我发给对方消息
-            rtn.AddRange(GetChatContentList(request.Content.UId, request.Content.PartnerUId,true));
-            //对方发给我的消息
-            rtn.AddRange(GetChatContentList(request.Content.PartnerUId, request.Content.UId,false));
+            var myMessahes = GetChatContentList(request.Content.UId, request.Content.PartnerUId, true);
+            if(myMessahes.NotEmpty())
+            {
+                rtn.AddRange(myMessahes);
+            }
 
-            response.Content.ChatContentList = rtn.OrderBy(a => a.CreateTime).ToList();
+            //对方发给我的消息
+            var partnerMessages = GetChatContentList(request.Content.PartnerUId, request.Content.UId, false);
+            if(partnerMessages.NotEmpty())
+            {
+                rtn.AddRange(partnerMessages);
+            }
+            
+
+            //response.Content.ChatContentList = rtn.OrderBy(a => a.CreateTime).ToList();
             return response;
         }
-        
+
         /// <summary>
         /// 删除会话
         /// </summary>
@@ -56,7 +66,7 @@ namespace Chat.Service
                 {
                     IsExecuteSuccess = true,
                     CurrentTotalUnReadCount = "50"
-        }
+                }
             };
             return response;
         }
@@ -71,7 +81,7 @@ namespace Chat.Service
                 Content = new ClearUnReadCountResponse()
                 {
                     IsExecuteSuccess = true,
-                    CurrentTotalUnReadCount="67"
+                    CurrentTotalUnReadCount = "67"
                 }
             };
             return response;
@@ -100,7 +110,7 @@ namespace Chat.Service
                 HasRead = false
             };
 
-            response.Content.IsExecuteSuccess= chatDal.InsertChatContent(message);
+            response.Content.IsExecuteSuccess = chatDal.InsertChatContent(message);
             return response;
         }
 
@@ -109,12 +119,12 @@ namespace Chat.Service
             var rtn = new GetChatContentListReponse();
             var item = new List<ChatContentDetail>();
             var today = DateTime.Now;
-            for(int i = 1; i <= 40; i++)
+            for (int i = 1; i <= 40; i++)
             {
                 var dto = new ChatContentDetail()
                 {
                     IsOwner = i % 3 == 0, //取余数
-                    HeadImgPath= i % 3==0? "../../content/images/pikaer.jpg" : "../../content/images/partner.jpg",
+                    HeadImgPath = i % 3 == 0 ? "../../content/images/pikaer.jpg" : "../../content/images/partner.jpg",
                     ChatContent = string.Format("我给你发送了第{0}条消息对话", i),
                     ChatContentType = ChatContentTypeEnum.Text,
                     ChatTime = today.AddDays(i).GetDateDesc(),
@@ -151,12 +161,12 @@ namespace Chat.Service
             return chatList;
         }
 
-        private List<ChatContentDetail> GetChatContentList(long uId, long partnerUId,bool isOwner)
+        private List<ChatContentDetail> GetChatContentList(long uId, long partnerUId, bool isOwner)
         {
             var rtn = new List<ChatContentDetail>();
             var message = chatDal.GetChatContent(uId, partnerUId);
             var userInfo = userInfoDal.GetUserInfoByUId(uId);
-            if (userInfo == null|| message.IsNullOrEmpty())
+            if (userInfo == null || message.IsNullOrEmpty())
             {
                 return null;
             }
@@ -169,7 +179,7 @@ namespace Chat.Service
                     ChatContent = item.ContentDetail,
                     ChatContentType = item.Type,
                     ChatTime = item.CreateTime.GetDateDesc(),
-                    CreateTime= item.CreateTime,
+                    CreateTime = item.CreateTime,
                     IsDisplayChatTime = true
                 };
                 rtn.Add(dto);
