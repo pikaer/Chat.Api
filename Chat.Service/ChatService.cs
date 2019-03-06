@@ -31,7 +31,7 @@ namespace Chat.Service
         {
             var response = new ResponseContext<GetChatContentListReponse>()
             {
-                Content = ChatContentListTestData()
+                Content =new GetChatContentListReponse()
             };
 
             var rtn = new List<ChatContentDetail>();
@@ -49,9 +49,24 @@ namespace Chat.Service
             {
                 rtn.AddRange(partnerMessages);
             }
+
+            rtn = rtn.OrderBy(a => a.CreateTime).ToList();
+            if (rtn.NotEmpty()&&rtn.Count > 1)
+            {
+                //聊天时间相隔小于10分钟就不展示
+                for (int i = 0; i < rtn.Count-1; i++)
+                {
+                    var time1 = rtn[i].CreateTime;
+                    var time2 = rtn[i + 1].CreateTime;
+                    if (time1.AddMinutes(10) < time2)
+                    {
+                        rtn[i].ChatTime = "";
+                    }
+                }
+            }
             
 
-            //response.Content.ChatContentList = rtn.OrderBy(a => a.CreateTime).ToList();
+            response.Content.ChatContentList = rtn.OrderBy(a => a.CreateTime).ToList();
             return response;
         }
 
