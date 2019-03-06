@@ -40,6 +40,7 @@ namespace Chat.Api.Hubs
         {
             try
             {
+                //用户连接信息同步到数据库目的：不同页面之间共享用户行为信息
                 long uId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UId"]);
                 long partnerUId = Convert.ToInt64(Context.GetHttpContext().Request.Query["PartnerUId"]);
                 var user = _userInfoDal.GetUserInfoByUId(uId);

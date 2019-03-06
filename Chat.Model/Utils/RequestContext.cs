@@ -32,6 +32,7 @@ namespace Chat.Model.Utils
         {
             TransactionId = Guid.NewGuid();
         }
+
         /// <summary>
         /// Token信息
         /// </summary>

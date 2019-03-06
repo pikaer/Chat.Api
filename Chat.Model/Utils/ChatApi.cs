@@ -585,7 +585,6 @@ namespace Chat.Model.Utils
     }
     #endregion
     
-
     #region ClearUnReadCount
     /// <summary>
     /// 清除未读条数
