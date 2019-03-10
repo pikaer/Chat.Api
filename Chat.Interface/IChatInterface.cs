@@ -73,5 +73,11 @@ namespace Chat.Interface
         /// 发送消息
         /// </summary>
         ResponseContext<SendMessageResponse> SendMessage(RequestContext<SendMessageRequest> request);
+
+        /// <summary>
+        /// 获取动态
+        /// </summary>
+        ResponseContext<GetMomentsResponse> GetMoments(RequestContext<GetMomentsRequest> request);
+
     }
 }

@@ -14,6 +14,7 @@ namespace Chat.Interface
         private UserInfoService userInfoService = SingletonProvider<UserInfoService>.Instance;
         private GoldCoinService goldCoinService = SingletonProvider<GoldCoinService>.Instance;
         private ChatService chatService = SingletonProvider<ChatService>.Instance;
+        private MomentService momentService = SingletonProvider<MomentService>.Instance;
 
         public ResponseContext<GetUserInfoResponse> GetUserInfo(RequestContext<GetUserInfoRequest> request)
         {
@@ -78,6 +79,11 @@ namespace Chat.Interface
         public ResponseContext<SendMessageResponse> SendMessage(RequestContext<SendMessageRequest> request)
         {
             return chatService.SendMessage(request);
+        }
+
+        public ResponseContext<GetMomentsResponse> GetMoments(RequestContext<GetMomentsRequest> request)
+        {
+           return momentService.GetMoments(request);
         }
     }
 }

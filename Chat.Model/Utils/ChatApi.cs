@@ -656,4 +656,80 @@ namespace Chat.Model.Utils
         public bool IsExecuteSuccess { get; set; }
     }
     #endregion
+
+    #region GetMoments
+    /// <summary>
+    /// 获取动态请求体
+    /// </summary>
+    public class GetMomentsRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 动态类别
+        /// </summary>
+        public MomentTypeEnum MomentType { get; set; }
+    }
+
+    public class GetMomentsResponse
+    {
+        public List<MomentType> MomentList { get; set; }
+    }
+
+    public class MomentType
+    {
+        /// <summary>
+        /// 动态Id
+        /// </summary>
+        public string MomentId { get; set; }
+
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 头像路径
+        /// </summary>
+        public string HeadImgPath { get; set; }
+
+        /// <summary>
+        /// 用户展示名称（当备注为空时，为用户昵称，否则是备注）
+        /// </summary>
+        public string DispalyName { get; set; }
+
+        /// <summary>
+        /// 发布时间
+        /// </summary>
+        public string PublishTime { get; set; }
+
+        /// <summary>
+        /// 文本内容
+        /// </summary>
+        public string TextContent { get; set; }
+
+        /// <summary>
+        /// 图片内容
+        /// </summary>
+        public List<string> ImgContents { get; set; }
+
+        /// <summary>
+        /// 是否已经点赞
+        /// </summary>
+        public bool HasSupport { get; set; }
+
+        /// <summary>
+        /// 点赞数
+        /// </summary>
+        public string SupportCount { get; set; }
+
+        /// <summary>
+        /// 评论数
+        /// </summary>
+        public string CommentCount { get; set; }
+    }
+    #endregion
 }
