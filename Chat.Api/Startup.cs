@@ -70,7 +70,6 @@ namespace Chat.Api
             //集线器
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chat");
                 routes.MapHub<OnChatHub>("/onChat");
                 routes.MapHub<OnlineHub>("/online");
             });
