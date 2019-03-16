@@ -1,16 +1,10 @@
 ﻿using Chat.Interface;
 using Chat.Model.Enum;
 using Chat.Model.Utils;
-using Chat.Utility;
 using Infrastructure;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 
 namespace Chat.Api.Controllers
 {
@@ -57,12 +51,11 @@ namespace Chat.Api.Controllers
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "GetMoments", ex);
             }
         }
-
-
+        
         /// <summary>
         /// 发布动态
         /// </summary>
-        /// <returns></returns>
+        [HttpPost]
         public JsonResult PublishMoment()
         {
             try
@@ -97,7 +90,7 @@ namespace Chat.Api.Controllers
         /// <summary>
         /// 上传动态图片
         /// </summary>
-        /// <returns></returns>
+        [HttpPost]
         public JsonResult UpLoadImg()
         {
             var response = new ResponseContext<UpLoadImgResponse>()
@@ -108,7 +101,7 @@ namespace Chat.Api.Controllers
             {
                 var uploadfile = Request.Form.Files[0];
 
-                var filePath = "MomentImg".ToMomentImagePath();
+                var filePath = JsonSettingHelper.AppSettings["SaveMomentImg"];
 
                 if (!Directory.Exists(filePath))
                 {
@@ -187,6 +180,41 @@ namespace Chat.Api.Controllers
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "UpLoadImg", ex);
+            }
+        }
+
+        /// <summary>
+        /// 删除已上传的图片
+        /// </summary>
+        [HttpPost]
+        public JsonResult DeleteImg()
+        {
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                var request = json.JsonToObject<RequestContext<DeleteImgRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null|| request.Content.ImgPath.IsNullOrEmpty())
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                var response = api.DeleteImg(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetMoments", ex);
             }
         }
     }

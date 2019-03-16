@@ -83,5 +83,10 @@ namespace Chat.Interface
         /// 发布动态
         /// </summary>
         ResponseContext<PublishMomentResponse> PublishMoment(RequestContext<PublishMomentRequest> request);
+
+        /// <summary>
+        /// 删除已经上传的图片
+        /// </summary>
+        ResponseContext<DeleteImgResponse> DeleteImg(RequestContext<DeleteImgRequest> request);
     }
 }

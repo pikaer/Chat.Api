@@ -793,7 +793,9 @@ namespace Chat.Model.Utils
         /// </summary>
         public bool IsExecuteSuccess { get; set; }
     }
+    #endregion
 
+    #region UpLoadImg
     public class UpLoadImgResponse
     {
         /// <summary>
@@ -813,4 +815,18 @@ namespace Chat.Model.Utils
     }
     #endregion
 
+    #region DeleteImg
+    public class DeleteImgRequest
+    {
+        public string ImgPath { get; set; }
+    }
+
+    public class DeleteImgResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
 }

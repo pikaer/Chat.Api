@@ -6,6 +6,7 @@ using Chat.Utility;
 using Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Chat.Service
@@ -115,7 +116,7 @@ namespace Chat.Service
                 CreateTime = DateTime.Now
             };
 
-            bool success = false;
+            bool success = true;
             if (request.Content.ImgContents.NotEmpty())
             {
                 foreach (var item in request.Content.ImgContents)
@@ -147,6 +148,27 @@ namespace Chat.Service
                 rtn.Head = new ResponseHead(false,ErrCodeEnum.InsertError);
             }
             return rtn;
+        }
+
+        public ResponseContext<DeleteImgResponse> DeleteImg(RequestContext<DeleteImgRequest> request)
+        {
+            var response = new ResponseContext<DeleteImgResponse>()
+            {
+                Content = new DeleteImgResponse()
+            };
+
+            string path = JsonSettingHelper.AppSettings["SaveMomentImg"]+request.Content.ImgPath;
+
+            try
+            {
+                File.Delete(path);
+                response.Content.IsExecuteSuccess = true;
+            } 
+            catch(Exception ex)
+            {
+                Log.Error("DeleteImg", "删除图片失败，path" + path, ex);
+            }
+            return response;
         }
 
         /// <summary>
