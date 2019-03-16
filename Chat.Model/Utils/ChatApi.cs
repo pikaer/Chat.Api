@@ -717,6 +717,11 @@ namespace Chat.Model.Utils
         public List<string> ImgContents { get; set; }
 
         /// <summary>
+        /// 动态评论
+        /// </summary>
+        public List<DiscussType > DiscussList { get; set; }
+
+        /// <summary>
         /// 是否已经点赞
         /// </summary>
         public bool HasSupport { get; set; }
@@ -731,5 +736,81 @@ namespace Chat.Model.Utils
         /// </summary>
         public string CommentCount { get; set; }
     }
+
+    /// <summary>
+    /// 动态评论
+    /// </summary>
+    public class DiscussType
+    {
+        /// <summary>
+        /// 发表Moment的用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 评论人的Id
+        /// </summary>
+        public long PartnerUId { get; set; }
+
+        /// <summary>
+        /// 评论内容
+        /// </summary>
+        public string DiscussContent { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public string CreateTimeDesc { get; set; }
+    }
     #endregion
+
+    #region PublishMoment
+    /// <summary>
+    /// 发布动态
+    /// </summary>
+    public class PublishMomentRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 文本内容
+        /// </summary>
+        public string TextContent { get; set; }
+
+        /// <summary>
+        /// 图片内容
+        /// </summary>
+        public List<UpLoadImgResponse> ImgContents { get; set; }
+    }
+
+    public class PublishMomentResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+    }
+
+    public class UpLoadImgResponse
+    {
+        /// <summary>
+        /// 文件存储名
+        /// </summary>
+        public string ImgPath { get; set; }
+
+        /// <summary>
+        /// 文件原图大小
+        /// </summary>
+        public long ImgLength { get; set; }
+
+        /// <summary>
+        /// 后缀
+        /// </summary>
+        public string ImgMime { get; set; }
+    }
+    #endregion
+
 }

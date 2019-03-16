@@ -1,16 +1,19 @@
-﻿using Chat.Model.Enum;
+﻿using Chat.Model.Entity.Moment;
+using Chat.Model.Enum;
 using Chat.Model.Utils;
 using Chat.Repository;
 using Chat.Utility;
 using Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Chat.Service
 {
     public class MomentService
     {
         private readonly MomentRepository momentDal = SingletonProvider<MomentRepository>.Instance;
+        private UserInfoRepository userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
 
         public ResponseContext<GetMomentsResponse> GetMoments(RequestContext<GetMomentsRequest> request)
         {
@@ -19,20 +22,130 @@ namespace Chat.Service
                 Content = new GetMomentsResponse()
             };
 
-            switch (request.Content.MomentType)
+            bool testOpen = true;
+
+            if (testOpen)
             {
-                case MomentTypeEnum.Attention:
-                    rtn.Content.MomentList = GetAttentionMomentsTestData();
-                    break;
-                case MomentTypeEnum.Newest:
-                    rtn.Content.MomentList = GetNewestMomentsTestData();
-                    break;
-                case MomentTypeEnum.Recommend:
-                default:
-                    rtn.Content.MomentList = GetRecommendMomentsTestData();
-                    break;
+                switch (request.Content.MomentType)
+                {
+                    case MomentTypeEnum.Attention:
+                        rtn.Content.MomentList = GetAttentionMomentsTestData();
+                        break;
+                    case MomentTypeEnum.Newest:
+                        rtn.Content.MomentList = GetNewestMomentsTestData();
+                        break;
+                    case MomentTypeEnum.Recommend:
+                    default:
+                        rtn.Content.MomentList = GetRecommendMomentsTestData();
+                        break;
+                }
+                return rtn;
+            }
+            
+            var momentList = new List<MomentType>();
+            var moments = momentDal.GetMomentList();
+            foreach(var item in moments)
+            {
+                var userInfo = userInfoDal.GetUserInfoByUId(item.UId);
+                if (userInfo == null)
+                {
+                    continue;
+                }
+                var dto = new MomentType()
+                {
+                    MomentId = item.MomentId.ToString(),
+                    UId = item.UId,
+                    DispalyName = userInfo.NickName,
+                    HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                    PublishTime = item.CreateTime.GetDateDesc(),
+                    TextContent = item.TextContent
+                };
+
+                var imgList = momentDal.GetMomentImgList(item.MomentId);
+                if (imgList.NotEmpty())
+                {
+                    dto.ImgContents=new List<string>();
+                    foreach(var img in imgList)
+                    {
+                        dto.ImgContents.Add(img.ImgPath.ToMomentImagePath());
+                    }
+                }
+
+                var discussList = momentDal.GetMomentDiscussList(item.MomentId);
+                if (discussList.NotEmpty())
+                {
+                    dto.DiscussList = discussList.Select(a=>new DiscussType
+                    {
+                        UId= item.UId,
+                        PartnerUId=a.PartnerUId,
+                        DiscussContent=a.DiscussContent,
+                        CreateTimeDesc=a.CreateTime.GetDateDesc()
+                    }).ToList();
+
+                    dto.CommentCount = discussList.Count.ToString();
+                }
+
+                var supportList = momentDal.GetMomentSupportList(item.MomentId);
+                if (supportList.NotEmpty())
+                {
+                    dto.SupportCount = supportList.Count.ToString();
+                }
+            }
+            return rtn;
+        }
+
+        /// <summary>
+        /// 发布动态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ResponseContext<PublishMomentResponse> PublishMoment(RequestContext<PublishMomentRequest> request)
+        {
+            var rtn = new ResponseContext<PublishMomentResponse>()
+            {
+                Content = new PublishMomentResponse()
+            };
+
+            var moment = new MomentContent()
+            {
+                MomentId = Guid.NewGuid(),
+                UId = request.Content.UId,
+                TextContent = request.Content.TextContent,
+                MomentState = MomentStateEnum.Default,
+                CreateTime = DateTime.Now
+            };
+
+            bool success = false;
+            if (request.Content.ImgContents.NotEmpty())
+            {
+                foreach (var item in request.Content.ImgContents)
+                {
+                    var img = new MomentImg()
+                    {
+                        ImgId = Guid.NewGuid(),
+                        MomentId = moment.MomentId,
+                        ImgPath = item.ImgPath,
+                        ImgMime = item.ImgMime,
+                        ImgLength = item.ImgLength,
+                        CreateTime = DateTime.Now
+                    };
+                    success=momentDal.InsertMomentImg(img);
+                    if (!success)
+                    {
+                        break;
+                    }
+                }
+            }
+            if (success)
+            {
+                success = momentDal.InsertMomentContent(moment);
             }
 
+            rtn.Content.IsExecuteSuccess = success;
+            if (!success)
+            {
+                rtn.Head = new ResponseHead(false,ErrCodeEnum.InsertError);
+            }
             return rtn;
         }
 

@@ -85,5 +85,10 @@ namespace Chat.Interface
         {
            return momentService.GetMoments(request);
         }
+
+        public ResponseContext<PublishMomentResponse> PublishMoment(RequestContext<PublishMomentRequest> request)
+        {
+            return momentService.PublishMoment(request);
+        }
     }
 }

@@ -79,5 +79,9 @@ namespace Chat.Interface
         /// </summary>
         ResponseContext<GetMomentsResponse> GetMoments(RequestContext<GetMomentsRequest> request);
 
+        /// <summary>
+        /// 发布动态
+        /// </summary>
+        ResponseContext<PublishMomentResponse> PublishMoment(RequestContext<PublishMomentRequest> request);
     }
 }

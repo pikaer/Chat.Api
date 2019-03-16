@@ -13,7 +13,7 @@ namespace Chat.Api.Hubs
 {
     public class OnChatHub: Hub
     {
-        private UserInfoRepository _userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
+        private UserInfoRepository userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
         private HubService hubService = SingletonProvider<HubService>.Instance;
 
         //操作OnlineChats的时候，要加锁
@@ -43,8 +43,8 @@ namespace Chat.Api.Hubs
                 //用户连接信息同步到数据库目的：不同页面之间共享用户行为信息
                 long uId = Convert.ToInt64(Context.GetHttpContext().Request.Query["UId"]);
                 long partnerUId = Convert.ToInt64(Context.GetHttpContext().Request.Query["PartnerUId"]);
-                var user = _userInfoDal.GetUserInfoByUId(uId);
-                var partner = _userInfoDal.GetUserInfoByUId(partnerUId);
+                var user = userInfoDal.GetUserInfoByUId(uId);
+                var partner = userInfoDal.GetUserInfoByUId(partnerUId);
                 if (user != null && partner != null)
                 {
                     lock (SyncObj)
