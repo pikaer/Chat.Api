@@ -15,6 +15,7 @@ namespace Chat.Api.Controllers
     [ApiController]
     public class MomentController : BaseController
     {
+        private readonly string MODULE = "MomentController";
         private readonly IChatInterface api = SingletonProvider<ChatImplement>.Instance;
 
         /// <summary>
@@ -23,6 +24,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetMoments()
         {
+            RequestContext<GetMomentsRequest>request=null;
+            ResponseContext<GetMomentsResponse>response=null;
             try
             {
                 string json = GetInputString();
@@ -30,7 +33,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<GetMomentsRequest>>();
+                request = json.JsonToObject<RequestContext<GetMomentsRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -43,12 +46,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.GetMoments(request);
+                response = api.GetMoments(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "GetMoments", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetMoments", request?.Head, response?.Head, request, response);
             }
         }
         
@@ -58,6 +65,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult PublishMoment()
         {
+            RequestContext<PublishMomentRequest> request = null;
+            ResponseContext<PublishMomentResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -65,7 +74,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<PublishMomentRequest>>();
+                request = json.JsonToObject<RequestContext<PublishMomentRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -78,12 +87,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.PublishMoment(request);
+                response = api.PublishMoment(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
-                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetMoments", ex);
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "PublishMoment", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "PublishMoment", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -189,6 +202,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult DeleteImg()
         {
+            RequestContext<DeleteImgRequest> request = null;
+            ResponseContext<DeleteImgResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -196,7 +211,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<DeleteImgRequest>>();
+                request = json.JsonToObject<RequestContext<DeleteImgRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -209,12 +224,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.DeleteImg(request);
+                response = api.DeleteImg(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
-                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetMoments", ex);
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "DeleteImg", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "DeleteImg", request?.Head, response?.Head, request, response);
             }
         }
     }

@@ -25,6 +25,17 @@ namespace Infrastructure
             }
             return rtn;
         }
+
+        /// <summary>
+        /// 将实体类序列化为JSON字符串
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string SerializeToString<T>(this T data)
+        {
+            return JsonConvert.SerializeObject(data);
+        }
         
         public static bool IsNullOrEmpty<T>(this List<T> list)
         {

@@ -13,6 +13,7 @@ namespace Chat.Api.Controllers
     [Route("api/[controller]/[action]")]
     public class GoldCoinController : BaseController
     {
+        private readonly string MODULE = "GoldCoinController";
         private readonly IChatInterface api = SingletonProvider<ChatImplement>.Instance;
 
         /// <summary>
@@ -21,6 +22,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetGoldCoinNumber()
         {
+            RequestContext<GetGoldCoinNumberRequest> request = null;
+            ResponseContext<GetGoldCoinNumberResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -28,7 +31,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<GetGoldCoinNumberRequest>>();
+                request = json.JsonToObject<RequestContext<GetGoldCoinNumberRequest>>();
 
                 //ToDo => 优化
                 if (request == null)
@@ -49,14 +52,17 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.GetGoldCoinNumber(request);
+                response = api.GetGoldCoinNumber(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
-                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetGoldCoinNumberByUid", ex);
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetGoldCoinNumber", ex);
             }
-
+            finally
+            {
+                WriteServiceLog(MODULE, "GetGoldCoinNumber", request?.Head, response?.Head, request, response);
+            }
         }
 
         /// <summary>
@@ -66,33 +72,46 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult UpdateGoldCoinNumber()
         {
-            string json = GetInputString();
-            if (string.IsNullOrEmpty(json))
+            RequestContext<UpdateGoldCoinRequest> request = null;
+            ResponseContext<UpdateGoldCoinResponse> response = null;
+            try
             {
-                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
-            }
-            var request = json.JsonToObject<RequestContext<UpdateGoldCoinRequest>>();
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<UpdateGoldCoinRequest>>();
 
-            if (request == null)
-            {
-                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
-            }
-            if (request.Head == null)
-            {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
-            }
-            if (request.Content == null)
-            {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
-            }
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
 
-            if (request.Content.UId <= 0)
-            {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
-            }
+                if (request.Content.UId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
 
-            var response = api.UpdateGoldCoin(request);
-            return new JsonResult(response);
+                response = api.UpdateGoldCoin(request);
+                return new JsonResult(response);
+            }
+            catch(Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "UpdateGoldCoinNumber", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "UpdateGoldCoinNumber", request?.Head, response?.Head, request, response);
+            }
         }
 
         /// <summary>
@@ -102,34 +121,47 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetGoldCoinDetails()
         {
-            string json = GetInputString();
+            RequestContext<GetGoldCoinDetailsRequest> request = null;
+            ResponseContext<GetGoldCoinDetailsResponse> response = null;
+            try
+            {
+                string json = GetInputString();
 
-            if (string.IsNullOrEmpty(json))
-            {
-                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
-            }
-            var request = json.JsonToObject<RequestContext<GetGoldCoinDetailsRequest>>();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<GetGoldCoinDetailsRequest>>();
 
-            if (request == null)
-            {
-                return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
-            }
-            if (request.Head == null)
-            {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
-            }
-            if (request.Content == null)
-            {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
-            }
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
 
-            if (request.Content.UId <= 0)
-            {
-                return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
-            }
+                if (request.Content.UId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
 
-            var response = api.GetGoldCoinDetails(request);
-            return new JsonResult(response);
+                response = api.GetGoldCoinDetails(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetGoldCoinDetails", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetGoldCoinDetails", request?.Head, response?.Head, request, response);
+            }
         }
     }
 }

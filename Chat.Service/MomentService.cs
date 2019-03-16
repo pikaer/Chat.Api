@@ -22,10 +22,9 @@ namespace Chat.Service
             {
                 Content = new GetMomentsResponse()
             };
-
-            bool testOpen = true;
-
-            if (testOpen)
+            
+            //测试数据
+            if (SwitchControl.TestIsOpen())
             {
                 switch (request.Content.MomentType)
                 {
@@ -166,7 +165,7 @@ namespace Chat.Service
             } 
             catch(Exception ex)
             {
-                Log.Error("DeleteImg", "删除图片失败，path" + path, ex);
+                Log.Error("DeleteImg", "删除图片失败，path" + path, ex,request.Head);
             }
             return response;
         }

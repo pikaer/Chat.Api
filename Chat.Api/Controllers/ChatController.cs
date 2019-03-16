@@ -14,6 +14,7 @@ namespace Chat.Api.Controllers
     [ApiController]
     public class ChatController : BaseController
     {
+        private readonly string MODULE = "ChatController";
         private readonly IChatInterface api = SingletonProvider<ChatImplement>.Instance;
 
         /// <summary>
@@ -22,6 +23,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetChatList()
         {
+            RequestContext<GetChatListRequest> request = null;
+            ResponseContext<GetChatListResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -29,7 +32,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<GetChatListRequest>>();
+                request = json.JsonToObject<RequestContext<GetChatListRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -42,12 +45,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.GetChatList(request);
+                response = api.GetChatList(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "GetChatList", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetChatList", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -57,6 +64,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetChatContentList()
         {
+            RequestContext<GetChatContentListRequest> request = null;
+            ResponseContext<GetChatContentListReponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -64,7 +73,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<GetChatContentListRequest>>();
+                request = json.JsonToObject<RequestContext<GetChatContentListRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -77,12 +86,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.GetChatContentList(request);
+                response = api.GetChatContentList(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "GetChatContentList", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetChatContentList", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -92,6 +105,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult DeleteChat()
         {
+            RequestContext<DeleteChatRequest> request = null;
+            ResponseContext<DeleteChatResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -99,7 +114,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<DeleteChatRequest>>();
+                request = json.JsonToObject<RequestContext<DeleteChatRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -112,12 +127,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.DeleteChat(request);
+                response = api.DeleteChat(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "DeleteChat", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "DeleteChat", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -127,6 +146,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult ClearUnReadCount()
         {
+            RequestContext<ClearUnReadCountRequest> request = null;
+            ResponseContext<ClearUnReadCountResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -134,7 +155,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<ClearUnReadCountRequest>>();
+                request = json.JsonToObject<RequestContext<ClearUnReadCountRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -147,12 +168,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.ClearUnReadCount(request);
+                 response = api.ClearUnReadCount(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "ClearUnReadCount", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "ClearUnReadCount", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -162,6 +187,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult SendMessage()
         {
+            RequestContext<SendMessageRequest> request = null;
+            ResponseContext<SendMessageResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -169,7 +196,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<SendMessageRequest>>();
+                request = json.JsonToObject<RequestContext<SendMessageRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -182,12 +209,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.SendMessage(request);
+                response = api.SendMessage(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "SendMessage", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "SendMessage", request?.Head, response?.Head, request, response);
             }
         }
     }

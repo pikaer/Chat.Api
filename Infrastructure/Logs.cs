@@ -6,6 +6,9 @@ using System.Data.SqlClient;
 
 namespace Infrastructure
 {
+    /// <summary>
+    /// 业务日志
+    /// </summary>
     public static class Logs
     {
         /// <summary>

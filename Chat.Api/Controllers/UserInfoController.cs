@@ -14,6 +14,7 @@ namespace Chat.Api.Controllers
     [Route("api/[controller]/[action]")]
     public class UserInfoController : BaseController
     {
+        private readonly string MODULE = "UserInfoController";
         private readonly IChatInterface api = SingletonProvider<ChatImplement>.Instance;
 
         /// <summary>
@@ -22,6 +23,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetUserInfo()
         {
+            RequestContext<GetUserInfoRequest> request = null;
+            ResponseContext<GetUserInfoResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -29,7 +32,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<GetUserInfoRequest>>();
+                request = json.JsonToObject<RequestContext<GetUserInfoRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -42,12 +45,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.GetUserInfo(request);
+                response = api.GetUserInfo(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "GetUserInfo", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetUserInfo", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -57,6 +64,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult SetUserInfo()
         {
+            RequestContext<SetUserInfoRequest> request = null;
+            ResponseContext<SetUserInfoResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -64,7 +73,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<SetUserInfoRequest>>();
+                request = json.JsonToObject<RequestContext<SetUserInfoRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -77,12 +86,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.SetUserInfo(request);
+                 response = api.SetUserInfo(request);
                 return new JsonResult(response);
             }
             catch(Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "SetUserInfo", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "SetUserInfo", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -92,6 +105,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult UpdateUserInfo()
         {
+            RequestContext<UpdateUserInfoRequest> request = null;
+            ResponseContext<UpdateUserInfoResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -99,7 +114,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<UpdateUserInfoRequest>>();
+                request = json.JsonToObject<RequestContext<UpdateUserInfoRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -112,12 +127,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.UpdateUserInfo(request);
+                response = api.UpdateUserInfo(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "UpdateUserInfo", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "UpdateUserInfo", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -127,6 +146,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult GetUserPreference()
         {
+            RequestContext<GetUserPreferenceRequest> request = null;
+            ResponseContext<GetUserPreferenceResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -134,7 +155,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<GetUserPreferenceRequest>>();
+                request = json.JsonToObject<RequestContext<GetUserPreferenceRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -147,12 +168,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.GetUserPreference(request);
+                response = api.GetUserPreference(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "GetUserPreference", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetUserPreference", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -162,6 +187,8 @@ namespace Chat.Api.Controllers
         [HttpPost]
         public JsonResult UpdateUserPreference()
         {
+            RequestContext<UpdateUserPreferenceRequest> request = null;
+            ResponseContext<UpdateUserPreferenceResponse> response = null;
             try
             {
                 string json = GetInputString();
@@ -169,7 +196,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
                 }
-                var request = json.JsonToObject<RequestContext<UpdateUserPreferenceRequest>>();
+                request = json.JsonToObject<RequestContext<UpdateUserPreferenceRequest>>();
                 if (request == null)
                 {
                     return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
@@ -182,12 +209,16 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
-                var response = api.UpdateUserPreference(request);
+                response = api.UpdateUserPreference(request);
                 return new JsonResult(response);
             }
             catch (Exception ex)
             {
                 return ErrorJsonResult(ErrCodeEnum.InnerError, "UpdateUserPreference", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "UpdateUserPreference", request?.Head, response?.Head, request, response);
             }
         }
     }
