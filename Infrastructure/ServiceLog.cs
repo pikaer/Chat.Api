@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Dapper;
+using System;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Infrastructure
 {
@@ -7,9 +10,32 @@ namespace Infrastructure
     /// </summary>
     public static class ServiceLog
     {
+        private static IDbConnection GetDbConnection()
+        {
+            var connString = ConfigHelper.AppSettings("LogConnection");
+            return new SqlConnection(connString);
+        }
+
         public static void WriteServiceLog(ServiceLogEntity serviceLogEntity)
         {
-
+            //日志开关
+            if (!ConfigHelper.GetBool("ServiceLogIsOpen"))
+            {
+                return;
+            }
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"INSERT INTO dbo.sys_ServiceLog(ServiceLogId,ServiceName,Module,Method,Request,Response,UId,Code,Msg,Platform,TransactionId,CreateTime)
+                                     VALUES (@ServiceLogId,@ServiceName,@Module,@Method,@Request,@Response,@UId,@Code,@Msg,@Platform,@TransactionId,@CreateTime)";
+                    Db.Execute(sql, serviceLogEntity);
+                }
+                catch
+                {
+                    return;
+                }
+            }
         }
     }
 
