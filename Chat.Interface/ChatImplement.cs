@@ -95,5 +95,20 @@ namespace Chat.Interface
         {
             return momentService.DeleteImg(request);
         }
+
+        public ResponseContext<SupportMomentResponse> SupportMoment(RequestContext<SupportMomentRequest> request)
+        {
+            return momentService.SupportMoment(request);
+        }
+
+        public ResponseContext<MomentDetailResponse> MomentDetail(RequestContext<MomentDetailRequest> request)
+        {
+            return momentService.MomentDetail(request);
+        }
+
+        public ResponseContext<SupportDiscussResponse> SupportDiscuss(RequestContext<SupportDiscussRequest> request)
+        {
+            return momentService.SupportDiscuss(request);
+        }
     }
 }

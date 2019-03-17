@@ -18,15 +18,10 @@ namespace Chat.Model.Entity.Moment
         public Guid MomentId { get; set; }
 
         /// <summary>
-        /// 发表Moment的用户Id(记载一次Uid,减少联合查询)
-        /// </summary>
-        public long UId { get; set; }
-
-        /// <summary>
         /// 评论人的Id
         /// </summary>
-        public long PartnerUId { get; set; }
-
+        public long UId { get; set; }
+        
         /// <summary>
         /// 评论内容
         /// </summary>

@@ -25,26 +25,7 @@ namespace Chat.Service
                     MomentList=new List<MomentType>()
                 }
             };
-            
-            //测试数据
-            if (SwitchControl.TestIsOpen())
-            {
-                switch (request.Content.MomentType)
-                {
-                    case MomentTypeEnum.Attention:
-                        rtn.Content.MomentList = GetAttentionMomentsTestData();
-                        break;
-                    case MomentTypeEnum.Newest:
-                        rtn.Content.MomentList = GetNewestMomentsTestData();
-                        break;
-                    case MomentTypeEnum.Recommend:
-                    default:
-                        rtn.Content.MomentList = GetRecommendMomentsTestData();
-                        break;
-                }
-                return rtn;
-            }
-            
+
             var moments = momentDal.GetMomentList();
             foreach(var item in moments)
             {
@@ -60,9 +41,7 @@ namespace Chat.Service
                     DispalyName = userInfo.NickName,
                     HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
                     PublishTime = item.CreateTime.GetDateDesc(),
-                    TextContent = item.TextContent,
-                    SupportCount="0",
-                    CommentCount="0"
+                    TextContent = item.TextContent
                 };
 
                 var imgList = momentDal.GetMomentImgList(item.MomentId);
@@ -78,32 +57,20 @@ namespace Chat.Service
                 var discussList = momentDal.GetMomentDiscussList(item.MomentId);
                 if (discussList.NotEmpty())
                 {
-                    dto.DiscussList = discussList.Select(a=>new DiscussType
-                    {
-                        UId= item.UId,
-                        PartnerUId=a.PartnerUId,
-                        DiscussContent=a.DiscussContent,
-                        CreateTimeDesc=a.CreateTime.GetDateDesc()
-                    }).ToList();
-
-                    dto.CommentCount = discussList.Count.ToString();
+                    dto.CommentCount = discussList.Count;
                 }
 
                 var supportList = momentDal.GetMomentSupportList(item.MomentId);
                 if (supportList.NotEmpty())
                 {
-                    dto.SupportCount = supportList.Count.ToString();
+                    dto.SupportCount = supportList.Count;
+                    dto.HasSupport = supportList.Exists(a => a.UId == request.Content.UId);
                 }
                 rtn.Content.MomentList.Add(dto);
             }
             return rtn;
         }
-
-        /// <summary>
-        /// 发布动态
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        
         public ResponseContext<PublishMomentResponse> PublishMoment(RequestContext<PublishMomentRequest> request)
         {
             var rtn = new ResponseContext<PublishMomentResponse>()
@@ -154,6 +121,137 @@ namespace Chat.Service
             return rtn;
         }
 
+        public ResponseContext<MomentDetailResponse> MomentDetail(RequestContext<MomentDetailRequest> request)
+        {
+            #region 初始化
+            var rtn = new ResponseContext<MomentDetailResponse>();
+            var moment = momentDal.GetMoment(request.Content.MomentId);
+            if (moment == null)
+            {
+                return rtn;
+            }
+            var userInfo = userInfoDal.GetUserInfoByUId(moment.UId);
+            if (userInfo == null)
+            {
+                return rtn;
+            }
+            #endregion
+            
+            #region 动态正文
+            rtn.Content = new MomentDetailResponse()
+            {
+                TextContent = moment.TextContent,
+                PublishTime = moment.CreateTime.GetDateDesc(),
+                DispalyName = userInfo.NickName,
+                HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath()
+            };
+            #endregion
+
+            #region 动态图片
+            var imgList = momentDal.GetMomentImgList(moment.MomentId);
+            if (imgList.NotEmpty())
+            {
+                rtn.Content.ImgContents = new List<string>();
+                foreach (var img in imgList)
+                {
+                    rtn.Content.ImgContents.Add(img.ImgPath.ToMomentImagePath());
+                }
+            }
+            #endregion
+
+            #region 动态点赞
+            var supportList = momentDal.GetMomentSupportList(moment.MomentId);
+            if (supportList.NotEmpty())
+            {
+                rtn.Content.SupportCount = supportList.Count;
+                rtn.Content.HasSupport = supportList.Exists(a => a.UId == request.Content.UId);
+            }
+            #endregion
+
+            #region 动态评论
+            var discussList = momentDal.GetMomentDiscussList(moment.MomentId);
+            if (discussList.NotEmpty())
+            {
+                rtn.Content.CommentCount = discussList.Count;
+                rtn.Content.DiscussList = new List<DiscussType>();
+
+                //评论点赞信息
+                foreach(var item in discussList)
+                {
+                    var user= userInfoDal.GetUserInfoByUId(item.UId);
+                    var dto = new DiscussType()
+                    {
+                        DiscussId = item.DiscussId,
+                        UId = item.UId,
+                        DispalyName = user.NickName,
+                        HeadImgPath = user.HeadPhotoPath.ToHeadImagePath(),
+                        DiscussContent = item.DiscussContent,
+                        DiscussTime = item.CreateTime.GetDateDesc()
+                    };
+
+                    var discussSupport = momentDal.GetDiscussSupportList(item.DiscussId);
+                    if (discussSupport.NotEmpty())
+                    {
+                        dto.SupportCount = discussSupport.Count;
+                        dto.HasSupport = discussSupport.Exists(a => a.UId == request.Content.UId);
+                    }
+                    rtn.Content.DiscussList.Add(dto);
+                }
+            }
+            return rtn;
+            #endregion
+        }
+
+        public ResponseContext<SupportMomentResponse> SupportMoment(RequestContext<SupportMomentRequest> request)
+        {
+            var response = new ResponseContext<SupportMomentResponse>()
+            {
+                Content = new SupportMomentResponse()
+            };
+
+            if (request.Content.IsSupport)
+            {
+                var support = new MomentSupport()
+                {
+                    SupportId = Guid.NewGuid(),
+                    MomentId = request.Content.MomentId,
+                    UId = request.Content.UId,
+                    CreateTime = DateTime.Now
+                };
+                response.Content.IsExecuteSuccess= momentDal.InsertMomentSupport(support);
+            }
+            else
+            {
+                response.Content.IsExecuteSuccess = momentDal.DeleteMomentSupport(request.Content.MomentId, request.Content.UId);
+            }
+            return response;
+        }
+
+        public ResponseContext<SupportDiscussResponse> SupportDiscuss(RequestContext<SupportDiscussRequest> request)
+        {
+            var response = new ResponseContext<SupportDiscussResponse>()
+            {
+                Content = new SupportDiscussResponse()
+            };
+
+            if (request.Content.IsSupport)
+            {
+                var support = new DiscussSupport()
+                {
+                    DiscussSupportId = Guid.NewGuid(),
+                    DiscussId = request.Content.DiscussId,
+                    UId = request.Content.UId,
+                    CreateTime = DateTime.Now
+                };
+                response.Content.IsExecuteSuccess = momentDal.InsertDiscussSupport(support);
+            }
+            else
+            {
+                response.Content.IsExecuteSuccess = momentDal.DeleteDiscussSupport(request.Content.DiscussId, request.Content.UId);
+            }
+            return response;
+        }
+
         public ResponseContext<DeleteImgResponse> DeleteImg(RequestContext<DeleteImgRequest> request)
         {
             var response = new ResponseContext<DeleteImgResponse>()
@@ -173,117 +271,6 @@ namespace Chat.Service
                 Log.Error("DeleteImg", "删除图片失败，path" + path, ex,request.Head);
             }
             return response;
-        }
-
-        /// <summary>
-        /// 获取动态测试数据
-        /// </summary>
-        private List<MomentType> GetRecommendMomentsTestData()
-        {
-            var rtn = new List<MomentType>();
-
-            for(int i =1; i <= 30; i++)
-            {
-                var dto = new MomentType()
-                {
-                    MomentId=Guid.NewGuid().ToString(),
-                    HeadImgPath= CommonHelper.DefaultHead(),
-                    DispalyName =string.Format("我是第{0}块小饼干",i),
-                    PublishTime=string.Format("{0}分钟之前", i*3),
-                    TextContent= string.Format("第{0}块小饼干在{1}分钟之前发布了Moment", i,i * 3),
-                    HasSupport=i%3==0,
-                    SupportCount=(i*7).ToString(),
-                    CommentCount=(i*9).ToString()
-                };
-
-                var count = new Random().Next(0, 10);
-                if (count > 0)
-                {
-                    dto.ImgContents = new List<string>();
-                    for (int j = 1; j < count; j++)
-                    {
-                        var path = string.Format("test{0}", j).ToMomentImagePath();
-                        dto.ImgContents.Add(path);
-                    }
-                }
-               
-                rtn.Add(dto);
-            }
-            return rtn;
-        }
-
-        /// <summary>
-        /// 获取动态测试数据
-        /// </summary>
-        private List<MomentType> GetNewestMomentsTestData()
-        {
-            var rtn = new List<MomentType>();
-
-            for (int i = 1; i <= 30; i++)
-            {
-                var dto = new MomentType()
-                {
-                    MomentId = Guid.NewGuid().ToString(),
-                    HeadImgPath = CommonHelper.DefaultHead(),
-                    DispalyName = string.Format("第{0}个小星星", i),
-                    PublishTime = string.Format("{0}分钟之前", i * 6),
-                    TextContent = string.Format("第{0}个小星星在{1}分钟之前发布了Moment", i, i * 6),
-                    HasSupport = i % 3 == 0,
-                    SupportCount = (i * 7).ToString(),
-                    CommentCount = (i * 9).ToString()
-                };
-
-                var count = new Random().Next(0, 10);
-                if (count > 0)
-                {
-                    dto.ImgContents = new List<string>();
-                    for (int j = 1; j < count; j++)
-                    {
-                        var path = string.Format("test{0}", j).ToMomentImagePath();
-                        dto.ImgContents.Add(path);
-                    }
-                }
-
-                rtn.Add(dto);
-            }
-            return rtn;
-        }
-
-        /// <summary>
-        /// 获取动态测试数据
-        /// </summary>
-        private List<MomentType> GetAttentionMomentsTestData()
-        {
-            var rtn = new List<MomentType>();
-
-            for (int i = 1; i <= 30; i++)
-            {
-                var dto = new MomentType()
-                {
-                    MomentId = Guid.NewGuid().ToString(),
-                    HeadImgPath = CommonHelper.DefaultHead(),
-                    DispalyName = string.Format("第{0}个皮卡丘", i),
-                    PublishTime = string.Format("{0}分钟之前", i * 8),
-                    TextContent = string.Format("第{0}个皮卡丘在{1}分钟之前发布了Moment", i, i * 8),
-                    HasSupport = i % 3 == 0,
-                    SupportCount = (i * 7).ToString(),
-                    CommentCount = (i * 9).ToString()
-                };
-
-                var count = new Random().Next(0, 10);
-                if (count > 0)
-                {
-                    dto.ImgContents = new List<string>();
-                    for (int j = 1; j < count; j++)
-                    {
-                        var path = string.Format("test{0}", j).ToMomentImagePath();
-                        dto.ImgContents.Add(path);
-                    }
-                }
-
-                rtn.Add(dto);
-            }
-            return rtn;
         }
     }
 }

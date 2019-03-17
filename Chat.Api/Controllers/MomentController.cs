@@ -42,7 +42,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
                 }
-                if (request.Content == null)
+                if (request.Content == null|| request.Content.UId<=0)
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
@@ -234,6 +234,132 @@ namespace Chat.Api.Controllers
             finally
             {
                 WriteServiceLog(MODULE, "DeleteImg", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
+        /// 点赞或者取消点赞某条动态
+        /// </summary>
+        [HttpPost]
+        public JsonResult SupportMoment()
+        {
+            RequestContext<SupportMomentRequest> request = null;
+            ResponseContext<SupportMomentResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<SupportMomentRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null|| request.Content.MomentId==null||
+                    request.Content.MomentId==Guid.Empty|| request.Content.UId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.SupportMoment(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "SupportMoment", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "SupportMoment", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
+        /// 点赞或者取消点赞某条评论
+        /// </summary>
+        [HttpPost]
+        public JsonResult SupportDiscuss()
+        {
+            RequestContext<SupportDiscussRequest> request = null;
+            ResponseContext<SupportDiscussResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<SupportDiscussRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.DiscussId == null ||
+                    request.Content.DiscussId == Guid.Empty || request.Content.UId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.SupportDiscuss(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "SupportDiscuss", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "SupportDiscuss", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
+        /// 动态详情
+        /// </summary>
+        [HttpPost]
+        public JsonResult MomentDetail()
+        {
+            RequestContext<MomentDetailRequest> request = null;
+            ResponseContext<MomentDetailResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<MomentDetailRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.MomentId == null ||
+                    request.Content.MomentId == Guid.Empty || request.Content.MomentId==null|| request.Content.MomentId==Guid.Empty)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.MomentDetail(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "MomentDetail", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "MomentDetail", request?.Head, response?.Head, request, response);
             }
         }
     }

@@ -715,12 +715,7 @@ namespace Chat.Model.Utils
         /// 图片内容
         /// </summary>
         public List<string> ImgContents { get; set; }
-
-        /// <summary>
-        /// 动态评论
-        /// </summary>
-        public List<DiscussType > DiscussList { get; set; }
-
+        
         /// <summary>
         /// 是否已经点赞
         /// </summary>
@@ -729,38 +724,12 @@ namespace Chat.Model.Utils
         /// <summary>
         /// 点赞数
         /// </summary>
-        public string SupportCount { get; set; }
+        public int SupportCount { get; set; }
 
         /// <summary>
         /// 评论数
         /// </summary>
-        public string CommentCount { get; set; }
-    }
-
-    /// <summary>
-    /// 动态评论
-    /// </summary>
-    public class DiscussType
-    {
-        /// <summary>
-        /// 发表Moment的用户Id
-        /// </summary>
-        public long UId { get; set; }
-
-        /// <summary>
-        /// 评论人的Id
-        /// </summary>
-        public long PartnerUId { get; set; }
-
-        /// <summary>
-        /// 评论内容
-        /// </summary>
-        public string DiscussContent { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public string CreateTimeDesc { get; set; }
+        public int CommentCount { get; set; }
     }
     #endregion
 
@@ -827,6 +796,169 @@ namespace Chat.Model.Utils
         /// 是否执行成功
         /// </summary>
         public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
+
+    #region SupportMoment
+    public class SupportMomentRequest
+    {
+        /// <summary>
+        /// 动态Id
+        /// </summary>
+        public Guid MomentId { get; set; }
+        
+        /// <summary>
+        /// 点赞人的Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 是否点赞（是：点赞，false：取消点赞）
+        /// </summary>
+        public bool IsSupport { get; set; }
+    }
+
+    public class SupportMomentResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
+
+    #region SupportDiscuss
+    public class SupportDiscussRequest
+    {
+        /// <summary>
+        /// 动态评论Id
+        /// </summary>
+        public Guid DiscussId { get; set; }
+
+        /// <summary>
+        /// 点赞人的Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 是否点赞（是：点赞，false：取消点赞）
+        /// </summary>
+        public bool IsSupport { get; set; }
+    }
+
+    public class SupportDiscussResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
+
+
+    #region MomentDetail
+    public class MomentDetailRequest
+    {
+        /// <summary>
+        /// 动态Id
+        /// </summary>
+        public Guid MomentId { get; set; }
+
+        /// <summary>
+        /// 当前登录人UId
+        /// </summary>
+        public long UId { get; set; }
+    }
+
+    public class MomentDetailResponse
+    {
+        /// <summary>
+        /// 头像路径
+        /// </summary>
+        public string HeadImgPath { get; set; }
+
+        /// <summary>
+        /// 用户展示名称（当备注为空时，为用户昵称，否则是备注）
+        /// </summary>
+        public string DispalyName { get; set; }
+
+        /// <summary>
+        /// 发布时间
+        /// </summary>
+        public string PublishTime { get; set; }
+
+        /// <summary>
+        /// 文本内容
+        /// </summary>
+        public string TextContent { get; set; }
+
+        /// <summary>
+        /// 图片内容
+        /// </summary>
+        public List<string> ImgContents { get; set; }
+
+        /// <summary>
+        /// 动态评论
+        /// </summary>
+        public List<DiscussType> DiscussList { get; set; }
+
+        /// <summary>
+        /// 是否已经点赞
+        /// </summary>
+        public bool HasSupport { get; set; }
+
+        /// <summary>
+        /// 点赞数
+        /// </summary>
+        public int SupportCount { get; set; }
+
+        /// <summary>
+        /// 评论数
+        /// </summary>
+        public int CommentCount { get; set; }
+}
+
+    public class DiscussType
+    {
+        /// <summary>
+        /// 唯一标示
+        /// </summary>
+        public Guid DiscussId { get; set; }
+
+        /// <summary>
+        /// 发表该评论的用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 用户展示名称（当备注为空时，为用户昵称，否则是备注）
+        /// </summary>
+        public string DispalyName { get; set; }
+
+        /// <summary>
+        /// 头像路径
+        /// </summary>
+        public string HeadImgPath { get; set; }
+
+        /// <summary>
+        /// 评论内容
+        /// </summary>
+        public string DiscussContent { get; set; }
+
+        /// <summary>
+        /// 评论时间
+        /// </summary>
+        public string DiscussTime { get; set; }
+
+        /// <summary>
+        /// 我是否已经点赞
+        /// </summary>
+        public bool HasSupport { get; set; }
+
+        /// <summary>
+        /// 改评论点赞数
+        /// </summary>
+        public int SupportCount { get; set; }
     }
     #endregion
 }

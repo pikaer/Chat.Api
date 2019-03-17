@@ -88,5 +88,20 @@ namespace Chat.Interface
         /// 删除已经上传的图片
         /// </summary>
         ResponseContext<DeleteImgResponse> DeleteImg(RequestContext<DeleteImgRequest> request);
+
+        /// <summary>
+        /// 点赞或者取消点赞某条动态
+        /// </summary>
+        ResponseContext<SupportMomentResponse> SupportMoment(RequestContext<SupportMomentRequest> request);
+
+        /// <summary>
+        /// 动态详情
+        /// </summary>
+        ResponseContext<MomentDetailResponse> MomentDetail(RequestContext<MomentDetailRequest> request);
+
+        /// <summary>
+        /// 点赞或者取消点赞某条评论
+        /// </summary>
+        ResponseContext<SupportDiscussResponse> SupportDiscuss(RequestContext<SupportDiscussRequest> request);
     }
 }
