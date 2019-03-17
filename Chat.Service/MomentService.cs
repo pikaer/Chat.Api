@@ -21,6 +21,9 @@ namespace Chat.Service
             var rtn = new ResponseContext<GetMomentsResponse>()
             {
                 Content = new GetMomentsResponse()
+                {
+                    MomentList=new List<MomentType>()
+                }
             };
             
             //测试数据
@@ -42,7 +45,6 @@ namespace Chat.Service
                 return rtn;
             }
             
-            var momentList = new List<MomentType>();
             var moments = momentDal.GetMomentList();
             foreach(var item in moments)
             {
@@ -58,7 +60,9 @@ namespace Chat.Service
                     DispalyName = userInfo.NickName,
                     HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
                     PublishTime = item.CreateTime.GetDateDesc(),
-                    TextContent = item.TextContent
+                    TextContent = item.TextContent,
+                    SupportCount="0",
+                    CommentCount="0"
                 };
 
                 var imgList = momentDal.GetMomentImgList(item.MomentId);
@@ -90,6 +94,7 @@ namespace Chat.Service
                 {
                     dto.SupportCount = supportList.Count.ToString();
                 }
+                rtn.Content.MomentList.Add(dto);
             }
             return rtn;
         }
@@ -182,8 +187,8 @@ namespace Chat.Service
                 var dto = new MomentType()
                 {
                     MomentId=Guid.NewGuid().ToString(),
-                    HeadImgPath= "pikaer".ToHeadImagePath(),
-                    DispalyName=string.Format("我是第{0}块小饼干",i),
+                    HeadImgPath= CommonHelper.DefaultHead(),
+                    DispalyName =string.Format("我是第{0}块小饼干",i),
                     PublishTime=string.Format("{0}分钟之前", i*3),
                     TextContent= string.Format("第{0}块小饼干在{1}分钟之前发布了Moment", i,i * 3),
                     HasSupport=i%3==0,
@@ -219,7 +224,7 @@ namespace Chat.Service
                 var dto = new MomentType()
                 {
                     MomentId = Guid.NewGuid().ToString(),
-                    HeadImgPath = "pikaer".ToHeadImagePath(),
+                    HeadImgPath = CommonHelper.DefaultHead(),
                     DispalyName = string.Format("第{0}个小星星", i),
                     PublishTime = string.Format("{0}分钟之前", i * 6),
                     TextContent = string.Format("第{0}个小星星在{1}分钟之前发布了Moment", i, i * 6),
@@ -256,7 +261,7 @@ namespace Chat.Service
                 var dto = new MomentType()
                 {
                     MomentId = Guid.NewGuid().ToString(),
-                    HeadImgPath = "pikaer".ToHeadImagePath(),
+                    HeadImgPath = CommonHelper.DefaultHead(),
                     DispalyName = string.Format("第{0}个皮卡丘", i),
                     PublishTime = string.Format("{0}分钟之前", i * 8),
                     TextContent = string.Format("第{0}个皮卡丘在{1}分钟之前发布了Moment", i, i * 8),

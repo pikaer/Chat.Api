@@ -16,6 +16,7 @@ namespace Chat.Utility
             {
                 return rtn;
             }
+            
             //默认前缀
             string defaultPath = JsonSettingHelper.AppSettings["HeadPhoto"];
 
@@ -35,24 +36,37 @@ namespace Chat.Utility
             {
                 return rtn;
             }
+            
             //默认前缀
             string defaultPath = JsonSettingHelper.AppSettings["MomentImg"];
-
+            
 
             return GetPath(defaultPath, shortPath);
         }
 
-        //获取绝对路径
+        public static string DefaultHead()
+        {
+            string path = JsonSettingHelper.AppSettings["DefaultHead"];
+
+            //默认前缀
+            string defaultPath = JsonSettingHelper.AppSettings["HeadPhoto"];
+
+            return GetPath(defaultPath, path);
+        }
+
+
+        /// <summary>
+        /// 获取绝对路径
+        /// </summary>
         private static string GetPath(string defaultPath,string shortPath)
         {
             string rtn = string.Empty;
 
-            //头像图片格式
-            string shotFormat = JsonSettingHelper.AppSettings["ImgFormat"];
+            string host = JsonSettingHelper.AppSettings["ApiHost"];
 
-            if (!string.IsNullOrEmpty(defaultPath) && !string.IsNullOrEmpty(shotFormat))
+            if (!string.IsNullOrEmpty(defaultPath))
             {
-                rtn = string.Format("{0}{1}{2}", defaultPath, shortPath, shotFormat);
+                rtn = string.Format("{0}{1}{2}", host,defaultPath, shortPath);
             }
             return rtn;
         }

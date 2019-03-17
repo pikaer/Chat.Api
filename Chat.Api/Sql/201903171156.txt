@@ -1,0 +1,464 @@
+USE [master]
+GO
+/****** Object:  Database [Chat]    Script Date: 2019/3/17 11:55:39 ******/
+CREATE DATABASE [Chat]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'Chat', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\DATA\Chat.mdf' , SIZE = 5120KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+ LOG ON 
+( NAME = N'Chat_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\DATA\Chat_log.ldf' , SIZE = 2560KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+GO
+ALTER DATABASE [Chat] SET COMPATIBILITY_LEVEL = 120
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [Chat].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [Chat] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [Chat] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [Chat] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [Chat] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [Chat] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [Chat] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [Chat] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [Chat] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [Chat] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [Chat] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [Chat] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [Chat] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [Chat] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [Chat] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [Chat] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [Chat] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [Chat] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [Chat] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [Chat] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [Chat] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [Chat] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [Chat] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [Chat] SET RECOVERY FULL 
+GO
+ALTER DATABASE [Chat] SET  MULTI_USER 
+GO
+ALTER DATABASE [Chat] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [Chat] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [Chat] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [Chat] SET TARGET_RECOVERY_TIME = 0 SECONDS 
+GO
+ALTER DATABASE [Chat] SET DELAYED_DURABILITY = DISABLED 
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'Chat', N'ON'
+GO
+USE [Chat]
+GO
+/****** Object:  Table [dbo].[chat_ChatContent]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[chat_ChatContent](
+	[ChatId] [uniqueidentifier] NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[PartnerUId] [bigint] NOT NULL,
+	[ContentDetail] [nvarchar](1000) NOT NULL,
+	[Type] [tinyint] NOT NULL,
+	[HasRead] [bit] NOT NULL CONSTRAINT [DF_chat_ChatContent_HasRead]  DEFAULT ((0)),
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL,
+ CONSTRAINT [PK_chat_ChatContent] PRIMARY KEY CLUSTERED 
+(
+	[ChatId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[hub_OnChat]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[hub_OnChat](
+	[Id] [uniqueidentifier] NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[PartnerUId] [bigint] NOT NULL,
+	[ConnectionId] [nchar](30) NOT NULL,
+	[IsOnline] [bit] NOT NULL,
+	[FirstConnectTime] [datetime] NOT NULL,
+	[LastConnectTime] [datetime] NULL,
+ CONSTRAINT [PK_hub_OnChat] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[hub_Online]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[hub_Online](
+	[Id] [uniqueidentifier] NOT NULL,
+	[ConnectionId] [nchar](30) NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[IsOnline] [bit] NOT NULL,
+	[FirstConnectTime] [datetime] NOT NULL,
+	[LastConnectTime] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[moment_MomentContent]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[moment_MomentContent](
+	[MomentId] [uniqueidentifier] NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[TextContent] [nvarchar](300) NOT NULL,
+	[MomentState] [tinyint] NOT NULL CONSTRAINT [DF_moment_MomentContent_MomentState]  DEFAULT ((0)),
+	[CreateTime] [datetime] NULL,
+	[UpdateTime] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[moment_MomentDiscuss]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[moment_MomentDiscuss](
+	[DiscussId] [uniqueidentifier] NOT NULL,
+	[MomentId] [uniqueidentifier] NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[PartnerUId] [bigint] NOT NULL,
+	[DiscussContent] [nvarchar](200) NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[moment_MomentImg]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[moment_MomentImg](
+	[ImgId] [uniqueidentifier] NOT NULL,
+	[MomentId] [uniqueidentifier] NOT NULL,
+	[ImgPath] [nvarchar](50) NOT NULL,
+	[CompressPath] [nvarchar](50) NULL,
+	[ImgLength] [bigint] NOT NULL,
+	[ImgMime] [nchar](10) NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[moment_MomentSupport]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[moment_MomentSupport](
+	[SupportId] [uniqueidentifier] NOT NULL,
+	[MomentId] [uniqueidentifier] NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[PartnerUId] [bigint] NOT NULL,
+	[CancelSupport] [bit] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[sys_Log]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[sys_Log](
+	[LogId] [uniqueidentifier] NOT NULL,
+	[LogLevel] [tinyint] NOT NULL,
+	[TransactionID] [uniqueidentifier] NULL,
+	[UId] [bigint] NULL,
+	[Platform] [nchar](20) NOT NULL,
+	[LogTitle] [nchar](20) NULL,
+	[LogContent] [nvarchar](max) NULL,
+	[ServiceName] [nchar](20) NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+ CONSTRAINT [PK_sys_Log] PRIMARY KEY CLUSTERED 
+(
+	[LogId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[sys_LogTag]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[sys_LogTag](
+	[TagId] [uniqueidentifier] NOT NULL,
+	[LogId] [uniqueidentifier] NULL,
+	[LogKey] [nchar](50) NULL,
+	[LogValue] [nvarchar](max) NULL,
+	[CreateTime] [datetime] NULL,
+ CONSTRAINT [PK_sys_LogTag] PRIMARY KEY CLUSTERED 
+(
+	[TagId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[sys_ServiceLog]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[sys_ServiceLog](
+	[ServiceLogId] [uniqueidentifier] NOT NULL,
+	[ServiceName] [nchar](20) NOT NULL,
+	[Module] [nchar](30) NOT NULL,
+	[Method] [nchar](30) NOT NULL,
+	[Request] [nvarchar](max) NOT NULL,
+	[Response] [nvarchar](max) NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[Code] [int] NULL,
+	[Msg] [nchar](30) NULL,
+	[Platform] [nchar](30) NULL,
+	[TransactionId] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[user_Friend]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[user_Friend](
+	[FriendId] [bigint] IDENTITY(1,1) NOT NULL,
+	[UId] [bigint] NOT NULL,
+	[PartnerUId] [bigint] NOT NULL,
+	[IsDelete] [bit] NOT NULL,
+	[AddType] [tinyint] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL,
+ CONSTRAINT [PK_user_Friend] PRIMARY KEY CLUSTERED 
+(
+	[FriendId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[user_UserInfo]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[user_UserInfo](
+	[UId] [bigint] IDENTITY(1,1) NOT NULL,
+	[OpenId] [varchar](30) NULL,
+	[UNo] [varchar](30) NULL,
+	[Gender] [tinyint] NULL,
+	[NickName] [nvarchar](50) NULL,
+	[BirthDate] [varchar](14) NULL,
+	[Province] [nvarchar](50) NULL,
+	[City] [nvarchar](50) NULL,
+	[Area] [nvarchar](50) NULL,
+	[HomeProvince] [nvarchar](50) NULL,
+	[HomeCity] [nvarchar](50) NULL,
+	[HomeArea] [nvarchar](50) NULL,
+	[SchoolName] [nvarchar](50) NULL,
+	[EntranceDate] [varchar](14) NULL,
+	[SchoolType] [tinyint] NOT NULL CONSTRAINT [DF_user_UserInfo_SchoolType]  DEFAULT ((0)),
+	[LiveState] [tinyint] NOT NULL CONSTRAINT [DF_user_UserInfo_LiveState]  DEFAULT ((0)),
+	[Mobile] [varchar](30) NULL,
+	[WeChatNo] [varchar](50) NULL,
+	[HeadPhotoPath] [nvarchar](100) NULL,
+	[Signature] [nvarchar](100) NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL,
+ CONSTRAINT [PK_user_UserInfo] PRIMARY KEY CLUSTERED 
+(
+	[UId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[user_UserPreference]    Script Date: 2019/3/17 11:55:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[user_UserPreference](
+	[PreferId] [bigint] IDENTITY(1,1) NOT NULL,
+	[UId] [bigint] NOT NULL CONSTRAINT [DF_user_UserPreference_UId]  DEFAULT ((0)),
+	[PreferGender] [tinyint] NOT NULL CONSTRAINT [DF_user_UserPreference_PreferGender]  DEFAULT ((0)),
+	[PreferPlace] [tinyint] NOT NULL CONSTRAINT [DF_user_UserPreference_PreferPlace]  DEFAULT ((0)),
+	[PreferHome] [tinyint] NOT NULL CONSTRAINT [DF_user_UserPreference_PreferHome]  DEFAULT ((0)),
+	[PreferAge] [tinyint] NOT NULL CONSTRAINT [DF_user_UserPreference_PreferAge]  DEFAULT ((0)),
+	[PreferSchoolType] [tinyint] NOT NULL CONSTRAINT [DF_user_UserPreference_PreferSchoolType]  DEFAULT ((0)),
+	[PreferLiveState] [tinyint] NOT NULL CONSTRAINT [DF_user_UserPreference_PreferLiveState]  DEFAULT ((0)),
+	[CreateTime] [datetime] NOT NULL,
+	[UpdateTime] [datetime] NULL,
+ CONSTRAINT [PK_user_UserPreference] PRIMARY KEY CLUSTERED 
+(
+	[PreferId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+ALTER TABLE [dbo].[moment_MomentSupport] ADD  CONSTRAINT [DF_moment_MomentSupport_SupportId]  DEFAULT (newid()) FOR [SupportId]
+GO
+ALTER TABLE [dbo].[moment_MomentSupport] ADD  CONSTRAINT [DF_moment_MomentSupport_CancelSupport]  DEFAULT ((0)) FOR [CancelSupport]
+GO
+ALTER TABLE [dbo].[sys_ServiceLog] ADD  CONSTRAINT [DF_sys_ServiceLog_UId]  DEFAULT ((0)) FOR [UId]
+GO
+ALTER TABLE [dbo].[user_Friend] ADD  CONSTRAINT [DF_user_Friend_IsDelete]  DEFAULT ((0)) FOR [IsDelete]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'chat_ChatContent', @level2type=N'COLUMN',@level2name=N'UId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'对方Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'chat_ChatContent', @level2type=N'COLUMN',@level2name=N'PartnerUId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否已读' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'chat_ChatContent', @level2type=N'COLUMN',@level2name=N'HasRead'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'chat_ChatContent', @level2type=N'COLUMN',@level2name=N'CreateTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'chat_ChatContent', @level2type=N'COLUMN',@level2name=N'UpdateTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'唯一标示' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_OnChat', @level2type=N'COLUMN',@level2name=N'Id'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'正在聊天对象' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_OnChat', @level2type=N'COLUMN',@level2name=N'PartnerUId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N' webSocket连接Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_OnChat', @level2type=N'COLUMN',@level2name=N'ConnectionId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否在线' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_OnChat', @level2type=N'COLUMN',@level2name=N'IsOnline'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'首次连接时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_OnChat', @level2type=N'COLUMN',@level2name=N'FirstConnectTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最后连接时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_OnChat', @level2type=N'COLUMN',@level2name=N'LastConnectTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'唯一标示' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_Online', @level2type=N'COLUMN',@level2name=N'Id'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'首次登录时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_Online', @level2type=N'COLUMN',@level2name=N'FirstConnectTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最后登录时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'hub_Online', @level2type=N'COLUMN',@level2name=N'LastConnectTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'动态Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentContent', @level2type=N'COLUMN',@level2name=N'MomentId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentContent', @level2type=N'COLUMN',@level2name=N'UId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文本内容' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentContent', @level2type=N'COLUMN',@level2name=N'TextContent'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'动态Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentDiscuss', @level2type=N'COLUMN',@level2name=N'MomentId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'发表Moment的用户Id(记载一次Uid,减少联合查询)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentDiscuss', @level2type=N'COLUMN',@level2name=N'UId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'评论人的Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentDiscuss', @level2type=N'COLUMN',@level2name=N'PartnerUId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'评论内容' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentDiscuss', @level2type=N'COLUMN',@level2name=N'DiscussContent'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'动态Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentImg', @level2type=N'COLUMN',@level2name=N'MomentId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'图片路径' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentImg', @level2type=N'COLUMN',@level2name=N'ImgPath'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'压缩后的路径' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentImg', @level2type=N'COLUMN',@level2name=N'CompressPath'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件原图大小' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentImg', @level2type=N'COLUMN',@level2name=N'ImgLength'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'后缀' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentImg', @level2type=N'COLUMN',@level2name=N'ImgMime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'唯一标示' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentSupport', @level2type=N'COLUMN',@level2name=N'SupportId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'动态Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentSupport', @level2type=N'COLUMN',@level2name=N'MomentId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'发表Moment的用户Id(记载一次Uid,减少联合查询)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentSupport', @level2type=N'COLUMN',@level2name=N'UId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'点赞人的Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'moment_MomentSupport', @level2type=N'COLUMN',@level2name=N'PartnerUId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'服务名' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_ServiceLog', @level2type=N'COLUMN',@level2name=N'ServiceName'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'模块' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_ServiceLog', @level2type=N'COLUMN',@level2name=N'Module'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'方法' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_ServiceLog', @level2type=N'COLUMN',@level2name=N'Method'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'请求体Json串' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_ServiceLog', @level2type=N'COLUMN',@level2name=N'Request'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'响应体Json串' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_ServiceLog', @level2type=N'COLUMN',@level2name=N'Response'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'错误码' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_ServiceLog', @level2type=N'COLUMN',@level2name=N'Code'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'主键,唯一标识' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_Friend', @level2type=N'COLUMN',@level2name=N'FriendId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_Friend', @level2type=N'COLUMN',@level2name=N'UId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'对方Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_Friend', @level2type=N'COLUMN',@level2name=N'PartnerUId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否逻辑删除' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_Friend', @level2type=N'COLUMN',@level2name=N'IsDelete'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'添加好友方式' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_Friend', @level2type=N'COLUMN',@level2name=N'AddType'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'添加时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_Friend', @level2type=N'COLUMN',@level2name=N'CreateTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_Friend', @level2type=N'COLUMN',@level2name=N'UpdateTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户唯一标示，自增' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'UId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'小程序端-用户唯一标示' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'OpenId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户的性别，值为1时是男性，值为2时是女性，值为0时是未知' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Gender'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户昵称' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'NickName'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户所在省份' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Province'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户所在城市' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'City'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户的语言，简体中文为zh_CN' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'HomeCity'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'手机号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Mobile'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'头像路径' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'HeadPhotoPath'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'个性签名' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'Signature'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'CreateTime'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'user_UserInfo', @level2type=N'COLUMN',@level2name=N'UpdateTime'
+GO
+USE [master]
+GO
+ALTER DATABASE [Chat] SET  READ_WRITE 
+GO

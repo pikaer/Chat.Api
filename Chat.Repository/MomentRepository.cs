@@ -96,7 +96,7 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = SELECT_MomentContent;
+                    var sql = SELECT_MomentContent+ "Order by CreateTime desc";
                     return Db.Query<MomentContent>(sql).AsList();
                 }
                 catch (Exception ex)
@@ -113,8 +113,8 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = SELECT_MomentImg+ "MomentId=@MomentId";
-                    return Db.Query<MomentImg>(sql,new { MomentId= momentId }).AsList();
+                    var sql = string.Format("{0}Where MomentId = '{1}'", SELECT_MomentImg, momentId.ToString());
+                    return Db.Query<MomentImg>(sql).AsList();
                 }
                 catch (Exception ex)
                 {
@@ -130,8 +130,8 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = SELECT_MomentDiscuss + "MomentId=@MomentId";
-                    return Db.Query<MomentDiscuss>(sql, new { MomentId = momentId }).AsList();
+                    var sql = string.Format("{0}Where MomentId='{1}'", SELECT_MomentDiscuss, momentId.ToString());
+                    return Db.Query<MomentDiscuss>(sql).AsList();
                 }
                 catch (Exception ex)
                 {
@@ -147,8 +147,8 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = SELECT_MomentSupport + "MomentId=@MomentId";
-                    return Db.Query<MomentSupport>(sql, new { MomentId = momentId }).AsList();
+                    var sql = string.Format("{0}Where MomentId='{1}'", SELECT_MomentSupport, momentId.ToString());
+                    return Db.Query<MomentSupport>(sql).AsList();
                 }
                 catch (Exception ex)
                 {
