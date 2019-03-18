@@ -143,6 +143,23 @@ namespace Chat.Repository
             }
         }
 
+        public List<MomentContent> GetMomentsByUId(long uId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = string.Format("{0}Where UId = {1}", SELECT_MomentContent, uId.ToString());
+                    return Db.Query<MomentContent>(sql).AsList();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetMoments", "通过UId从数据库获取动态信息异常,UId="+ uId, ex);
+                    return null;
+                }
+            }
+        }
+
         public List<MomentImg> GetMomentImgList(Guid momentId)
         {
             using (var Db = GetDbConnection())

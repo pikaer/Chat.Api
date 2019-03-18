@@ -103,5 +103,10 @@ namespace Chat.Interface
         /// 点赞或者取消点赞某条评论
         /// </summary>
         ResponseContext<SupportDiscussResponse> SupportDiscuss(RequestContext<SupportDiscussRequest> request);
+
+        /// <summary>
+        /// 我的空间
+        /// </summary>
+        ResponseContext<MySpaceResponse> MySpace(RequestContext<MySpaceRequest> request);
     }
 }

@@ -7,7 +7,6 @@ using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Chat.Service
 {
@@ -200,6 +199,21 @@ namespace Chat.Service
             }
             return rtn;
             #endregion
+        }
+
+        public ResponseContext<MySpaceResponse> MySpace(RequestContext<MySpaceRequest> request)
+        {
+            #region 初始化
+            var rtn = new ResponseContext<MySpaceResponse>();
+            var userInfo = userInfoDal.GetUserInfoByUId(request.Content.UId);
+            if (userInfo == null)
+            {
+                return rtn;
+            }
+            var moments = momentDal.GetMomentsByUId(request.Content.UId);
+            #endregion
+
+            return rtn;
         }
 
         public ResponseContext<SupportMomentResponse> SupportMoment(RequestContext<SupportMomentRequest> request)

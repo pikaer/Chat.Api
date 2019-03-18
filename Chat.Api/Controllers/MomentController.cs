@@ -362,5 +362,46 @@ namespace Chat.Api.Controllers
                 WriteServiceLog(MODULE, "MomentDetail", request?.Head, response?.Head, request, response);
             }
         }
+
+        /// <summary>
+        /// 我的空间
+        /// </summary>
+        [HttpPost]
+        public JsonResult MySpace()
+        {
+            RequestContext<MySpaceRequest> request = null;
+            ResponseContext<MySpaceResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<MySpaceRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.UId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.MySpace(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "MySpace", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "MySpace", request?.Head, response?.Head, request, response);
+            }
+        }
     }
 }

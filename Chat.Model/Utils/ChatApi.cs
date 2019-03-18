@@ -854,8 +854,7 @@ namespace Chat.Model.Utils
         public bool IsExecuteSuccess { get; set; }
     }
     #endregion
-
-
+    
     #region MomentDetail
     public class MomentDetailRequest
     {
@@ -959,6 +958,104 @@ namespace Chat.Model.Utils
         /// 改评论点赞数
         /// </summary>
         public int SupportCount { get; set; }
+    }
+    #endregion
+
+    #region MySpace
+    public class MySpaceRequest
+    {
+        public long UId { get; set; }
+    }
+
+    public class MySpaceResponse
+    {
+        /// <summary>
+        /// 空间背景图片
+        /// </summary>
+        public string BackgroundImg { get; set; }
+
+        /// <summary>
+        /// 头像路径
+        /// </summary>
+        public string HeadImgPath { get; set; }
+
+        /// <summary>
+        /// 我的昵称
+        /// </summary>
+        public string NickName { get; set; }
+
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public string Gender { get; set; }
+
+        /// <summary>
+        /// 个性签名
+        /// </summary>
+        public string Signature { get; set; }
+
+        /// <summary>
+        /// 年龄
+        /// </summary>
+        public string Age { get; set; }
+
+        /// <summary>
+        /// 星座
+        /// </summary>
+        public string Constellation { get; set; }
+
+        /// <summary>
+        /// 所在地
+        /// </summary>
+        public string Location { get; set; }
+
+        /// <summary>
+        /// 职业
+        /// </summary>
+        public string Career { get; set; }
+
+        /// <summary>
+        /// 已经发布的动态
+        /// </summary>
+        public List<MySpaceMomentType> MomentList { get; set; }
+    }
+
+    public class MySpaceMomentType
+    {
+        /// <summary>
+        /// 动态Id
+        /// </summary>
+        public string MomentId { get; set; }
+        
+        /// <summary>
+        /// 发布时间
+        /// </summary>
+        public string PublishTime { get; set; }
+
+        /// <summary>
+        /// 文本内容
+        /// </summary>
+        public string TextContent { get; set; }
+
+        /// <summary>
+        /// 图片内容
+        /// </summary>
+        public List<string> ImgContents { get; set; }
+
+        /// <summary>
+        /// 是否已经点赞
+        /// </summary>
+        public bool HasSupport { get; set; }
+
+        /// <summary>
+        /// 点赞数
+        /// </summary>
+        public int SupportCount { get; set; }
+
+        /// <summary>
+        /// 评论数
+        /// </summary>
+        public int CommentCount { get; set; }
     }
     #endregion
 }
