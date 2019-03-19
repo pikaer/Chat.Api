@@ -252,7 +252,7 @@ namespace Chat.Repository
                 try
                 {
                     var sql = @"DELETE FROM dbo.moment_MomentSupport WHERE MomentId=@MomentId And UId=@UId";
-                    return Db.Execute(sql,new { MomentId = momentId , PartnerUId = partnerUId }) > 0;
+                    return Db.Execute(sql,new { MomentId = momentId , UId = partnerUId }) > 0;
                 }
                 catch (Exception ex)
                 {
