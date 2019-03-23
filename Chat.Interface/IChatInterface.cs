@@ -108,5 +108,10 @@ namespace Chat.Interface
         /// 我的空间
         /// </summary>
         ResponseContext<MySpaceResponse> MySpace(RequestContext<MySpaceRequest> request);
+
+        /// <summary>
+        /// 动态评论
+        /// </summary>
+        ResponseContext<MomentDiscussResponse> MomentDiscuss(RequestContext<MomentDiscussRequest> request);
     }
 }

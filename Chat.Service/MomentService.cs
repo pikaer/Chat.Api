@@ -7,13 +7,14 @@ using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Chat.Service
 {
     public class MomentService
     {
         private readonly MomentRepository momentDal = SingletonProvider<MomentRepository>.Instance;
-        private UserInfoRepository userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
+        private readonly UserInfoRepository userInfoDal = SingletonProvider<UserInfoRepository>.Instance;
 
         public ResponseContext<GetMomentsResponse> GetMoments(RequestContext<GetMomentsRequest> request)
         {
@@ -141,23 +142,12 @@ namespace Chat.Service
             {
                 TextContent = moment.TextContent,
                 PublishTime = moment.CreateTime.GetDateDesc(),
+                ImgContents= GetImgContents(moment.MomentId),
                 DispalyName = userInfo.NickName,
                 HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath()
             };
             #endregion
-
-            #region 动态图片
-            var imgList = momentDal.GetMomentImgList(moment.MomentId);
-            if (imgList.NotEmpty())
-            {
-                rtn.Content.ImgContents = new List<string>();
-                foreach (var img in imgList)
-                {
-                    rtn.Content.ImgContents.Add(img.ImgPath.ToMomentImagePath());
-                }
-            }
-            #endregion
-
+            
             #region 动态点赞
             var supportList = momentDal.GetMomentSupportList(moment.MomentId);
             if (supportList.NotEmpty())
@@ -201,10 +191,32 @@ namespace Chat.Service
             #endregion
         }
 
+        public ResponseContext<MomentDiscussResponse> MomentDiscuss(RequestContext<MomentDiscussRequest> request)
+        {
+            var response = new ResponseContext<MomentDiscussResponse>()
+            {
+                Content =new MomentDiscussResponse()
+            };
+
+            var entity = new MomentDiscuss()
+            {
+                DiscussId = Guid.NewGuid(),
+                MomentId = request.Content.MomentId,
+                UId = request.Content.UId,
+                DiscussContent = request.Content.DiscussContent,
+                CreateTime = DateTime.Now
+            };
+
+            response.Content.IsExecuteSuccess = momentDal.InsertMomentDiscuss(entity);
+
+            return response;
+        }
+
         public ResponseContext<MySpaceResponse> MySpace(RequestContext<MySpaceRequest> request)
         {
             #region 初始化
             var rtn = new ResponseContext<MySpaceResponse>();
+
             var userInfo = userInfoDal.GetUserInfoByUId(request.Content.UId);
             if (userInfo == null)
             {
@@ -213,7 +225,36 @@ namespace Chat.Service
             var moments = momentDal.GetMomentsByUId(request.Content.UId);
             #endregion
 
+            #region 填充响应体
+            var age = Convert.ToDateTime(userInfo.BirthDate).GetAgeByBirthdate().ToString();
+            var constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation();
+            var location = CommonHelper.GetLocation(userInfo.Province, userInfo.City, "");
+            var career = userInfo.SchoolName+"程序员";
+            string basicInfo = string.Format("{0}·{1}岁·{2}·{3}", userInfo.Gender==GenderEnum.Man?"男":"女", age, constellation, location);
+
+            rtn.Content = new MySpaceResponse()
+            {
+                BackgroundImg = userInfo.BackgroundImg.ToBackgroundImgPath(),
+                HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                NickName = userInfo.NickName,
+                Gender = userInfo.Gender.ToDescription(),
+                Signature = userInfo.Signature,
+                BasicInfo= basicInfo,
+                EducationAndCareer = career
+            };
+
+            if (moments.NotEmpty())
+            {
+                rtn.Content.MomentList = moments.Select(a => new MySpaceMomentType()
+                {
+                    MomentId=a.MomentId.ToString(),
+                    PublishTime=a.CreateTime.GetDateDesc(),
+                    TextContent=a.TextContent,
+                    ImgContents= GetImgContents(a.MomentId)
+                }).ToList();
+            }
             return rtn;
+            #endregion
         }
 
         public ResponseContext<SupportMomentResponse> SupportMoment(RequestContext<SupportMomentRequest> request)
@@ -285,6 +326,26 @@ namespace Chat.Service
                 Log.Error("DeleteImg", "删除图片失败，path" + path, ex,request.Head);
             }
             return response;
+        }
+
+        /// <summary>
+        /// 获取动态图片
+        /// </summary>
+        /// <param name="momentId">动态Id</param>
+        /// <returns></returns>
+        private List<string> GetImgContents(Guid momentId)
+        {
+            var imgList = momentDal.GetMomentImgList(momentId);
+            if (imgList.NotEmpty())
+            {
+                var rtn = new List<string>();
+                foreach (var img in imgList)
+                {
+                    rtn.Add(img.ImgPath.ToMomentImagePath());
+                }
+                return rtn;
+            }
+            return null;
         }
     }
 }

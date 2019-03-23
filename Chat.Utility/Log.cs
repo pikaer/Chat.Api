@@ -79,7 +79,7 @@ namespace Chat.Utility
             {
                 string desc = string.Empty;
                 string platform = string.Empty;
-                Guid tid = Guid.NewGuid();
+                Guid tid = Guid.Empty;
                 long uid = 0;
 
                 if (ex == null)

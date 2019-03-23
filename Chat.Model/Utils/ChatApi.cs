@@ -6,7 +6,7 @@ namespace Chat.Model.Utils
 {
     /**
     * 以下类都是和前端交互的实体，后面的只要是接口直接返回的类
-    * 都放在此处，和DTO,Entity完全分离
+    * 都放在此处，和DTO,Entity完全分离。强制要求和前端交互的类不得直接引用DTO,Entity中的类
     * */
 
     #region GetUserInfo
@@ -854,7 +854,35 @@ namespace Chat.Model.Utils
         public bool IsExecuteSuccess { get; set; }
     }
     #endregion
-    
+
+    #region MomentDiscuss
+    public class MomentDiscussRequest
+    {
+        /// <summary>
+        /// 动态Id
+        /// </summary>
+        public Guid MomentId { get; set; }
+
+        /// <summary>
+        /// 评论者UId
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 评论内容
+        /// </summary>
+        public string DiscussContent { get; set; }
+    }
+
+    public class MomentDiscussResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
+
     #region MomentDetail
     public class MomentDetailRequest
     {
@@ -995,25 +1023,15 @@ namespace Chat.Model.Utils
         public string Signature { get; set; }
 
         /// <summary>
-        /// 年龄
+        /// 基础信息
         /// </summary>
-        public string Age { get; set; }
+        public string BasicInfo { get; set; }
 
         /// <summary>
-        /// 星座
+        /// 教育和职业
         /// </summary>
-        public string Constellation { get; set; }
-
-        /// <summary>
-        /// 所在地
-        /// </summary>
-        public string Location { get; set; }
-
-        /// <summary>
-        /// 职业
-        /// </summary>
-        public string Career { get; set; }
-
+        public string EducationAndCareer { get; set; }
+        
         /// <summary>
         /// 已经发布的动态
         /// </summary>
@@ -1041,21 +1059,6 @@ namespace Chat.Model.Utils
         /// 图片内容
         /// </summary>
         public List<string> ImgContents { get; set; }
-
-        /// <summary>
-        /// 是否已经点赞
-        /// </summary>
-        public bool HasSupport { get; set; }
-
-        /// <summary>
-        /// 点赞数
-        /// </summary>
-        public int SupportCount { get; set; }
-
-        /// <summary>
-        /// 评论数
-        /// </summary>
-        public int CommentCount { get; set; }
     }
     #endregion
 }

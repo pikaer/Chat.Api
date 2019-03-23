@@ -115,5 +115,10 @@ namespace Chat.Interface
         {
             return momentService.MySpace(request);
         }
+
+        public ResponseContext<MomentDiscussResponse> MomentDiscuss(RequestContext<MomentDiscussRequest> request)
+        {
+            return momentService.MomentDiscuss(request);
+        }
     }
 }

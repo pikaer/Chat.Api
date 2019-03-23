@@ -12,7 +12,7 @@ namespace Chat.Repository
             return DbEnum.ChatConnect;
         }
 
-        private readonly string SELECT_USERINFO = "SELECT UId,UNo,OpenId,Gender,NickName,BirthDate,Province,City,Area,HomeProvince,HomeCity,HomeArea,SchoolName,EntranceDate,SchoolType,LiveState ,Mobile,WeChatNo,HeadPhotoPath,Signature,CreateTime,UpdateTime FROM dbo.user_UserInfo ";
+        private readonly string SELECT_USERINFO = "SELECT UId,UNo,OpenId,Gender,NickName,BirthDate,Province,City,Area,HomeProvince,HomeCity,HomeArea,SchoolName,EntranceDate,SchoolType,LiveState ,Mobile,WeChatNo,HeadPhotoPath,BackgroundImg,Signature,CreateTime,UpdateTime FROM dbo.user_UserInfo ";
 
         private readonly string SELECT_USERPREFERENCE = "SELECT PreferId,UId ,PreferGender,PreferPlace,PreferHome,PreferAge,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime FROM dbo.user_UserPreference";
 

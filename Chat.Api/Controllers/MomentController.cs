@@ -322,6 +322,49 @@ namespace Chat.Api.Controllers
         }
 
         /// <summary>
+        /// 动态评论
+        /// </summary>
+        [HttpPost]
+        public JsonResult MomentDiscuss()
+        {
+            RequestContext<MomentDiscussRequest> request = null;
+            ResponseContext<MomentDiscussResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<MomentDiscussRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.MomentId == null ||
+                    request.Content.MomentId == Guid.Empty || request.Content.UId <= 0||
+                    request.Content.DiscussContent.IsNullOrEmpty())
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.MomentDiscuss(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "MomentDiscuss", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "MomentDiscuss", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
         /// 动态详情
         /// </summary>
         [HttpPost]

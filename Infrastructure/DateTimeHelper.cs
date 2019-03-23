@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Infrastructure
 {
@@ -136,10 +137,8 @@ namespace Infrastructure
         }
 
         /// <summary>
-        /// 计算年龄
+        /// 根据出生日期计算年龄
         /// </summary>
-        /// <param name="birthdate">生日</param>
-        /// <returns></returns>
         public static int GetAgeByBirthdate(this DateTime birthdate)
         {
             DateTime now = DateTime.Now;
@@ -149,6 +148,75 @@ namespace Infrastructure
                 age--;
             }
             return age < 0 ? 0 : age;
+        }
+
+        /// <summary>
+        /// 根据出生日期获得星座信息
+        /// </summary>
+        public static string GetConstellation(this DateTime birthdate)
+        {
+            var rtn =Constellation.Acrab;
+            float birthdayF = birthdate.Month == 1 && birthdate.Day < 20 ?
+                13 + birthdate.Day / 100f :  birthdate.Month + birthdate.Day / 100f;
+
+            float[] bound = { 1.20F, 2.20F, 3.21F, 4.21F, 5.21F, 6.22F, 7.23F, 8.23F, 9.23F, 10.23F, 11.21F, 12.22F, 13.20F };
+
+            var constellations = new Constellation[12];
+            for (int i = 0; i < constellations.Length; i++)
+            {
+                constellations[i] = (Constellation)(i + 1);
+            }
+               
+            for (int i = 0; i < bound.Length - 1; i++)
+            {
+                float b = bound[i];
+                float nextB = bound[i + 1];
+                if (birthdayF >= b && birthdayF < nextB)
+                {
+                    rtn=constellations[i];
+                }
+            }
+
+            return rtn.ToDescription();
+        }
+
+        public enum Constellation
+        {
+            [Description("水瓶座")]
+            Aquarius = 1,//1.20 - 2.18
+
+            [Description("双鱼座")]
+            Pisces = 2,//2.19 - 3.20
+
+            [Description("白羊座")]
+            Aries = 3,//3.21 - 4.19          
+
+            [Description("金牛座")]
+            Taurus = 4, //4.20 - 5.20
+
+            [Description("双子座")]
+            Gemini = 5,//5.21 - 6.21
+
+            [Description("巨蟹座")]
+            Cancer = 6,//6.22 - 7.22
+
+            [Description("狮子座")]
+            Leo = 7,// 7.23 - 8.22
+
+            [Description("处女座")]
+            Virgo = 8,//8.23 - 9.22
+
+            [Description("天秤座")]
+            Libra = 9,//9.23 - 10.23
+
+            [Description("天蝎座")]
+            Acrab = 10,//10.24 - 11.22
+
+            [Description("射手座")]
+            Sagittarius = 11,//11.23 - 12.21
+
+            [Description("摩羯座")]
+            Capricornus = 12,//12.22 - 1.19
         }
     }
 }

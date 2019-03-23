@@ -109,6 +109,11 @@ namespace Chat.Model.Entity.UserInfo
         public string Signature { get; set; }
 
         /// <summary>
+        /// 空间背景图片
+        /// </summary>
+        public string BackgroundImg { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

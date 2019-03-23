@@ -23,10 +23,8 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = @"INSERT INTO dbo.chat_ChatContent
-                               (ChatId,UId,PartnerUId,ContentDetail ,Type ,HasRead,CreateTime)
-                               VALUES
-                               (@ChatId,@UId ,@PartnerUId ,@ContentDetail,@Type,@HasRead,@CreateTime)";
+                    var sql = @"INSERT INTO dbo.chat_ChatContent (ChatId,UId,PartnerUId,ContentDetail ,Type ,HasRead,CreateTime)
+                                VALUES  (@ChatId,@UId ,@PartnerUId ,@ContentDetail,@Type,@HasRead,@CreateTime)";
                     return Db.Execute(sql, message) > 0;
                 }
                 catch (Exception ex)
