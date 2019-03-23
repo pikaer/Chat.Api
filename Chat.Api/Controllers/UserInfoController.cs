@@ -41,7 +41,7 @@ namespace Chat.Api.Controllers
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
                 }
-                if (request.Content == null)
+                if (request.Content == null || request.Content.UId <= 0)
                 {
                     return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
                 }
@@ -55,6 +55,47 @@ namespace Chat.Api.Controllers
             finally
             {
                 WriteServiceLog(MODULE, "GetUserInfo", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
+        /// 获取用户简易信息
+        /// </summary>
+        [HttpPost]
+        public JsonResult GetUserSimpleInfo()
+        {
+            RequestContext<GetUserSimpleInfoRequest> request = null;
+            ResponseContext<GetUserSimpleInfoResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<GetUserSimpleInfoRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null|| request.Content.UId<=0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.GetUserSimpleInfo(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetUserSimpleInfo", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetUserSimpleInfo", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -96,6 +137,47 @@ namespace Chat.Api.Controllers
             finally
             {
                 WriteServiceLog(MODULE, "SetUserInfo", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
+        /// 存入访客信息
+        /// </summary>
+        [HttpPost]
+        public JsonResult SetVisitor()
+        {
+            RequestContext<SetVisitorRequest> request = null;
+            ResponseContext<SetVisitorResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<SetVisitorRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null|| request.Content.UId<=0|| request.Content.PartnerUId<=0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.SetVisitor(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "SetVisitor", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "SetVisitor", request?.Head, response?.Head, request, response);
             }
         }
 

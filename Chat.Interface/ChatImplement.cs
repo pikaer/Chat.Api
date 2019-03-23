@@ -120,5 +120,15 @@ namespace Chat.Interface
         {
             return momentService.MomentDiscuss(request);
         }
+
+        public ResponseContext<GetUserSimpleInfoResponse> GetUserSimpleInfo(RequestContext<GetUserSimpleInfoRequest> request)
+        {
+            return userInfoService.GetUserSimpleInfo(request);
+        }
+
+        public ResponseContext<SetVisitorResponse> SetVisitor(RequestContext<SetVisitorRequest> request)
+        {
+            return userInfoService.SetVisitor(request);
+        }
     }
 }

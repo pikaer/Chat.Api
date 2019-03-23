@@ -2,6 +2,7 @@
 using Chat.Utility;
 using Dapper;
 using System;
+using System.Collections.Generic;
 
 namespace Chat.Repository
 {
@@ -14,7 +15,11 @@ namespace Chat.Repository
 
         private readonly string SELECT_USERINFO = "SELECT UId,UNo,OpenId,Gender,NickName,BirthDate,Province,City,Area,HomeProvince,HomeCity,HomeArea,SchoolName,EntranceDate,SchoolType,LiveState ,Mobile,WeChatNo,HeadPhotoPath,BackgroundImg,Signature,CreateTime,UpdateTime FROM dbo.user_UserInfo ";
 
-        private readonly string SELECT_USERPREFERENCE = "SELECT PreferId,UId ,PreferGender,PreferPlace,PreferHome,PreferAge,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime FROM dbo.user_UserPreference";
+        private readonly string SELECT_USERPREFERENCE = "SELECT PreferId,UId ,PreferGender,PreferPlace,PreferHome,PreferAge,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime FROM dbo.user_UserPreference ";
+
+        private readonly string SELECT_FRIEND = "SELECT FriendId, UId, PartnerUId, IsDelete, AddType, CreateTime, UpdateTime FROM Chat.dbo.user_Friend ";
+
+        private readonly string SELECT_VISITOR = "SELECT VisitorId,UId,PartnerUId,VisitCount,CreateTime,UpdateTime  FROM dbo.user_Visitor ";
 
         public UserInfo GetUserInfoByUId(long uid)
         {
@@ -45,6 +50,61 @@ namespace Chat.Repository
                 catch (Exception ex)
                 {
                     Log.Error("GetUserInfoByOpenId", "获取用户信息异常，OpenId=" + openId, ex);
+                    return null;
+                }
+            }
+        }
+
+        public List<Friend>GetFriendsByUid(long uid,bool isUId=true)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = string.Format("{0} Where UId={1}", SELECT_FRIEND, uid);
+                    if (!isUId)
+                    {
+                        sql = string.Format("{0} Where PartnerUId='{1}'", SELECT_FRIEND, uid);
+                    }
+                    return Db.Query<Friend>(sql).AsList();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetFriendsByUid", "获取用户信息异常，UId=" + uid, ex);
+                    return null;
+                }
+            }
+        }
+
+        public List<Visitor>GetVisitors(long partnerUId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = string.Format("{0} Where PartnerUId={1}", SELECT_VISITOR,partnerUId);
+                    return Db.Query<Visitor>(sql).AsList();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetVisitors", "获取访客信息异常。PartnerUId="+ partnerUId, ex);
+                    return null;
+                }
+            }
+        }
+
+        public Visitor GetVisitor(long uId,long partnerUId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = string.Format("{0} Where UId={1} and PartnerUId={2}", SELECT_VISITOR, uId,partnerUId);
+                    return Db.QueryFirstOrDefault<Visitor>(sql);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetVisitor", "获取访客信息异常", ex);
                     return null;
                 }
             }
@@ -101,6 +161,45 @@ namespace Chat.Repository
                 }
             }
         }
+
+        public bool UpdateVisitor(Visitor visitor)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"UPDATE dbo.user_Visitor
+                                   SET VisitCount =@VisitCount
+                                      ,UpdateTime =@UpdateTime
+                                 WHERE VisitorId=@VisitorId";
+                    return Db.Execute(sql, visitor) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("UpdateVisitor", "更新访客信息异常", ex);
+                    return false;
+                }
+            }
+        }
+
+        public bool InsertVisitor(Visitor entity)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"INSERT INTO dbo.user_Visitor(UId,PartnerUId,VisitCount,CreateTime)
+                                VALUES(@UId,@PartnerUId,@VisitCount,@CreateTime)";
+                    return Db.Execute(sql, entity) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("InsertVisitor", "存入访客信息异常", ex);
+                    return false;
+                }
+            }
+        }
+
         public UserPreference GetUserPreference(long uid)
         {
             using (var Db = GetDbConnection())

@@ -5,6 +5,7 @@ using Chat.Repository;
 using Chat.Utility;
 using Infrastructure;
 using System;
+using System.Linq;
 
 namespace Chat.Service
 {
@@ -39,7 +40,6 @@ namespace Chat.Service
                     LiveState = (int)entity.LiveState,
                     Mobile = entity.Mobile,
                     WeChatNo = entity.WeChatNo,
-                    HeadPhotoPath = entity.HeadPhotoPath,
                     Signature = entity.Signature,
                 };
             }
@@ -128,6 +128,89 @@ namespace Chat.Service
             {
                 response.Head = new ResponseHead(false, ErrCodeEnum.InsertError);
                 Log.Error("SetUserInfo", "存入用户信息异常", ex, request.Head);
+            }
+            return response;
+        }
+
+        public ResponseContext<SetVisitorResponse> SetVisitor(RequestContext<SetVisitorRequest> request)
+        {
+            var response = new ResponseContext<SetVisitorResponse>()
+            {
+                Content = new SetVisitorResponse()
+                {
+                    IsExecuteSuccess = true
+                }
+            };
+
+            if (request.Content.UId == request.Content.PartnerUId)
+            {
+                return response;
+            }
+
+            var visitor = userInfoDal.GetVisitor(request.Content.UId, request.Content.PartnerUId);
+            if (visitor == null)
+            {
+                var entity = new Visitor()
+                {
+                    UId= request.Content.UId,
+                    PartnerUId= request.Content.PartnerUId,
+                    VisitCount=1,
+                    CreateTime=DateTime.Now
+                };
+                response.Content.IsExecuteSuccess = userInfoDal.InsertVisitor(entity);
+            }
+            else
+            {
+                visitor.VisitCount++;
+                visitor.UpdateTime = DateTime.Now;
+                response.Content.IsExecuteSuccess = userInfoDal.UpdateVisitor(visitor);
+            }
+            return response;
+        }
+
+        public ResponseContext<GetUserSimpleInfoResponse> GetUserSimpleInfo(RequestContext<GetUserSimpleInfoRequest> request)
+        {
+            var response = new ResponseContext<GetUserSimpleInfoResponse>();
+            try
+            {
+                var entity = userInfoDal.GetUserInfoByUId(request.Content.UId);
+                if (entity == null)
+                {
+                    return response;
+                }
+
+                response.Content = new GetUserSimpleInfoResponse
+                {
+                    NickName = entity.NickName,
+                    UNo = entity.UNo,
+                    HeadPhotoPath = entity.HeadPhotoPath.ToHeadImagePath()
+                };
+
+                //我的关注
+                var attentions = userInfoDal.GetFriendsByUid(request.Content.UId);
+                if (attentions.NotEmpty())
+                {
+                    response.Content.AttentionCount = attentions.Count;
+                }
+
+                //我的粉丝
+                var fans= userInfoDal.GetFriendsByUid(request.Content.UId,false);
+                if (fans.NotEmpty())
+                {
+                    response.Content.FansCount = fans.Count;
+                }
+
+                //访客数量
+                var visitors= userInfoDal.GetVisitors(request.Content.UId);
+                if (visitors.NotEmpty())
+                {
+                    response.Content.VisitorCount = visitors.Sum(a=>a.VisitCount);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Head = new ResponseHead(false, ErrCodeEnum.QueryError);
+                Log.Error("GetUserSimpleInfo", "获取用户简易信息异常", ex, request.Head);
             }
             return response;
         }

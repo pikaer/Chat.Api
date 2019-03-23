@@ -229,8 +229,8 @@ namespace Chat.Service
             var age = Convert.ToDateTime(userInfo.BirthDate).GetAgeByBirthdate().ToString();
             var constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation();
             var location = CommonHelper.GetLocation(userInfo.Province, userInfo.City, "");
-            var career = userInfo.SchoolName+"程序员";
-            string basicInfo = string.Format("{0}·{1}岁·{2}·{3}", userInfo.Gender==GenderEnum.Man?"男":"女", age, constellation, location);
+            var career = string.Format("{0} · {1}", userInfo.SchoolName,"程序员");
+            string basicInfo = string.Format("{0} · {1}岁 · {2} · {3}", userInfo.Gender==GenderEnum.Man?"男":"女", age, constellation, location);
 
             rtn.Content = new MySpaceResponse()
             {
@@ -249,9 +249,11 @@ namespace Chat.Service
                 {
                     MomentId=a.MomentId.ToString(),
                     PublishTime=a.CreateTime.GetDateDesc(),
-                    TextContent=a.TextContent,
+                    TextContent=a.TextContent.Trim(),
                     ImgContents= GetImgContents(a.MomentId)
                 }).ToList();
+
+                rtn.Content.MomentList.RemoveAll(a => a.TextContent.IsNullOrEmpty() && a.ImgContents.IsNullOrEmpty());
             }
             return rtn;
             #endregion

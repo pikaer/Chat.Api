@@ -96,14 +96,53 @@ namespace Chat.Model.Utils
         public string WeChatNo { get; set; }
 
         /// <summary>
+        /// 个性签名
+        /// </summary>
+        public string Signature { get; set; }
+    }
+    #endregion
+
+    #region GetUserSimpleInfo
+    public class GetUserSimpleInfoRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+    }
+
+    public class GetUserSimpleInfoResponse
+    {
+        /// <summary>
+        /// 用户昵称
+        /// </summary>
+        public string NickName { get; set; }
+
+        /// <summary>
+        /// 用户账号，外露给前端
+        /// </summary>
+        public long UNo { get; set; }
+
+        /// <summary>
         /// 头像路径
         /// </summary>
         public string HeadPhotoPath { get; set; }
 
         /// <summary>
-        /// 个性签名
+        /// 关注数量
         /// </summary>
-        public string Signature { get; set; }
+        public int AttentionCount { get; set; }
+
+        /// <summary>
+        /// 粉丝数量
+        /// </summary>
+        public int FansCount { get; set; }
+
+        /// <summary>
+        /// 访客数量
+        /// </summary>
+        public int VisitorCount { get; set; }
+
     }
     #endregion
 
@@ -1059,6 +1098,26 @@ namespace Chat.Model.Utils
         /// 图片内容
         /// </summary>
         public List<string> ImgContents { get; set; }
+    }
+    #endregion
+
+    #region SetVisitor
+    public class SetVisitorRequest
+    {
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 对方Id
+        /// </summary>
+        public long PartnerUId { get; set; }
+    }
+
+    public class SetVisitorResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
     }
     #endregion
 }

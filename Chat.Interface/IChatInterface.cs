@@ -90,6 +90,11 @@ namespace Chat.Interface
         ResponseContext<DeleteImgResponse> DeleteImg(RequestContext<DeleteImgRequest> request);
 
         /// <summary>
+        /// 获取用户简易信息
+        /// </summary>
+        ResponseContext<GetUserSimpleInfoResponse> GetUserSimpleInfo(RequestContext<GetUserSimpleInfoRequest> request);
+
+        /// <summary>
         /// 点赞或者取消点赞某条动态
         /// </summary>
         ResponseContext<SupportMomentResponse> SupportMoment(RequestContext<SupportMomentRequest> request);
@@ -113,5 +118,10 @@ namespace Chat.Interface
         /// 动态评论
         /// </summary>
         ResponseContext<MomentDiscussResponse> MomentDiscuss(RequestContext<MomentDiscussRequest> request);
+
+        /// <summary>
+        /// 存入访客信息
+        /// </summary>
+        ResponseContext<SetVisitorResponse> SetVisitor(RequestContext<SetVisitorRequest> request);
     }
 }
