@@ -5,6 +5,7 @@ using Chat.Repository;
 using Chat.Utility;
 using Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Chat.Service
@@ -147,23 +148,73 @@ namespace Chat.Service
                 return response;
             }
 
-            var visitor = userInfoDal.GetVisitor(request.Content.UId, request.Content.PartnerUId);
-            if (visitor == null)
+            var entity = new Visitor()
             {
-                var entity = new Visitor()
+                UId = request.Content.UId,
+                PartnerUId = request.Content.PartnerUId,
+                CreateTime = DateTime.Now
+            };
+            response.Content.IsExecuteSuccess = userInfoDal.InsertVisitor(entity);
+            return response;
+        }
+
+        public ResponseContext<GetFriendsResponse> GetFriends(RequestContext<GetFriendsRequest> request)
+        {
+            var response = new ResponseContext<GetFriendsResponse>()
+            {
+                Content=new GetFriendsResponse()
+            };
+            
+            switch (request.Content.FriendType)
+            {
+                case FriendTypeEnum.Default:
+                    response.Content.Friends = GetRealFriends(request.Content.UId);
+                    break;
+                case FriendTypeEnum.Attentin:
+                    response.Content.Friends = GetAttentionFriends(request.Content.UId);
+                    break;
+                case FriendTypeEnum.Fans:
+                    response.Content.Friends = GetFansFriends(request.Content.UId);
+                    break;
+                case FriendTypeEnum.Visitor:
+                    response.Content.Friends = GetVisitorFriends(request.Content.UId);
+                    break;
+            }
+
+            return response;
+        }
+        
+        public ResponseContext<UpdateAttentionStateResponse> UpdateAttentionState(RequestContext<UpdateAttentionStateRequest> request)
+        {
+            var response = new ResponseContext<UpdateAttentionStateResponse>()
+            {
+                Content = new UpdateAttentionStateResponse()
                 {
-                    UId= request.Content.UId,
-                    PartnerUId= request.Content.PartnerUId,
-                    VisitCount=1,
-                    CreateTime=DateTime.Now
+                    IsExecuteSuccess = true
+                }
+            };
+
+            if(request.Content.UId== request.Content.PartnerUId)
+            {
+                return response;
+            }
+
+            var friend = userInfoDal.GetFriend(request.Content.UId, request.Content.PartnerUId);
+            if (friend == null)
+            {
+                var entity = new Friend()
+                {
+                    UId = request.Content.UId,
+                    PartnerUId = request.Content.PartnerUId,
+                    CreateTime = DateTime.Now
                 };
-                response.Content.IsExecuteSuccess = userInfoDal.InsertVisitor(entity);
+                response.Content.IsExecuteSuccess = userInfoDal.InsertFriend(entity);
             }
             else
             {
-                visitor.VisitCount++;
-                visitor.UpdateTime = DateTime.Now;
-                response.Content.IsExecuteSuccess = userInfoDal.UpdateVisitor(visitor);
+                friend.IsDelete = !friend.IsDelete;
+                friend.UpdateTime = DateTime.Now;
+                response.Content.IsExecuteSuccess = userInfoDal.UpdateFriend(friend);
             }
             return response;
         }
@@ -204,7 +255,7 @@ namespace Chat.Service
                 var visitors= userInfoDal.GetVisitors(request.Content.UId);
                 if (visitors.NotEmpty())
                 {
-                    response.Content.VisitorCount = visitors.Sum(a=>a.VisitCount);
+                    response.Content.VisitorCount = visitors.Count;
                 }
             }
             catch (Exception ex)
@@ -283,6 +334,153 @@ namespace Chat.Service
             }
             return response;
         }
-        
+
+        /// <summary>
+        /// 获取互相关注的朋友
+        /// </summary>
+        private List<FriendResponseType> GetRealFriends(long uId)
+        {
+            var rtn = new List<FriendResponseType>();
+            var friends = userInfoDal.GetFriendsByUid(uId);
+            if (friends.NotEmpty())
+            {
+                foreach (var item in friends.OrderByDescending(a => a.CreateTime))
+                {
+                    var friend = userInfoDal.GetFriend(item.PartnerUId, item.UId);
+                    if (friend != null)
+                    {
+                        var userInfo = userInfoDal.GetUserInfoByUId(item.PartnerUId);
+                        if (userInfo == null)
+                        {
+                            continue;
+                        }
+                        rtn.Add(new FriendResponseType()
+                        {
+                            DisplayName = item.RemarkName.IsNullOrEmpty() ? userInfo.NickName : item.RemarkName,
+                            HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                            Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
+                            Gender = userInfo.Gender,
+                            HasAttention = true
+                        });
+                    }
+                }
+            }
+            return rtn;
+        }
+
+        /// <summary>
+        /// 我关注的
+        /// </summary>
+        private List<FriendResponseType> GetAttentionFriends(long uId)
+        {
+            var rtn = new List<FriendResponseType>();
+
+            var friends = userInfoDal.GetFriendsByUid(uId);
+            if (friends.NotEmpty())
+            {
+                foreach (var item in friends.OrderByDescending(a => a.CreateTime))
+                {
+                    var friend = userInfoDal.GetFriend(item.PartnerUId, item.UId);
+                    if (friend == null)
+                    {
+                        var userInfo = userInfoDal.GetUserInfoByUId(item.PartnerUId);
+                        if (userInfo == null)
+                        {
+                            continue;
+                        }
+
+                        rtn.Add(new FriendResponseType()
+                        {
+                            DisplayName = userInfo.NickName,
+                            HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                            Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
+                            Gender = userInfo.Gender,
+                            HasAttention = true
+                        });
+                    }
+                }
+            }
+            return rtn;
+        }
+
+        /// <summary>
+        /// 别人关注我的
+        /// </summary>
+        private List<FriendResponseType> GetFansFriends(long uId)
+        {
+            var rtn = new List<FriendResponseType>();
+
+            var friends = userInfoDal.GetFriendsByUid(uId, false);
+            if (friends.NotEmpty())
+            {
+                foreach (var item in friends.OrderByDescending(a => a.CreateTime))
+                {
+                    var friend = userInfoDal.GetFriend(uId, item.UId);
+                    if (friend == null)
+                    {
+                        var userInfo = userInfoDal.GetUserInfoByUId(item.UId);
+                        if (userInfo == null)
+                        {
+                            continue;
+                        }
+
+                        rtn.Add(new FriendResponseType()
+                        {
+                            DisplayName = userInfo.NickName,
+                            HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                            Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
+                            Gender = userInfo.Gender,
+                            HasAttention = false
+                        });
+                    }
+                }
+            }
+            return rtn;
+        }
+
+        /// <summary>
+        /// 我的访客
+        /// </summary>
+        private List<FriendResponseType> GetVisitorFriends(long uId)
+        {
+            var rtn = new List<FriendResponseType>();
+
+            var visitors = userInfoDal.GetVisitors(uId);
+            if (visitors.NotEmpty())
+            {
+                foreach (var item in visitors.OrderByDescending(a => a.CreateTime))
+                {
+                    var userInfo = userInfoDal.GetUserInfoByUId(item.UId);
+                    if (userInfo == null)
+                    {
+                        continue;
+                    }
+
+                    var nickName = string.Empty;
+                    var friend = userInfoDal.GetFriend(uId, item.UId);
+                    if (friend != null && !friend.RemarkName.IsNullOrEmpty())
+                    {
+                        nickName = friend.RemarkName;
+                    }
+                    else
+                    {
+                        nickName = userInfo.NickName;
+                    }
+
+                    rtn.Add(new FriendResponseType()
+                    {
+                        DisplayName = nickName,
+                        HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                        Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
+                        Gender = userInfo.Gender,
+                        HasAttention = friend != null,
+                        TimeRemark = item.CreateTime.GetDateDesc()
+                    });
+                }
+            }
+
+            return rtn;
+        }
+
     }
 }

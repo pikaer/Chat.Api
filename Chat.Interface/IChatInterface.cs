@@ -123,5 +123,15 @@ namespace Chat.Interface
         /// 存入访客信息
         /// </summary>
         ResponseContext<SetVisitorResponse> SetVisitor(RequestContext<SetVisitorRequest> request);
+
+        /// <summary>
+        /// 更新关注状态
+        /// </summary>
+        ResponseContext<UpdateAttentionStateResponse> UpdateAttentionState(RequestContext<UpdateAttentionStateRequest> request);
+
+        /// <summary>
+        /// 获取好友列表信息
+        /// </summary>
+        ResponseContext<GetFriendsResponse> GetFriends(RequestContext<GetFriendsRequest> request);
     }
 }

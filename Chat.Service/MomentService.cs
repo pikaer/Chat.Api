@@ -217,12 +217,11 @@ namespace Chat.Service
             #region 初始化
             var rtn = new ResponseContext<MySpaceResponse>();
 
-            var userInfo = userInfoDal.GetUserInfoByUId(request.Content.UId);
+            var userInfo = userInfoDal.GetUserInfoByUId(request.Content.PartnerUId);
             if (userInfo == null)
             {
                 return rtn;
             }
-            var moments = momentDal.GetMomentsByUId(request.Content.UId);
             #endregion
 
             #region 填充响应体
@@ -240,9 +239,12 @@ namespace Chat.Service
                 Gender = userInfo.Gender.ToDescription(),
                 Signature = userInfo.Signature,
                 BasicInfo= basicInfo,
-                EducationAndCareer = career
+                EducationAndCareer = career,
+                IsSelf=request.Content.UId== request.Content.PartnerUId
             };
 
+            //发布的动态
+            var moments = momentDal.GetMomentsByUId(request.Content.PartnerUId);
             if (moments.NotEmpty())
             {
                 rtn.Content.MomentList = moments.Select(a => new MySpaceMomentType()
@@ -255,6 +257,10 @@ namespace Chat.Service
 
                 rtn.Content.MomentList.RemoveAll(a => a.TextContent.IsNullOrEmpty() && a.ImgContents.IsNullOrEmpty());
             }
+
+            var friend = userInfoDal.GetFriend(request.Content.UId, request.Content.PartnerUId);
+            rtn.Content.HasAttention = friend != null&& !friend.IsDelete;
+
             return rtn;
             #endregion
         }

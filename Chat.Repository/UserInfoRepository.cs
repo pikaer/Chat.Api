@@ -17,9 +17,9 @@ namespace Chat.Repository
 
         private readonly string SELECT_USERPREFERENCE = "SELECT PreferId,UId ,PreferGender,PreferPlace,PreferHome,PreferAge,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime FROM dbo.user_UserPreference ";
 
-        private readonly string SELECT_FRIEND = "SELECT FriendId, UId, PartnerUId, IsDelete, AddType, CreateTime, UpdateTime FROM Chat.dbo.user_Friend ";
+        private readonly string SELECT_FRIEND = "SELECT FriendId, UId, PartnerUId,RemarkName,IsDelete, CreateTime, UpdateTime FROM Chat.dbo.user_Friend ";
 
-        private readonly string SELECT_VISITOR = "SELECT VisitorId,UId,PartnerUId,VisitCount,CreateTime,UpdateTime  FROM dbo.user_Visitor ";
+        private readonly string SELECT_VISITOR = "SELECT VisitorId,UId,PartnerUId,CreateTime  FROM dbo.user_Visitor ";
 
         public UserInfo GetUserInfoByUId(long uid)
         {
@@ -61,16 +61,34 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = string.Format("{0} Where UId={1}", SELECT_FRIEND, uid);
+                    var sql = string.Format("{0} Where IsDelete=false and UId={1}", SELECT_FRIEND, uid);
                     if (!isUId)
                     {
-                        sql = string.Format("{0} Where PartnerUId='{1}'", SELECT_FRIEND, uid);
+                        sql = string.Format("{0} Where IsDelete=false and PartnerUId={1}", SELECT_FRIEND, uid);
                     }
                     return Db.Query<Friend>(sql).AsList();
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("GetFriendsByUid", "获取用户信息异常，UId=" + uid, ex);
+                    Log.Error("GetFriendsByUid", "获取好友列表信息异常，UId=" + uid, ex);
+                    return null;
+                }
+            }
+        }
+
+        public Friend GetFriend(long uId, long partnerUId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = string.Format("{0} Where and UId={1} and PartnerUId={2}", SELECT_FRIEND, uId, partnerUId);
+                    
+                    return Db.QueryFirstOrDefault<Friend>(sql);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetFriendsByUid", "获取好友信息异常", ex);
                     return null;
                 }
             }
@@ -92,20 +110,67 @@ namespace Chat.Repository
                 }
             }
         }
-
-        public Visitor GetVisitor(long uId,long partnerUId)
+        
+        public UserPreference GetUserPreference(long uid)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
-                    var sql = string.Format("{0} Where UId={1} and PartnerUId={2}", SELECT_VISITOR, uId,partnerUId);
-                    return Db.QueryFirstOrDefault<Visitor>(sql);
+                    var sql = string.Format("{0} Where UId={1}", SELECT_USERPREFERENCE, uid);
+                    return Db.QueryFirst<UserPreference>(sql);
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("GetVisitor", "获取访客信息异常", ex);
+                    Log.Error("GetUserInfo", "获取用户偏好设置信息异常，Uid=" + uid, ex);
                     return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取当前最大用户编号
+        /// </summary>
+        /// <returns></returns>
+        public long GetMaxUNo()
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = "Select Max(UNo) from user_UserInfo";
+                    return Db.QueryFirst<long>(sql);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("GetMaxUNo", "获取当前最大用户编号异常", ex);
+                    return 0;
+                }
+            }
+        }
+
+        public bool UpdateUserPreference(UserPreference req)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"UPDATE dbo.user_UserPreference
+                                   SET PreferGender = @PreferGender
+                                      ,PreferPlace = @PreferPlace
+                                      ,PreferHome = @PreferHome
+                                      ,PreferAge = @PreferAge
+                                      ,PreferSchoolType = @PreferSchoolType
+                                      ,PreferLiveState = @PreferLiveState
+                                      ,CreateTime = @CreateTime
+                                      ,UpdateTime = @UpdateTime
+                                 WHERE PreferId=@PreferId";
+                    return Db.Execute(sql, req) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("UpdateUserPreference", "更新用户偏好设置异常，UId=" + req.UId, ex);
+                    return false;
                 }
             }
         }
@@ -143,40 +208,19 @@ namespace Chat.Repository
                 }
             }
         }
-
-        public bool InsertUserInfo(UserInfo req)
+        
+        public bool UpdateFriend(Friend entity)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
-                    var sql = @"INSERT INTO dbo.user_UserInfo (OpenId,Gender,UNo,NickName,CreateTime,UpdateTime)
-                                        VALUES(@OpenId,@Gender,@UNo,@NickName,@CreateTime,@UpdateTime)";
-                    return Db.Execute(sql, req) > 0;
+                    var sql = @"UPDATE dbo.user_Friend SET IsDelete =@IsDelete, UpdateTime = @UpdateTime WHERE FriendId = @FriendId";
+                    return Db.Execute(sql, entity) > 0;
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("InsertUserInfo", "存入用户信息异常，OpenId=" + req.OpenId, ex);
-                    return false;
-                }
-            }
-        }
-
-        public bool UpdateVisitor(Visitor visitor)
-        {
-            using (var Db = GetDbConnection())
-            {
-                try
-                {
-                    var sql = @"UPDATE dbo.user_Visitor
-                                   SET VisitCount =@VisitCount
-                                      ,UpdateTime =@UpdateTime
-                                 WHERE VisitorId=@VisitorId";
-                    return Db.Execute(sql, visitor) > 0;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("UpdateVisitor", "更新访客信息异常", ex);
+                    Log.Error("UpdateVisitor", "更新好友信息异常", ex);
                     return false;
                 }
             }
@@ -188,8 +232,8 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = @"INSERT INTO dbo.user_Visitor(UId,PartnerUId,VisitCount,CreateTime)
-                                VALUES(@UId,@PartnerUId,@VisitCount,@CreateTime)";
+                    var sql = @"INSERT INTO dbo.user_Visitor(UId,PartnerUId,CreateTime)
+                                VALUES(@UId,@PartnerUId,@CreateTime)";
                     return Db.Execute(sql, entity) > 0;
                 }
                 catch (Exception ex)
@@ -199,24 +243,7 @@ namespace Chat.Repository
                 }
             }
         }
-
-        public UserPreference GetUserPreference(long uid)
-        {
-            using (var Db = GetDbConnection())
-            {
-                try
-                {
-                    var sql = string.Format("{0} Where UId={1}", SELECT_USERPREFERENCE, uid);
-                    return Db.QueryFirst<UserPreference>(sql);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("GetUserInfo", "获取用户偏好设置信息异常，Uid=" + uid, ex);
-                    return null;
-                }
-            }
-        }
-
+        
         public bool InsertUserPreference(UserPreference req)
         {
             using (var Db = GetDbConnection())
@@ -235,52 +262,40 @@ namespace Chat.Repository
             }
         }
 
-        public bool UpdateUserPreference(UserPreference req)
+        public bool InsertUserInfo(UserInfo req)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
-                    var sql = @"UPDATE dbo.user_UserPreference
-                                   SET PreferGender = @PreferGender
-                                      ,PreferPlace = @PreferPlace
-                                      ,PreferHome = @PreferHome
-                                      ,PreferAge = @PreferAge
-                                      ,PreferSchoolType = @PreferSchoolType
-                                      ,PreferLiveState = @PreferLiveState
-                                      ,CreateTime = @CreateTime
-                                      ,UpdateTime = @UpdateTime
-                                 WHERE PreferId=@PreferId";
+                    var sql = @"INSERT INTO dbo.user_UserInfo (OpenId,Gender,UNo,NickName,CreateTime,UpdateTime)
+                                        VALUES(@OpenId,@Gender,@UNo,@NickName,@CreateTime,@UpdateTime)";
                     return Db.Execute(sql, req) > 0;
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("UpdateUserPreference", "更新用户偏好设置异常，UId=" + req.UId, ex);
+                    Log.Error("InsertUserInfo", "存入用户信息异常", ex);
                     return false;
                 }
             }
         }
 
-        /// <summary>
-        /// 获取当前最大用户编号
-        /// </summary>
-        /// <returns></returns>
-        public long GetMaxUNo()
+        public bool InsertFriend(Friend entity)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
-                    var sql = "Select Max(UNo) from user_UserInfo";
-                    return Db.QueryFirst<long>(sql);
+                    var sql = @"INSERT INTO dbo.user_Friend(UId,PartnerUId ,RemarkName,CreateTime)
+                                VALUES(@UId,@PartnerUId,@RemarkName,@CreateTime)";
+                    return Db.Execute(sql, entity) > 0;
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("GetMaxUNo", "获取当前最大用户编号异常", ex);
-                    return 0;
+                    Log.Error("InsertFriend", "存入好友信息异常", ex);
+                    return false;
                 }
             }
         }
-
     }
 }

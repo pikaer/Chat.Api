@@ -130,5 +130,15 @@ namespace Chat.Interface
         {
             return userInfoService.SetVisitor(request);
         }
+
+        public ResponseContext<UpdateAttentionStateResponse> UpdateAttentionState(RequestContext<UpdateAttentionStateRequest> request)
+        {
+            return userInfoService.UpdateAttentionState(request);
+        }
+
+        public ResponseContext<GetFriendsResponse> GetFriends(RequestContext<GetFriendsRequest> request)
+        {
+            return userInfoService.GetFriends(request);
+        }
     }
 }

@@ -1032,6 +1032,11 @@ namespace Chat.Model.Utils
     public class MySpaceRequest
     {
         public long UId { get; set; }
+
+        /// <summary>
+        /// 对方Id
+        /// </summary>
+        public long PartnerUId { get; set; }
     }
 
     public class MySpaceResponse
@@ -1070,7 +1075,17 @@ namespace Chat.Model.Utils
         /// 教育和职业
         /// </summary>
         public string EducationAndCareer { get; set; }
-        
+
+        /// <summary>
+        /// 是否已经关注
+        /// </summary>
+        public bool HasAttention { get; set; }
+
+        /// <summary>
+        /// 是否是本人
+        /// </summary>
+        public bool IsSelf { get; set; }
+
         /// <summary>
         /// 已经发布的动态
         /// </summary>
@@ -1118,6 +1133,82 @@ namespace Chat.Model.Utils
         /// 是否执行成功
         /// </summary>
         public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
+
+    #region UpdateAttentionState
+    public class UpdateAttentionStateRequest
+    {
+        /// <summary>
+        /// 主动发起关注的Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 被关注者Id
+        /// </summary>
+        public long PartnerUId { get; set; }
+    }
+
+    public class UpdateAttentionStateResponse
+    {
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsExecuteSuccess { get; set; }
+    }
+    #endregion
+
+    #region GetFriends
+    public class GetFriendsRequest
+    {
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long UId { get; set; }
+
+        /// <summary>
+        /// 好友类别
+        /// </summary>
+        public FriendTypeEnum FriendType { get; set; }
+    }
+
+    public class GetFriendsResponse
+    {
+        public List<FriendResponseType> Friends { get; set; }
+    }
+
+    public class FriendResponseType
+    {
+        /// <summary>
+        /// 展示名称（备注为空时为用户昵称）
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// 头像路径
+        /// </summary>
+        public string HeadPhotoPath { get; set; }
+
+        /// <summary>
+        /// 用户星座
+        /// </summary>
+        public string Constellation { get; set; }
+
+        /// <summary>
+        /// 是否已经关注
+        /// </summary>
+        public bool HasAttention { get; set; }
+
+        /// <summary>
+        /// 时间标记
+        /// </summary>
+        public string TimeRemark { get; set; }
+
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public GenderEnum Gender { get; set; }
     }
     #endregion
 }

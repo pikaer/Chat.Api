@@ -18,20 +18,10 @@ namespace Chat.Model.Entity.UserInfo
         /// 对方Id（被访问者）
         /// </summary>
         public long PartnerUId { get; set; }
-
-        /// <summary>
-        /// 访问数量
-        /// </summary>
-        public int VisitCount { get; set; }
-
+        
         /// <summary>
         /// 添加时间
         /// </summary>
         public DateTime CreateTime { get; set; }
-
-        /// <summary>
-        /// 更新时间
-        /// </summary>
-        public DateTime? UpdateTime { get; set; }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chat.Model.DTO.UserInfo
+﻿namespace Chat.Model.DTO.UserInfo
 {
     /// <summary>
     /// 小程序存入用户信息请求

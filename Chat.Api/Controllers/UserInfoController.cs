@@ -1,7 +1,6 @@
 ﻿using Chat.Interface;
 using Chat.Model.Enum;
 using Chat.Model.Utils;
-using Chat.Service;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -55,6 +54,47 @@ namespace Chat.Api.Controllers
             finally
             {
                 WriteServiceLog(MODULE, "GetUserInfo", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
+        /// 获取好友列表信息
+        /// </summary>
+        [HttpPost]
+        public JsonResult GetFriends()
+        {
+            RequestContext<GetFriendsRequest> request = null;
+            ResponseContext<GetFriendsResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<GetFriendsRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.UId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.GetFriends(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetFriends", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetFriends", request?.Head, response?.Head, request, response);
             }
         }
 
@@ -301,6 +341,47 @@ namespace Chat.Api.Controllers
             finally
             {
                 WriteServiceLog(MODULE, "UpdateUserPreference", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
+        /// 更新关注状态
+        /// </summary>
+        [HttpPost]
+        public JsonResult UpdateAttentionState()
+        {
+            RequestContext<UpdateAttentionStateRequest> request = null;
+            ResponseContext<UpdateAttentionStateResponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<UpdateAttentionStateRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.UpdateAttentionState(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "UpdateAttentionState", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "UpdateAttentionState", request?.Head, response?.Head, request, response);
             }
         }
     }

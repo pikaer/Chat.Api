@@ -24,14 +24,14 @@ namespace Chat.Model.Entity.UserInfo
         public long PartnerUId { get; set; }
 
         /// <summary>
+        /// 备注名
+        /// </summary>
+        public string RemarkName { get; set; }
+
+        /// <summary>
         /// 是否逻辑删除
         /// </summary>
         public bool IsDelete { get; set; }
-
-        /// <summary>
-        /// 添加好友方式
-        /// </summary>
-        public FunctionEnum AddType { get; set; }
 
         /// <summary>
         /// 添加时间
