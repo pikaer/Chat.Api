@@ -1181,6 +1181,11 @@ namespace Chat.Model.Utils
     public class FriendResponseType
     {
         /// <summary>
+        /// 该好友的Uid
+        /// </summary>
+        public long PartnerUId { get; set; }
+
+        /// <summary>
         /// 展示名称（备注为空时为用户昵称）
         /// </summary>
         public string DisplayName { get; set; }

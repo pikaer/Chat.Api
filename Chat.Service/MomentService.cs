@@ -27,7 +27,7 @@ namespace Chat.Service
             };
 
             var moments = momentDal.GetMomentList();
-            foreach(var item in moments)
+            foreach(var item in moments.OrderByDescending(a=>a.CreateTime))
             {
                 var userInfo = userInfoDal.GetUserInfoByUId(item.UId);
                 if (userInfo == null)
@@ -247,7 +247,7 @@ namespace Chat.Service
             var moments = momentDal.GetMomentsByUId(request.Content.PartnerUId);
             if (moments.NotEmpty())
             {
-                rtn.Content.MomentList = moments.Select(a => new MySpaceMomentType()
+                rtn.Content.MomentList = moments.OrderByDescending(a=>a.CreateTime).Select(a => new MySpaceMomentType()
                 {
                     MomentId=a.MomentId.ToString(),
                     PublishTime=a.CreateTime.GetDateDesc(),

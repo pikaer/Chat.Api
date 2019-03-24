@@ -28,7 +28,7 @@ namespace Chat.Repository
                 try
                 {
                     var sql = string.Format("{0} Where UId={1}", SELECT_USERINFO, uid);
-                    return Db.QueryFirst<UserInfo>(sql);
+                    return Db.QueryFirstOrDefault<UserInfo>(sql);
                 }
                 catch(Exception ex)
                 {
@@ -61,10 +61,10 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = string.Format("{0} Where IsDelete=false and UId={1}", SELECT_FRIEND, uid);
+                    var sql = string.Format("{0} Where IsDelete=0 and UId={1}", SELECT_FRIEND, uid);
                     if (!isUId)
                     {
-                        sql = string.Format("{0} Where IsDelete=false and PartnerUId={1}", SELECT_FRIEND, uid);
+                        sql = string.Format("{0} Where IsDelete=0 and PartnerUId={1}", SELECT_FRIEND, uid);
                     }
                     return Db.Query<Friend>(sql).AsList();
                 }
@@ -82,7 +82,7 @@ namespace Chat.Repository
             {
                 try
                 {
-                    var sql = string.Format("{0} Where and UId={1} and PartnerUId={2}", SELECT_FRIEND, uId, partnerUId);
+                    var sql = string.Format("{0} Where UId={1} and PartnerUId={2}", SELECT_FRIEND, uId, partnerUId);
                     
                     return Db.QueryFirstOrDefault<Friend>(sql);
                 }

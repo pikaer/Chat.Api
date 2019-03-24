@@ -356,6 +356,7 @@ namespace Chat.Service
                         }
                         rtn.Add(new FriendResponseType()
                         {
+                            PartnerUId= item.PartnerUId,
                             DisplayName = item.RemarkName.IsNullOrEmpty() ? userInfo.NickName : item.RemarkName,
                             HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
                             Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
@@ -391,6 +392,7 @@ namespace Chat.Service
 
                         rtn.Add(new FriendResponseType()
                         {
+                            PartnerUId= item.PartnerUId,
                             DisplayName = userInfo.NickName,
                             HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
                             Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
@@ -426,6 +428,7 @@ namespace Chat.Service
 
                         rtn.Add(new FriendResponseType()
                         {
+                            PartnerUId= item.UId,
                             DisplayName = userInfo.NickName,
                             HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
                             Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
@@ -469,6 +472,7 @@ namespace Chat.Service
 
                     rtn.Add(new FriendResponseType()
                     {
+                        PartnerUId= item.UId,
                         DisplayName = nickName,
                         HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
                         Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
