@@ -63,10 +63,14 @@ namespace Chat.Service
                         rtn[i].ChatTime = "";
                     }
                 }
+
+                //每次返回30条
+                int pageIndex = request.Content.PageIndex;
+                rtn =rtn.Skip(30* (pageIndex - 1)).Take(30).ToList();
             }
             
 
-            response.Content.ChatContentList = rtn.OrderBy(a => a.CreateTime).ToList();
+            response.Content.ChatContentList = rtn;
             return response;
         }
 

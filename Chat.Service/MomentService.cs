@@ -66,7 +66,18 @@ namespace Chat.Service
                     dto.SupportCount = supportList.Count;
                     dto.HasSupport = supportList.Exists(a => a.UId == request.Content.UId);
                 }
+
+                //是否已经关注对方
+                dto.HasAttention = userInfoDal.GetFriend(request.Content.UId, item.UId)!= null;
+
                 rtn.Content.MomentList.Add(dto);
+            }
+
+            if (rtn.Content.MomentList.NotEmpty()&&request.Content.PageIndex>0)
+            {
+                //每次返回5条
+                int pageIndex = request.Content.PageIndex;
+                rtn.Content.MomentList = rtn.Content.MomentList.Skip(5 *(pageIndex-1)).Take(5).ToList();
             }
             return rtn;
         }

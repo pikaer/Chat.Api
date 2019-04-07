@@ -45,6 +45,8 @@ namespace Chat.Api.Hubs
                 long partnerUId = Convert.ToInt64(Context.GetHttpContext().Request.Query["PartnerUId"]);
                 var user = userInfoDal.GetUserInfoByUId(uId);
                 var partner = userInfoDal.GetUserInfoByUId(partnerUId);
+                string info = string.Format("连接对话.uId={0},partnerUId={1}", uId, partnerUId);
+
                 if (user != null && partner != null)
                 {
                     lock (SyncObj)
@@ -55,6 +57,12 @@ namespace Chat.Api.Hubs
                             OnlineChats[Context.ConnectionId] = onChat;
                         }
                     }
+                   
+                    Log.Info("OnChatHub-OnConnectedSuccess", info);
+                }
+                else
+                {
+                    Log.Error("OnChatHub-OnConnectedFail", info);
                 }
                 await base.OnConnectedAsync();
             }

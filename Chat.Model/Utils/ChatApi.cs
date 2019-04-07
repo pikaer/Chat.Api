@@ -538,6 +538,11 @@ namespace Chat.Model.Utils
         /// 好友UId
         /// </summary>
         public long PartnerUId { get; set; }
+
+        /// <summary>
+        /// 页码（分页传递数据）
+        /// </summary>
+        public int PageIndex { get; set; }
     }
 
     public class GetChatContentListReponse
@@ -711,6 +716,11 @@ namespace Chat.Model.Utils
         /// 动态类别
         /// </summary>
         public MomentTypeEnum MomentType { get; set; }
+
+        /// <summary>
+        /// 页码（分页传递数据）
+        /// </summary>
+        public int PageIndex { get; set; }
     }
 
     public class GetMomentsResponse
@@ -759,6 +769,11 @@ namespace Chat.Model.Utils
         /// 是否已经点赞
         /// </summary>
         public bool HasSupport { get; set; }
+
+        /// <summary>
+        /// 是否已经关注该用户
+        /// </summary>
+        public bool HasAttention { get; set; }
 
         /// <summary>
         /// 点赞数

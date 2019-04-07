@@ -26,7 +26,7 @@ namespace Chat.Repository
                 try
                 {
                     var sql = string.Format("{0} Where UId={1}", SELECT_Online, uid);
-                    return Db.QueryFirst<Online>(sql);
+                    return Db.QueryFirstOrDefault<Online>(sql);
                 }
                 catch (Exception ex)
                 {
@@ -43,7 +43,7 @@ namespace Chat.Repository
                 try
                 {
                     var sql = string.Format("{0} Where UId={1}", SELECT_OnChat, uid);
-                    return Db.QueryFirst<OnChat>(sql);
+                    return Db.QueryFirstOrDefault<OnChat>(sql);
                 }
                 catch (Exception ex)
                 {
