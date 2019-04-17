@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Chat.Repository
 {
-    public class UserInfoRepository: BaseRepository
+    public class UserInfoRepository : BaseRepository
     {
         protected override DbEnum GetDbEnum()
         {
@@ -30,7 +30,7 @@ namespace Chat.Repository
                     var sql = string.Format("{0} Where UId={1}", SELECT_USERINFO, uid);
                     return Db.QueryFirstOrDefault<UserInfo>(sql);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Error("GetUserInfoByUId", "通过UId获取用户信息异常，Uid=" + uid, ex);
                     return null;
@@ -55,7 +55,7 @@ namespace Chat.Repository
             }
         }
 
-        public List<Friend>GetFriendsByUid(long uid,bool isUId=true)
+        public List<Friend> GetFriendsByUid(long uid, bool isUId = true)
         {
             using (var Db = GetDbConnection())
             {
@@ -83,7 +83,7 @@ namespace Chat.Repository
                 try
                 {
                     var sql = string.Format("{0} Where UId={1} and PartnerUId={2}", SELECT_FRIEND, uId, partnerUId);
-                    
+
                     return Db.QueryFirstOrDefault<Friend>(sql);
                 }
                 catch (Exception ex)
@@ -94,23 +94,23 @@ namespace Chat.Repository
             }
         }
 
-        public List<Visitor>GetVisitors(long partnerUId)
+        public List<Visitor> GetVisitors(long partnerUId)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
-                    var sql = string.Format("{0} Where PartnerUId={1}", SELECT_VISITOR,partnerUId);
+                    var sql = string.Format("{0} Where PartnerUId={1}", SELECT_VISITOR, partnerUId);
                     return Db.Query<Visitor>(sql).AsList();
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("GetVisitors", "获取访客信息异常。PartnerUId="+ partnerUId, ex);
+                    Log.Error("GetVisitors", "获取访客信息异常。PartnerUId=" + partnerUId, ex);
                     return null;
                 }
             }
         }
-        
+
         public UserPreference GetUserPreference(long uid)
         {
             using (var Db = GetDbConnection())
@@ -199,7 +199,7 @@ namespace Chat.Repository
                                       ,WeChatNo = @WeChatNo
                                       ,UpdateTime= @UpdateTime
                                  WHERE UId=@UId";
-                    return Db.Execute(sql, req) >0;
+                    return Db.Execute(sql, req) > 0;
                 }
                 catch (Exception ex)
                 {
@@ -208,7 +208,7 @@ namespace Chat.Repository
                 }
             }
         }
-        
+
         public bool UpdateFriend(Friend entity)
         {
             using (var Db = GetDbConnection())
@@ -243,7 +243,7 @@ namespace Chat.Repository
                 }
             }
         }
-        
+
         public bool InsertUserPreference(UserPreference req)
         {
             using (var Db = GetDbConnection())
@@ -252,7 +252,7 @@ namespace Chat.Repository
                 {
                     var sql = @"INSERT INTO dbo.user_UserPreference (UId,PreferGender,PreferPlace,PreferHome,PreferAge ,PreferSchoolType,PreferLiveState,CreateTime,UpdateTime)
                                   VALUES (@UId,@PreferGender,@PreferPlace,@PreferHome,@PreferAge,@PreferSchoolType,@PreferLiveState,@CreateTime,@UpdateTime)";
-                    return Db.Execute(sql,req) > 0;
+                    return Db.Execute(sql, req) > 0;
                 }
                 catch (Exception ex)
                 {
@@ -293,6 +293,23 @@ namespace Chat.Repository
                 catch (Exception ex)
                 {
                     Log.Error("InsertFriend", "存入好友信息异常", ex);
+                    return false;
+                }
+            }
+        }
+
+        public bool UpdateHeadPath(UserInfo entity)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @" UPDATE dbo.user_UserInfo SET HeadPhotoPath = @HeadPhotoPath ,UpdateTime = @UpdateTime  WHERE Uid = @UId ";
+                    return Db.Execute(sql, entity) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("UpdateHeadPath", "跟新用户头像信息异常", ex);
                     return false;
                 }
             }

@@ -39,7 +39,7 @@ namespace Chat.Service
                     MomentId = item.MomentId.ToString(),
                     UId = item.UId,
                     DispalyName = userInfo.NickName,
-                    HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                    HeadImgPath = userInfo.HeadPhotoPath.GetImgPath(),
                     PublishTime = item.CreateTime.GetDateDesc(),
                     TextContent = item.TextContent
                 };
@@ -50,7 +50,7 @@ namespace Chat.Service
                     dto.ImgContents=new List<string>();
                     foreach(var img in imgList)
                     {
-                        dto.ImgContents.Add(img.ImgPath.ToMomentImagePath());
+                        dto.ImgContents.Add(img.ImgPath.GetImgPath());
                     }
                 }
 
@@ -155,7 +155,7 @@ namespace Chat.Service
                 PublishTime = moment.CreateTime.GetDateDesc(),
                 ImgContents= GetImgContents(moment.MomentId),
                 DispalyName = userInfo.NickName,
-                HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath()
+                HeadImgPath = userInfo.HeadPhotoPath.GetImgPath()
             };
             #endregion
             
@@ -184,7 +184,7 @@ namespace Chat.Service
                         DiscussId = item.DiscussId,
                         UId = item.UId,
                         DispalyName = user.NickName,
-                        HeadImgPath = user.HeadPhotoPath.ToHeadImagePath(),
+                        HeadImgPath = user.HeadPhotoPath.GetImgPath(),
                         DiscussContent = item.DiscussContent,
                         DiscussTime = item.CreateTime.GetDateDesc()
                     };
@@ -244,8 +244,8 @@ namespace Chat.Service
 
             rtn.Content = new MySpaceResponse()
             {
-                BackgroundImg = userInfo.BackgroundImg.ToBackgroundImgPath(),
-                HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                BackgroundImg = userInfo.BackgroundImg.GetImgPath(),
+                HeadImgPath = userInfo.HeadPhotoPath.GetImgPath(),
                 NickName = userInfo.NickName,
                 Gender = userInfo.Gender.ToDescription(),
                 Signature = userInfo.Signature,
@@ -360,7 +360,7 @@ namespace Chat.Service
                 var rtn = new List<string>();
                 foreach (var img in imgList)
                 {
-                    rtn.Add(img.ImgPath.ToMomentImagePath());
+                    rtn.Add(img.ImgPath.GetImgPath());
                 }
                 return rtn;
             }

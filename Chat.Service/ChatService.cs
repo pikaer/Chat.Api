@@ -20,11 +20,102 @@ namespace Chat.Service
             var response = new ResponseContext<GetChatListResponse>()
             {
                 Content = new GetChatListResponse()
+                {
+                    ChatList = new List<ChatListType>(),
+                    TotalUnReadCount=""
+                }
             };
+            //我主动发出的消息
+            var myMessages = chatDal.GetChatContent(request.Content.UId, true);
+            if (myMessages.NotEmpty())
+            {
+                foreach(var item in myMessages)
+                {
+                    var userinfo = userInfoDal.GetUserInfoByUId(item.PartnerUId);
+                    var dto = new ChatListType()
+                    {
+                        PartnerUId=item.PartnerUId,
+                        HeadImgPath= userinfo.HeadPhotoPath.GetImgPath(),
+                        DispalyName= userinfo.NickName,
+                        LatestChatTime=item.CreateTime.GetDateDesc(),
+                        LatestChatContent=item.ContentDetail,
+                        ChatContentType=item.Type,
+                        UnReadCount="",
+                    };
+                    response.Content.ChatList.Add(dto);
+                }
+            }
 
-            response.Content.ChatList = ChatListTestData();
-            response.Content.TotalUnReadCount = "50";
+            int unReadCount = 0;
+
+            //我被动接受的信息
+            var partnerMessages = chatDal.GetChatContent(request.Content.UId, false);
+            if (partnerMessages.NotEmpty())
+            {
+                foreach(var item in partnerMessages)
+                {
+                    if (response.Content.ChatList.Exists(a => a.PartnerUId == item.UId))
+                    {
+                        var myMessage = myMessages.FirstOrDefault(a => a.PartnerUId == item.UId);
+                        if(item.CreateTime> myMessage.CreateTime)
+                        {
+                            response.Content.ChatList.RemoveAll(a => a.PartnerUId == item.UId);
+                            response.Content.ChatList.Add(BuildChatType(item, ref unReadCount));
+                        }
+                    }
+                    else
+                    {
+                        response.Content.ChatList.Add(BuildChatType(item, ref unReadCount));
+                    }
+                }
+            }
+
+            //未读总数
+            if (unReadCount == 0)
+            {
+                response.Content.TotalUnReadCount = "";
+            }
+            else if (unReadCount > 0 && unReadCount < 100)
+            {
+                response.Content.TotalUnReadCount = unReadCount.ToString();
+            }
+            else
+            {
+                response.Content.TotalUnReadCount = "99+";
+            }
             return response;
+        }
+
+        private ChatListType BuildChatType(ChatContent content,ref int unReadCount)
+        {
+            var userinfo = userInfoDal.GetUserInfoByUId(content.UId);
+            int unread = chatDal.UnReadCount(content.UId, content.PartnerUId);
+
+            string unreadStr =string.Empty;
+            if (unread == 0)
+            {
+                unreadStr = "";
+            }
+            else if(unread>0&& unread < 100)
+            {
+                unreadStr = unread.ToString();
+            }
+            else
+            {
+                unreadStr = "99+";
+            }
+            unReadCount += unread;
+
+            return new ChatListType()
+            {
+                PartnerUId= content.UId,
+                HeadImgPath = userinfo.HeadPhotoPath.GetImgPath(),
+                DispalyName = userinfo.NickName,
+                LatestChatTime = content.CreateTime.GetDateDesc(),
+                LatestChatContent = content.ContentDetail,
+                ChatContentType = content.Type,
+                UnReadCount = unreadStr,
+            };
         }
 
         public ResponseContext<GetChatContentListReponse> GetChatContentList(RequestContext<GetChatContentListRequest> request)
@@ -37,10 +128,10 @@ namespace Chat.Service
             var rtn = new List<ChatContentDetail>();
 
             //我发给对方消息
-            var myMessahes = GetChatContentList(request.Content.UId, request.Content.PartnerUId, true);
-            if(myMessahes.NotEmpty())
+            var myMessages = GetChatContentList(request.Content.UId, request.Content.PartnerUId, true);
+            if(myMessages.NotEmpty())
             {
-                rtn.AddRange(myMessahes);
+                rtn.AddRange(myMessages);
             }
 
             //对方发给我的消息
@@ -194,7 +285,7 @@ namespace Chat.Service
                 var dto = new ChatContentDetail()
                 {
                     IsOwner = isOwner,
-                    HeadImgPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                    HeadImgPath = userInfo.HeadPhotoPath.GetImgPath(),
                     ChatContent = item.ContentDetail,
                     ChatContentType = item.Type,
                     ChatTime = item.CreateTime.GetDateDesc(),

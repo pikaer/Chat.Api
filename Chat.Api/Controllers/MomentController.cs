@@ -114,7 +114,7 @@ namespace Chat.Api.Controllers
             {
                 var uploadfile = Request.Form.Files[0];
 
-                var filePath = JsonSettingHelper.AppSettings["SaveMomentImg"];
+                var filePath = JsonSettingHelper.AppSettings["SetImgPath"];
 
                 if (!Directory.Exists(filePath))
                 {
@@ -171,9 +171,9 @@ namespace Chat.Api.Controllers
                     return new JsonResult(response);
                 }
 
-                var strDateTime = DateTime.Now.ToString("yyMMddhhmmssfff"); //取得时间字符串
-                var strRan = Convert.ToString(new Random().Next(100, 999)); //生成三位随机数
-                var saveName = strDateTime + strRan + fileExtension;
+                var strDateTime = DateTime.Now.ToString("yyyyMMdd"); //取得时间字符串
+                var strRan =Guid.NewGuid().ToString(); //生成随机数
+                var saveName = string.Format("{0}_{1}_{2}{3}", strDateTime, length,strRan, fileExtension);
 
                 using (FileStream fs = System.IO.File.Create(filePath + saveName))
                 {

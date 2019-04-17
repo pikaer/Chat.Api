@@ -170,6 +170,11 @@ namespace Chat.Model.Utils
         public string NickName { get; set; }
 
         /// <summary>
+        /// 用户头像地址
+        /// </summary>
+        public string HeadPhotoPath{ get; set; }
+
+        /// <summary>
         /// 用户所在国家
         /// </summary>
         public string Country { get; set; }

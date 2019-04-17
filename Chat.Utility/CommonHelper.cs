@@ -5,31 +5,11 @@ namespace Chat.Utility
     public static class CommonHelper
     {
         /// <summary>
-        /// 获取头像路径
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static string ToHeadImagePath(this string shortPath)
-        {
-            string rtn = string.Empty;
-            if (string.IsNullOrEmpty(shortPath))
-            {
-                return rtn;
-            }
-            
-            //默认前缀
-            string defaultPath = JsonSettingHelper.AppSettings["HeadPhoto"];
-
-            
-            return GetPath(defaultPath, shortPath);
-        }
-
-        /// <summary>
         /// 获取动态路径
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string ToMomentImagePath(this string shortPath)
+        public static string GetImgPath(this string shortPath)
         {
             string rtn = string.Empty;
             if (string.IsNullOrEmpty(shortPath))
@@ -38,40 +18,12 @@ namespace Chat.Utility
             }
             
             //默认前缀
-            string defaultPath = JsonSettingHelper.AppSettings["MomentImg"];
+            string defaultPath = JsonSettingHelper.AppSettings["GetImgPath"];
             
 
             return GetPath(defaultPath, shortPath);
         }
 
-        /// <summary>
-        /// 空间背景图片加载路径
-        /// </summary>
-        public static string ToBackgroundImgPath(this string shortPath)
-        {
-            string rtn = string.Empty;
-            if (string.IsNullOrEmpty(shortPath))
-            {
-                return rtn;
-            }
-
-            //默认前缀
-            string defaultPath = JsonSettingHelper.AppSettings["BackgroundImg"];
-
-
-            return GetPath(defaultPath, shortPath);
-        }
-
-        public static string DefaultHead()
-        {
-            string path = JsonSettingHelper.AppSettings["DefaultHead"];
-
-            //默认前缀
-            string defaultPath = JsonSettingHelper.AppSettings["HeadPhoto"];
-
-            return GetPath(defaultPath, path);
-        }
-        
         /// <summary>
         /// 拼接所在地
         /// </summary>

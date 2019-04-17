@@ -97,6 +97,7 @@ namespace Chat.Service
                     OpenId = data.OpenId,
                     Gender = (GenderEnum)data.Gender,
                     NickName = data.NickName,
+                    HeadPhotoPath=data.HeadPhotoPath,
                     CreateTime = DateTime.Now
                 };
 
@@ -121,6 +122,11 @@ namespace Chat.Service
                 else
                 {
                     entity.UId = userInfoEntity.UId;
+                    entity.UpdateTime = DateTime.Now;
+
+                    //保证每次都刷新用户头像
+                    userInfoDal.UpdateHeadPath(entity);
+
                     response.Content.UId = userInfoEntity.UId;
                     response.Content.ExcuteResult =true;
                 }
@@ -234,7 +240,7 @@ namespace Chat.Service
                 {
                     NickName = entity.NickName,
                     UNo = entity.UNo,
-                    HeadPhotoPath = entity.HeadPhotoPath.ToHeadImagePath()
+                    HeadPhotoPath = entity.HeadPhotoPath.GetImgPath()
                 };
 
                 //我的关注
@@ -358,7 +364,7 @@ namespace Chat.Service
                         {
                             PartnerUId= item.PartnerUId,
                             DisplayName = item.RemarkName.IsNullOrEmpty() ? userInfo.NickName : item.RemarkName,
-                            HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                            HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
                             Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
                             Gender = userInfo.Gender,
                             HasAttention = true
@@ -394,7 +400,7 @@ namespace Chat.Service
                         {
                             PartnerUId= item.PartnerUId,
                             DisplayName = userInfo.NickName,
-                            HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                            HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
                             Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
                             Gender = userInfo.Gender,
                             HasAttention = true
@@ -430,7 +436,7 @@ namespace Chat.Service
                         {
                             PartnerUId= item.UId,
                             DisplayName = userInfo.NickName,
-                            HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                            HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
                             Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
                             Gender = userInfo.Gender,
                             HasAttention = false
@@ -474,7 +480,7 @@ namespace Chat.Service
                     {
                         PartnerUId= item.UId,
                         DisplayName = nickName,
-                        HeadPhotoPath = userInfo.HeadPhotoPath.ToHeadImagePath(),
+                        HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
                         Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
                         Gender = userInfo.Gender,
                         HasAttention = friend != null,
