@@ -68,7 +68,7 @@ namespace Chat.Repository
                     if (isOwner)
                     {
                         sql = @"SELECT temp.ChatId,temp.UId ,temp.PartnerUId,temp.ContentDetail,temp.Type,temp.HasRead,temp.CreateTime,temp.UpdateTime 
-                                FROM( SELECT row_number() over(partition by PartnerUId order by CreateTime desc) as rownum  --对每个分组添加编号
+                                FROM( SELECT row_number() over(partition by PartnerUId order by CreateTime desc) as rownum,  --对每个分组添加编号
                                              ChatId,
                                              UId ,
                                              PartnerUId,
@@ -83,7 +83,7 @@ namespace Chat.Repository
                     else
                     {
                         sql = @"SELECT temp.ChatId,temp.UId ,temp.PartnerUId,temp.ContentDetail,temp.Type,temp.HasRead,temp.CreateTime,temp.UpdateTime 
-                                FROM( SELECT row_number() over(partition by UId order by CreateTime desc) as rownum  --对每个分组添加编号
+                                FROM( SELECT row_number() over(partition by UId order by CreateTime desc) as rownum,  --对每个分组添加编号
                                              ChatId,
                                              UId ,
                                              PartnerUId,
@@ -93,7 +93,7 @@ namespace Chat.Repository
                                              UpdateTime 
                                      FROM dbo.chat_ChatContent
                                      Where PartnerUId=@Uid) temp
-                                Where rownum=1 and  --取出编号为1的数据";
+                                Where rownum=1 --取出编号为1的数据";
                     }
                     return Db.Query<ChatContent>(sql,new { Uid= uId }).AsList();
                 }
@@ -120,7 +120,7 @@ namespace Chat.Repository
                     var sql = @"Select Count(0)
                                 FROM dbo.chat_ChatContent
                                 Where HasRead=0 and UId=@UId and PartnerUId=@PartnerUId";
-                    return Db.QueryFirstOrDefault<int>(sql);
+                    return Db.QueryFirstOrDefault<int>(sql,new { UId = uId , PartnerUId = partnerUId });
                 }
                 catch (Exception ex)
                 {
