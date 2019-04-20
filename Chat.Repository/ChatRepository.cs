@@ -41,13 +41,22 @@ namespace Chat.Repository
         /// <param name="uId"></param>
         /// <param name="partnerUId"></param>
         /// <returns></returns>
-        public List<ChatContent> GetChatContent(long uId,long partnerUId)
+        public List<ChatContent> GetChatContent(long uId,long partnerUId,bool onlyUnRead=false)
         {
             using (var Db = GetDbConnection())
             {
                 try
                 {
-                    var sql = string.Format("{0} Where UId={1} and PartnerUId={2}", SELECT_ChatContent, uId, partnerUId);
+                    string sql = string.Empty;
+                    if (onlyUnRead)
+                    {
+                        sql = string.Format("{0} Where HasRead=0 and UId={1} and PartnerUId={2}", SELECT_ChatContent, uId, partnerUId);
+                    }
+                    else
+                    {
+                        sql = string.Format("{0} Where UId={1} and PartnerUId={2}", SELECT_ChatContent, uId, partnerUId);
+                    }
+                    
                     return Db.Query<ChatContent>(sql).AsList();
                 }
                 catch (Exception ex)
@@ -124,8 +133,64 @@ namespace Chat.Repository
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("UnReadCount", string.Format("从数据库获取未读条数UId={0},PartnerUId={1}", uId, partnerUId), ex);
+                    Log.Error("UnReadCount", string.Format("从数据库获取未读条数异常，UId={0},PartnerUId={1}", uId, partnerUId), ex);
                     return 0;
+                }
+            }
+        }
+
+        public int UnReadCount(long uId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"Select Count(0)
+                                FROM dbo.chat_ChatContent
+                                Where HasRead=0 and PartnerUId=@PartnerUId";
+                    return Db.QueryFirstOrDefault<int>(sql, new {PartnerUId = uId });
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("UnReadCount", string.Format("从数据库获取未读条数异常，UId={0}", uId), ex);
+                    return 0;
+                }
+            }
+        }
+
+        public bool ClearUnReadCount(long uId, long partnerUId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"UPDATE dbo.chat_ChatContent
+                                   SET HasRead=1
+                                      ,UpdateTime=@UpdateTime
+                                 WHERE UId=@UId and PartnerUId=@PartnerUId";
+                    return Db.Execute(sql, new { UId = uId, PartnerUId = partnerUId, UpdateTime=DateTime.Now })>0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("ClearUnReadCount", string.Format("清除未读消息异常，UId={0},PartnerUId={1}", uId, partnerUId), ex);
+                    return false;
+                }
+            }
+        }
+
+        public bool DeletChatContent(long uId,long partnerUId)
+        {
+            using (var Db = GetDbConnection())
+            {
+                try
+                {
+                    var sql = @"DELETE FROM dbo.chat_ChatContent WHERE (UId=@UId And PartnerUId=@PartnerUId) or (UId=@PartnerUId And PartnerUId=@UId)";
+                    return Db.Execute(sql, new { UId = uId,PartnerUId = partnerUId }) > 0;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("DeletChatContent", "删除聊天记录内容异常", ex);
+                    return false;
                 }
             }
         }

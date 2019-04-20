@@ -117,7 +117,7 @@ namespace Chat.Api.Hubs
                 //当对方正在和自己聊天,通知对方刷新页面
                 if (onChat!=null&&onChat.IsOnline&& onChat.PartnerUId== uId)
                 {
-                    await Clients.Client(onChat.ConnectionId).SendAsync("receive", new { partnerUId= uId });
+                    await Clients.Client(onChat.ConnectionId).SendAsync("receive", new { partnerUId= uId});
                 }
 
             }

@@ -100,6 +100,47 @@ namespace Chat.Api.Controllers
         }
 
         /// <summary>
+        /// 获取未读聊天列表
+        /// </summary>
+        [HttpPost]
+        public JsonResult GetUnReadContentList()
+        {
+            RequestContext<GetUnReadContentListRequest> request = null;
+            ResponseContext<GetUnReadContentListReponse> response = null;
+            try
+            {
+                string json = GetInputString();
+                if (string.IsNullOrEmpty(json))
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotAllowedEmpty_Code);
+                }
+                request = json.JsonToObject<RequestContext<GetUnReadContentListRequest>>();
+                if (request == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.ParametersIsNotValid_Code);
+                }
+                if (request.Head == null)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestHead);
+                }
+                if (request.Content == null || request.Content.UId <= 0 || request.Content.PartnerUId <= 0)
+                {
+                    return ErrorJsonResult(ErrCodeEnum.InvalidRequestBody);
+                }
+                response = api.GetUnReadContentList(request);
+                return new JsonResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ErrorJsonResult(ErrCodeEnum.InnerError, "GetUnReadContentList", ex);
+            }
+            finally
+            {
+                WriteServiceLog(MODULE, "GetUnReadContentList", request?.Head, response?.Head, request, response);
+            }
+        }
+
+        /// <summary>
         /// 删除会话
         /// </summary>
         [HttpPost]

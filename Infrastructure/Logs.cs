@@ -77,7 +77,7 @@ namespace Infrastructure
             }
         }
         
-        private static void InsertLogs(LogEntity entity)
+        private static bool InsertLogs(LogEntity entity)
         {
             using (var Db = GetDbConnection())
             {
@@ -103,16 +103,16 @@ namespace Infrastructure
                                                  ,@LogContent
                                                  ,@ServiceName
                                                  ,@CreateTime)";
-                    Db.Execute(sql, entity);
+                    return Db.Execute(sql, entity)>0;
                 }
-                catch
+                catch(Exception ex)
                 {
-                    return;
+                    return false;
                 }
             }
         }
 
-        private static void InsertTags(LogTag logTag)
+        private static bool InsertTags(LogTag logTag)
         {
             using (var Db = GetDbConnection())
             {
@@ -130,11 +130,11 @@ namespace Infrastructure
                                                  ,@LogKey
                                                  ,@LogValue
                                                  ,CreateTime)";
-                    Db.Execute(sql, logTag);
+                    return Db.Execute(sql, logTag) > 0;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return;
+                    return false;
                 }
             }
         }

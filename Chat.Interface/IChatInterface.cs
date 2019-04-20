@@ -133,5 +133,10 @@ namespace Chat.Interface
         /// 获取好友列表信息
         /// </summary>
         ResponseContext<GetFriendsResponse> GetFriends(RequestContext<GetFriendsRequest> request);
+
+        /// <summary>
+        /// 获取未读聊天列表
+        /// </summary>
+        ResponseContext<GetUnReadContentListReponse> GetUnReadContentList(RequestContext<GetUnReadContentListRequest> request);
     }
 }

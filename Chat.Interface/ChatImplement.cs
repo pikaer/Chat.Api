@@ -140,5 +140,10 @@ namespace Chat.Interface
         {
             return userInfoService.GetFriends(request);
         }
+
+        public ResponseContext<GetUnReadContentListReponse> GetUnReadContentList(RequestContext<GetUnReadContentListRequest> request)
+        {
+            return chatService.GetUnReadContentList(request);
+        }
     }
 }

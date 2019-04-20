@@ -1,5 +1,4 @@
 ﻿using Chat.Model.Entity.Chat;
-using Chat.Model.Enum;
 using Chat.Model.Utils;
 using Chat.Repository;
 using Chat.Utility;
@@ -131,6 +130,11 @@ namespace Chat.Service
             var myMessages = GetChatContentList(request.Content.UId, request.Content.PartnerUId, true);
             if(myMessages.NotEmpty())
             {
+                var userInfo = userInfoDal.GetUserInfoByUId(request.Content.UId);
+                if (userInfo != null)
+                {
+                    response.Content.OwnerHeadImgPath = userInfo.HeadPhotoPath.GetImgPath();
+                }
                 rtn.AddRange(myMessages);
             }
 
@@ -138,12 +142,18 @@ namespace Chat.Service
             var partnerMessages = GetChatContentList(request.Content.PartnerUId, request.Content.UId, false);
             if(partnerMessages.NotEmpty())
             {
+                var userInfo = userInfoDal.GetUserInfoByUId(request.Content.PartnerUId);
+                if (userInfo != null)
+                {
+                    response.Content.PartnerHeadImgPath = userInfo.HeadPhotoPath.GetImgPath();
+                }
                 rtn.AddRange(partnerMessages);
             }
-
-            rtn = rtn.OrderBy(a => a.CreateTime).ToList();
+            
             if (rtn.NotEmpty()&&rtn.Count > 1)
             {
+                rtn = rtn.OrderByDescending(a => a.CreateTime).ToList();
+
                 //聊天时间相隔小于10分钟就不展示
                 for (int i = 0; i < rtn.Count-1; i++)
                 {
@@ -160,10 +170,29 @@ namespace Chat.Service
                 rtn =rtn.Skip(30* (pageIndex - 1)).Take(30).ToList();
             }
             
-
-            response.Content.ChatContentList = rtn;
+            //前端升序排列
+            response.Content.ChatContentList = rtn.OrderBy(a => a.CreateTime).ToList(); ;
             return response;
         }
+
+        public ResponseContext<GetUnReadContentListReponse> GetUnReadContentList(RequestContext<GetUnReadContentListRequest> request)
+        {
+            var list = GetChatContentList(request.Content.PartnerUId, request.Content.UId, false, true);
+
+            if (list.NotEmpty())
+            {
+                chatDal.ClearUnReadCount(request.Content.PartnerUId, request.Content.UId);
+            }
+
+            return new ResponseContext<GetUnReadContentListReponse>()
+            {
+                Content = new GetUnReadContentListReponse()
+                {
+                    ChatContentList = list
+                }
+            };
+        }
+
 
         /// <summary>
         /// 删除会话
@@ -174,8 +203,8 @@ namespace Chat.Service
             {
                 Content = new DeleteChatResponse()
                 {
-                    IsExecuteSuccess = true,
-                    CurrentTotalUnReadCount = "50"
+                    IsExecuteSuccess = chatDal.DeletChatContent(request.Content.UId, request.Content.PartnerUId),
+                    CurrentTotalUnReadCount = CurrentTotalUnReadCount(request.Content.UId)
                 }
             };
             return response;
@@ -190,11 +219,30 @@ namespace Chat.Service
             {
                 Content = new ClearUnReadCountResponse()
                 {
-                    IsExecuteSuccess = true,
-                    CurrentTotalUnReadCount = "67"
+                    IsExecuteSuccess = chatDal.ClearUnReadCount(request.Content.PartnerUId, request.Content.UId),
+                    CurrentTotalUnReadCount = CurrentTotalUnReadCount(request.Content.UId)
                 }
             };
             return response;
+        }
+
+        private string CurrentTotalUnReadCount(long uId)
+        {
+            int unread = chatDal.UnReadCount(uId);
+
+            //未读总数
+            if (unread == 0)
+            {
+                return "";
+            }
+            else if (unread > 0 && unread < 100)
+            {
+                return unread.ToString();
+            }
+            else
+            {
+                return "99+";
+            }
         }
 
         /// <summary>
@@ -223,69 +271,17 @@ namespace Chat.Service
             response.Content.IsExecuteSuccess = chatDal.InsertChatContent(message);
             return response;
         }
+        
 
-        public GetChatContentListReponse ChatContentListTestData()
-        {
-            var rtn = new GetChatContentListReponse();
-            var item = new List<ChatContentDetail>();
-            var today = DateTime.Now;
-            for (int i = 1; i <= 40; i++)
-            {
-                var dto = new ChatContentDetail()
-                {
-                    IsOwner = i % 3 == 0, //取余数
-                    HeadImgPath = i % 3 == 0 ? "../../content/images/pikaer.jpg" : "../../content/images/partner.jpg",
-                    ChatContent = string.Format("我给你发送了第{0}条消息对话", i),
-                    ChatContentType = ChatContentTypeEnum.Text,
-                    ChatTime = today.AddDays(i).GetDateDesc(),
-                    IsDisplayChatTime = i % 5 == 0
-                };
-                item.Add(dto);
-            }
-
-            rtn.ChatContentList = item;
-            return rtn;
-        }
-
-        /// <summary>
-        /// 用户列表模拟数据
-        /// </summary>
-        private List<ChatListType> ChatListTestData()
-        {
-            //暂时返回模拟数据
-            var chatList = new List<ChatListType>();
-            for (int i = 1; i <= 10; i++)
-            {
-                var dto = new ChatListType()
-                {
-                    PartnerUId = i + 1,
-                    HeadImgPath = "../../content/images/pikaer.jpg",
-                    DispalyName = string.Format("我是第{0}个小星星", i),
-                    LatestChatContent = string.Format("我是第{0}个Pikaer", i),
-                    ChatContentType = ChatContentTypeEnum.Text,
-                    LatestChatTime = "2018-8-9",
-                    UnReadCount = "23"
-                };
-                chatList.Add(dto);
-            }
-            return chatList;
-        }
-
-        private List<ChatContentDetail> GetChatContentList(long uId, long partnerUId, bool isOwner)
+        private List<ChatContentDetail> GetChatContentList(long uId, long partnerUId, bool isOwner, bool onlyUnRead = false)
         {
             var rtn = new List<ChatContentDetail>();
-            var message = chatDal.GetChatContent(uId, partnerUId);
-            var userInfo = userInfoDal.GetUserInfoByUId(uId);
-            if (userInfo == null || message.IsNullOrEmpty())
-            {
-                return null;
-            }
+            var message = chatDal.GetChatContent(uId, partnerUId, onlyUnRead);
             foreach (var item in message)
             {
                 var dto = new ChatContentDetail()
                 {
                     IsOwner = isOwner,
-                    HeadImgPath = userInfo.HeadPhotoPath.GetImgPath(),
                     ChatContent = item.ContentDetail,
                     ChatContentType = item.Type,
                     ChatTime = item.CreateTime.GetDateDesc(),
