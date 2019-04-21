@@ -20,26 +20,26 @@ namespace Infrastructure
             var beforeyestoday = DateTime.Now.AddDays(-2).Date;  //2018-9-2 0:00:00  前天凌晨
             if (datetime > today)
             {
-                var min1 = now.AddMinutes(-1).Date;       //    1分钟前
-                var min2 = now.AddMinutes(-2).Date;       //    2分钟前
-                var min5 = now.AddMinutes(-5).Date;       //    5分钟前
-                var min10 = now.AddMinutes(-10).Date;     //    10分钟前
-                var min20 = now.AddMinutes(-20).Date;     //    20分钟前
-                var min30 = now.AddMinutes(-30).Date;     //    30分钟前
-                var hour1 = now.AddHours(-1).Date;      //    1小时前
-                var hour2 = now.AddHours(-2).Date;      //    2小时前
-                var hour3 = now.AddHours(-3).Date;      //    3小时前
-                var hour4 = now.AddHours(-4).Date;      //    4小时前
-                var hour5 = now.AddHours(-5).Date;      //    5小时前
-                var hour6 = now.AddHours(-6).Date;      //    6小时前
-                var hour7 = now.AddHours(-7).Date;      //    7小时前
-                var hour8 = now.AddHours(-8).Date;      //    8小时前
-                var hour9 = now.AddHours(-9).Date;      //    9小时前
-                var hour10 = now.AddHours(-10).Date;    //    10小时前
-                var hour11 = now.AddHours(-11).Date;    //    11小时前
-                var hour12 = now.AddHours(-12).Date;    //    12小时前
-                var hour13 = now.AddHours(-13).Date;    //    13小时前
-                var hour14 = now.AddHours(-14).Date;    //    14小时前
+                var min1 = now.AddMinutes(-1);       //    1分钟前
+                var min2 = now.AddMinutes(-2);       //    2分钟前
+                var min5 = now.AddMinutes(-5);       //    5分钟前
+                var min10 = now.AddMinutes(-10);     //    10分钟前
+                var min20 = now.AddMinutes(-20);     //    20分钟前
+                var min30 = now.AddMinutes(-30);     //    30分钟前
+                var hour1 = now.AddHours(-1);      //    1小时前
+                var hour2 = now.AddHours(-2);      //    2小时前
+                var hour3 = now.AddHours(-3);      //    3小时前
+                var hour4 = now.AddHours(-4);      //    4小时前
+                var hour5 = now.AddHours(-5);      //    5小时前
+                var hour6 = now.AddHours(-6);      //    6小时前
+                var hour7 = now.AddHours(-7);      //    7小时前
+                var hour8 = now.AddHours(-8);      //    8小时前
+                var hour9 = now.AddHours(-9);      //    9小时前
+                var hour10 = now.AddHours(-10);    //    10小时前
+                var hour11 = now.AddHours(-11);    //    11小时前
+                var hour12 = now.AddHours(-12);    //    12小时前
+                var hour13 = now.AddHours(-13);    //    13小时前
+                var hour14 = now.AddHours(-14);    //    14小时前
                 if (datetime >= min1)
                 {
                     rtn = "刚刚";

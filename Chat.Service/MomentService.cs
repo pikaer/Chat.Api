@@ -179,6 +179,11 @@ namespace Chat.Service
                 foreach(var item in discussList)
                 {
                     var user= userInfoDal.GetUserInfoByUId(item.UId);
+                    if (user == null)
+                    {
+                        continue;
+                    }
+
                     var dto = new DiscussType()
                     {
                         DiscussId = item.DiscussId,

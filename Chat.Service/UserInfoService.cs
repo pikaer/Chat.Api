@@ -367,7 +367,8 @@ namespace Chat.Service
                             HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
                             Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
                             Gender = userInfo.Gender,
-                            HasAttention = true
+                            HasAttention = true,
+                            TimeRemark=""
                         });
                     }
                 }
@@ -387,25 +388,24 @@ namespace Chat.Service
             {
                 foreach (var item in friends.OrderByDescending(a => a.CreateTime))
                 {
-                    var friend = userInfoDal.GetFriend(item.PartnerUId, item.UId);
-                    if (friend == null)
+                    var userInfo = userInfoDal.GetUserInfoByUId(item.PartnerUId);
+                    if (userInfo == null)
                     {
-                        var userInfo = userInfoDal.GetUserInfoByUId(item.PartnerUId);
-                        if (userInfo == null)
-                        {
-                            continue;
-                        }
-
-                        rtn.Add(new FriendResponseType()
-                        {
-                            PartnerUId= item.PartnerUId,
-                            DisplayName = userInfo.NickName,
-                            HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
-                            Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
-                            Gender = userInfo.Gender,
-                            HasAttention = true
-                        });
+                        continue;
                     }
+
+                    var friend = userInfoDal.GetFriend(item.PartnerUId, uId);
+
+                    rtn.Add(new FriendResponseType()
+                    {
+                        PartnerUId = item.PartnerUId,
+                        DisplayName = item.RemarkName.IsNullOrEmpty() ? userInfo.NickName : item.RemarkName,
+                        HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
+                        Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
+                        Gender = userInfo.Gender,
+                        HasAttention = friend!=null&& !friend.IsDelete,
+                        TimeRemark=""
+                    });
                 }
             }
             return rtn;
@@ -423,25 +423,33 @@ namespace Chat.Service
             {
                 foreach (var item in friends.OrderByDescending(a => a.CreateTime))
                 {
-                    var friend = userInfoDal.GetFriend(uId, item.UId);
-                    if (friend == null)
+                    var userInfo = userInfoDal.GetUserInfoByUId(item.UId);
+                    if (userInfo == null)
                     {
-                        var userInfo = userInfoDal.GetUserInfoByUId(item.UId);
-                        if (userInfo == null)
-                        {
-                            continue;
-                        }
-
-                        rtn.Add(new FriendResponseType()
-                        {
-                            PartnerUId= item.UId,
-                            DisplayName = userInfo.NickName,
-                            HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
-                            Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
-                            Gender = userInfo.Gender,
-                            HasAttention = false
-                        });
+                        continue;
                     }
+
+                    var nickName = string.Empty;
+                    var friend = userInfoDal.GetFriend(uId, item.UId);
+                    if (friend != null && !friend.RemarkName.IsNullOrEmpty())
+                    {
+                        nickName = friend.RemarkName;
+                    }
+                    else
+                    {
+                        nickName = userInfo.NickName;
+                    }
+
+                    rtn.Add(new FriendResponseType()
+                    {
+                        PartnerUId = item.UId,
+                        DisplayName = nickName,
+                        HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
+                        Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
+                        Gender = userInfo.Gender,
+                        HasAttention = friend!=null&& !friend.IsDelete,
+                        TimeRemark=""
+                    });
                 }
             }
             return rtn;
@@ -483,7 +491,7 @@ namespace Chat.Service
                         HeadPhotoPath = userInfo.HeadPhotoPath.GetImgPath(),
                         Constellation = Convert.ToDateTime(userInfo.BirthDate).GetConstellation(),
                         Gender = userInfo.Gender,
-                        HasAttention = friend != null,
+                        HasAttention = friend != null&& !friend.IsDelete,
                         TimeRemark = item.CreateTime.GetDateDesc()
                     });
                 }

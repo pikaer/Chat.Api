@@ -31,6 +31,10 @@ namespace Chat.Service
                 foreach(var item in myMessages)
                 {
                     var userinfo = userInfoDal.GetUserInfoByUId(item.PartnerUId);
+                    if (userinfo == null)
+                    {
+                        continue;
+                    }
                     var dto = new ChatListType()
                     {
                         PartnerUId=item.PartnerUId,
